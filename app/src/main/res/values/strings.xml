@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name" translatable="false">PixelPal</string>
+    <string name="profile">Profile</string>
+    <string name="creators">Creators</string>
+    <string name="games">Games</string>
+    <string name="platforms">Platforms</string>
+    <string name="home">Home</string>
+    <string name="news">News</string>
+    <string name="all">All</string>
+    <string name="release_date">Release date:</string>
+    <string name="released">Released:</string>
+    <string name="genre">Genre:</string>
+    <string name="rating">Rating:</string>
+    <string name="famous_projects">Projects:</string>
+    <string name="search">Search</string>
+    <string name="where_to_buy">Stores</string>
+    <string name="creation_date">Creation date:</string>
+    <string name="playtime">Playtime:</string>
+</resources>

@@ -1,0 +1,9 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Base.Theme.PixelPal" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">#3497A1</item>
+        <item name="colorSecondary">@color/main_red</item>
+        <item name="colorTertiary">@color/black</item>
+            </style>
+
+    <style name="Theme.PixelPal" parent="Base.Theme.PixelPal" />
+</resources>

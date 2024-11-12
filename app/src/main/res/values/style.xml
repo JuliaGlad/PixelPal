@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget.Material3.BottomNavigationView.ActiveIndicator.Fintech" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/transparent</item>
+    </style>
+
+    <style name="BottomNavTextActive">
+        <item name="android:textSize">12sp</item>
+        <item name="fontFamily">@font/tektur_bold</item>
+        <item name="android:fontFamily">@font/tektur_bold</item>
+    </style>
+
+    <style name="BottomNavTextInactive">
+        <item name="android:textSize">12sp</item>
+        <item name="fontFamily">@font/tektur_medium</item>
+        <item name="android:fontFamily">@font/tektur_regular</item>
+    </style>
+
+    <style name="TabTextUnselected">
+        <item name="android:textSize">22sp</item>
+        <item name="fontFamily">@font/tektur_medium</item>
+        <item name="android:fontFamily">@font/tektur_medium</item>
+    </style>
+
+    <style name="TabTextSelected">
+        <item name="android:textSize">22sp</item>
+        <item name="fontFamily">@font/tektur_medium</item>
+        <item name="android:fontFamily">@font/tektur_medium</item>
+    </style>
+
+
+</resources>

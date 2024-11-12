@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <declare-styleable name="IconShimmerView">
+        <attr name="shimmerColor" format="color"/>
+        <attr name="iconColor" format="color"/>
+        <attr name="android:drawable"/>
+    </declare-styleable>
+
+    <declare-styleable name="TextShimmerView">
+        <attr name="textShimmerColor" format="color"/>
+        <attr name="android:textColor"/>
+        <attr name="android:text"/>
+        <attr name="android:fontFamily"/>
+        <attr name="android:textSize"/>
+    </declare-styleable>
+
+    <declare-styleable name="ShapeableImageView">
+        <attr name="android:background"/>
+    </declare-styleable>
+
+    <declare-styleable name="FlexBoxLayout">
+        <attr name="layout_alignment" format="integer">
+            <enum name="left" value="1"/>
+            <enum name="right" value="2"/>
+        </attr>
+    </declare-styleable>
+
+</resources>

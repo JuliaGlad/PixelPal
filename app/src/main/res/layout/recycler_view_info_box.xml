@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/info_box_background">
+
+    <View
+        android:id="@+id/line_top"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/blue_line_gradient_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/line_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/blue_line_gradient_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/icon_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/icon_outline"
+        app:layout_constraintEnd_toEndOf="@id/icon_outline"
+        app:layout_constraintStart_toStartOf="@id/icon_outline"
+        app:layout_constraintTop_toTopOf="@id/icon_outline"
+        app:srcCompat="@drawable/ic_info_back" />
+
+    <myapplication.android.pixelpal.custom_view.IconShimmerView
+        android:id="@+id/icon_outline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:drawable="@drawable/ic_info_line"
+        android:paddingVertical="30dp"
+        app:iconColor="@color/light_blue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shimmerColor="@color/light_blue" />
+
+    <myapplication.android.pixelpal.custom_view.TextShimmerView
+        android:id="@+id/text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:fontFamily="@font/tektur_medium"
+        android:textColor="@color/main_blue"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/icon_outline"
+        app:layout_constraintTop_toTopOf="parent"
+        app:textShimmerColor="@color/main_blue"
+        tools:text="Экшен - длинное описание жанра, его  особенностей и тд" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
