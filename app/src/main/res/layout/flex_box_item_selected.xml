@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/flex_box_item_selected_background">
 
-    <myapplication.android.pixelpal.custom_view.TextShimmerView
+    <myapplication.android.pixelpal.ui.custom_view.TextShimmerView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

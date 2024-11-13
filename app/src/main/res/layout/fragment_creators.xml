@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <myapplication.android.pixelpal.custom_view.flexBox.FlexBoxLayout
+    <myapplication.android.pixelpal.ui.custom_view.flexBox.FlexBoxLayout
         android:id="@+id/flex_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/flex_box" />
 
-    <myapplication.android.pixelpal.custom_view.TextShimmerView
+    <myapplication.android.pixelpal.ui.custom_view.TextShimmerView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
         app:textShimmerColor="@color/main_blue"
         tools:text="Программисты" />
 
-    <myapplication.android.pixelpal.custom_view.TextShimmerView
+    <myapplication.android.pixelpal.ui.custom_view.TextShimmerView
         android:id="@+id/action_all"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

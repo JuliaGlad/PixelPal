@@ -20,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <myapplication.android.pixelpal.custom_view.ShapeableImageView
+        <myapplication.android.pixelpal.ui.custom_view.ShapeableImageView
             android:id="@+id/image"
             android:layout_width="100dp"
             android:layout_height="100dp"

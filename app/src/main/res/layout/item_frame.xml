@@ -38,7 +38,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <myapplication.android.pixelpal.custom_view.IconShimmerView
+    <myapplication.android.pixelpal.ui.custom_view.IconShimmerView
         android:id="@+id/top_left_corner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <myapplication.android.pixelpal.custom_view.IconShimmerView
+    <myapplication.android.pixelpal.ui.custom_view.IconShimmerView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="-2dp"
@@ -60,7 +60,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <myapplication.android.pixelpal.custom_view.IconShimmerView
+    <myapplication.android.pixelpal.ui.custom_view.IconShimmerView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="-2dp"
@@ -71,7 +71,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <myapplication.android.pixelpal.custom_view.IconShimmerView
+    <myapplication.android.pixelpal.ui.custom_view.IconShimmerView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="-2dp"
