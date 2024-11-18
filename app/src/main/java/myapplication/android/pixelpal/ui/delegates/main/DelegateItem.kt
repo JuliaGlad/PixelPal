@@ -1,4 +1,4 @@
-package myapplication.android.pixelpal.ui.delegates
+package myapplication.android.pixelpal.ui.delegates.main
 
 interface DelegateItem {
     fun content(): Any

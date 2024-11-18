@@ -1,4 +1,4 @@
-package myapplication.android.pixelpal.ui.delegates
+package myapplication.android.pixelpal.ui.delegates.main
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

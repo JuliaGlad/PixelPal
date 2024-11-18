@@ -1,7 +1,8 @@
-package myapplication.android.pixelpal.ui.home.recycler_view.releases
+package myapplication.android.pixelpal.ui.delegates.delegates.releases
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import myapplication.android.pixelpal.databinding.RecyclerViewNewReleasesItemBinding
@@ -27,9 +28,12 @@ class ReleasesAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(model: ReleasesModel) {
-            binding.releaseDate.text = model.releaseDate
-            binding.releaseTitle.text = model.title
-            binding.genres.text = model.genres
+            with(binding) {
+                releaseDate.text = model.releaseDate
+                title.text = model.title
+                genres.text = model.genres
+                image.setImageUri(model.uri.toUri())
+            }
         }
     }
 }

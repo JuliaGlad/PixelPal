@@ -17,4 +17,7 @@
     <string name="creation_date">Создан:</string>
     <string name="famous_projects">Проекты:</string>
     <string name="playtime">Время игры:</string>
+    <string name="new_releases">Новые релизы</string>
+    <string name="all_time_top">Топ игры за все время</string>
+    <string name="release_this_month">Выйдут в этом месяце</string>
 </resources>

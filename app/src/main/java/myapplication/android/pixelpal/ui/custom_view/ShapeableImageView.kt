@@ -2,10 +2,12 @@ package myapplication.android.pixelpal.ui.custom_view
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.content.withStyledAttributes
+import com.bumptech.glide.Glide
 import myapplication.android.pixelpal.R
 
 class ShapeableImageView @JvmOverloads constructor(
@@ -28,6 +30,12 @@ class ShapeableImageView @JvmOverloads constructor(
             setBackgroundDrawable(backgroundForm)
         }
         scaleType = ScaleType.CENTER_CROP
+    }
+
+    fun setImageUri(uri: Uri){
+        Glide.with(context)
+            .load(uri)
+            .into(this)
     }
 
     fun setDrawableImage(image: Int){

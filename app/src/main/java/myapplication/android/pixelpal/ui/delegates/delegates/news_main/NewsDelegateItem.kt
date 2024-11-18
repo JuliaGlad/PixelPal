@@ -1,6 +1,6 @@
-package myapplication.android.pixelpal.ui.delegates.delegates
+package myapplication.android.pixelpal.ui.delegates.delegates.news_main
 
-import myapplication.android.pixelpal.ui.delegates.DelegateItem
+import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
 
 class NewsDelegateItem(
     private val newsItemModel: NewsItemModel

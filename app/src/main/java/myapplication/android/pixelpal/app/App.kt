@@ -12,7 +12,7 @@ import retrofit2.Retrofit
 import retrofit2.create
 
 internal class App : Application() {
-    lateinit var gamesApi: myapplication.android.pixelpal.data.api.GamesApi
+    lateinit var gamesApi: GamesApi
     private val cicerone = Cicerone.create()
     val router get() = cicerone.router
     val navigatorHolder get() = cicerone.getNavigatorHolder()

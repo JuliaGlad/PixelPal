@@ -1,4 +1,4 @@
-package myapplication.android.pixelpal.ui.home.recycler_view.releases
+package myapplication.android.pixelpal.ui.delegates.delegates.releases
 
 import androidx.recyclerview.widget.DiffUtil
 

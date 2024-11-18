@@ -9,8 +9,8 @@ import myapplication.android.pixelpal.domain.model.creator.CreatorRoleDomain
 import myapplication.android.pixelpal.domain.wrapper.creators.toDomain
 
 class CreatorsRepositoryImpl(
-    private val remoteSource: CreatorsRemoteSource,
-    private val localSource: CreatorsLocalSource
+    private val localSource: CreatorsLocalSource,
+    private val remoteSource: CreatorsRemoteSource
 ) : CreatorsRepository {
     override suspend fun getCreatorsRoles() : List<CreatorRoleDomain> =
         (getLocalCreatorsRoles() ?: remoteSource.getCreatorsRoles()).toDomain()

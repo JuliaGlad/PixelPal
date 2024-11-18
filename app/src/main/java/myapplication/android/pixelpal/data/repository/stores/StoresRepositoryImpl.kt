@@ -8,8 +8,8 @@ import myapplication.android.pixelpal.domain.wrapper.store.toDomain
 
 
 class StoresRepositoryImpl(
-    private val remoteSource: StoresRemoteSource,
-    private val localSource: StoresLocalSource
+    private val localSource: StoresLocalSource,
+    private val remoteSource: StoresRemoteSource
 ) : StoresRepository {
     override suspend fun getStores(): List<StoreDomain> =
         (getLocalStores() ?: remoteSource.getStores()).toDomain()

@@ -1,19 +1,52 @@
 package myapplication.android.pixelpal.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import myapplication.android.pixelpal.app.App
-import myapplication.android.pixelpal.data.api.GamesApi
+import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.databinding.FragmentHomeBinding
-import myapplication.android.pixelpal.ui.home.recycler_view.releases.ReleasesModel
+import myapplication.android.pixelpal.di.DiContainer
+import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsDelegate
+import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsDelegateItem
+import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsItemModel
+import myapplication.android.pixelpal.ui.delegates.delegates.releases.ReleasesAdapter
+import myapplication.android.pixelpal.ui.delegates.delegates.releases.ReleasesModel
+import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
+import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
+import myapplication.android.pixelpal.ui.home.model.GamesNewsUi
+import myapplication.android.pixelpal.ui.home.mvi.HomeContentResult
+import myapplication.android.pixelpal.ui.home.mvi.HomeEffect
+import myapplication.android.pixelpal.ui.home.mvi.HomeIntent
+import myapplication.android.pixelpal.ui.home.mvi.HomePartialState
+import myapplication.android.pixelpal.ui.home.mvi.HomeState
+import myapplication.android.pixelpal.ui.home.mvi.HomeStore
+import myapplication.android.pixelpal.ui.home.mvi.LceState
+import myapplication.android.pixelpal.ui.listener.ClickListener
+import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 
-class HomeFragment : Fragment() {
-    private lateinit var games: List<ReleasesModel>
+
+class HomeFragment :
+    MviBaseFragment<
+            HomePartialState,
+            HomeIntent,
+            HomeState,
+            HomeEffect
+            >(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
+    override val store: HomeStore by viewModels { DiContainer.homeStoreFactory }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,6 +58,112 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (savedInstanceState == null) {
+            store.sendIntent(HomeIntent.Init)
+        }
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                store.sendIntent(HomeIntent.GetGames("2024-11-18", "2024-11-30", "2024-11-01"))
+            }
+        }
+    }
+
+    override fun resolveEffect(effect: HomeEffect) {
+
+    }
+
+    override fun render(state: HomeState) {
+        when (state.ui) {
+            is LceState.Content -> {
+                binding.progressBar.root.visibility = GONE
+                initRecycler(state.ui.data)
+            }
+
+            is LceState.Error -> {
+                binding.progressBar.root.visibility = GONE
+                Log.i("Error", "error ${state.ui.throwable.message}")
+            }
+
+            LceState.Loading -> binding.progressBar.root.visibility = VISIBLE
+
+        }
+    }
+
+    private fun initRecycler(gamesNews: HomeContentResult) {
+        val adapter = MainAdapter()
+        adapter.addDelegate(NewsDelegate())
+        binding.recycler.adapter = adapter
+
+        val released = addReleaseItems(gamesNews.gamesReleased)
+        val releaseThisMonth = addReleaseItems(gamesNews.gameMonthReleases)
+        val topGames = addReleaseItems(gamesNews.gamesTop)
+
+        adapter.submitList(getMainItems(released, releaseThisMonth, topGames))
+    }
+
+    private fun getMainItems(
+        released: List<ReleasesModel>,
+        releaseThisMonth: List<ReleasesModel>,
+        topGames: List<ReleasesModel>
+    ) = listOf(
+        NewsDelegateItem(
+            NewsItemModel(
+                1,
+                getString(R.string.new_releases),
+                released,
+                object : ClickListener {
+                    override fun onClick() {
+                        TODO("open all new releases")
+                    }
+                }
+            )
+        ),
+        NewsDelegateItem(
+            NewsItemModel(
+                2,
+                getString(R.string.release_this_month),
+                releaseThisMonth,
+                object : ClickListener {
+                    override fun onClick() {
+                        TODO("Open all games releases in this month")
+                    }
+                }
+            )
+        ),
+        NewsDelegateItem(
+            NewsItemModel(
+                3,
+                getString(R.string.all_time_top),
+                topGames,
+                object : ClickListener {
+                    override fun onClick() {
+                        TODO("open all top games")
+                    }
+
+                }
+            )
+        )
+    )
+
+    private fun addReleaseItems(list: List<GamesNewsUi>): List<ReleasesModel> {
+        val items = mutableListOf<ReleasesModel>()
+        for (i in list) {
+            items.add(
+                ReleasesModel(
+                    list.indexOf(i),
+                    i.name,
+                    i.releaseDate.toString(),
+                    i.genre,
+                    i.uri.toString(),
+                    object : ClickListener {
+                        override fun onClick() {
+                            TODO("Open game details screen")
+                        }
+                    }
+                )
+            )
+        }
+        return items
     }
 
     override fun onDestroy() {

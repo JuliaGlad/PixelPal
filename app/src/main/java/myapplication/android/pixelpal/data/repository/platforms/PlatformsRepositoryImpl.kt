@@ -7,8 +7,8 @@ import myapplication.android.pixelpal.domain.model.platform.PlatformDomain
 import myapplication.android.pixelpal.domain.wrapper.platforms.toDomain
 
 class PlatformsRepositoryImpl(
-    private val remoteSource: PlatformRemoteSource,
-    private val localSource: PlatformLocalSource
+    private val localSource: PlatformLocalSource,
+    private val remoteSource: PlatformRemoteSource
 ) : PlatformsRepository {
 
     override suspend fun getPlatforms(): List<PlatformDomain> =

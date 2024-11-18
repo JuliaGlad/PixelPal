@@ -7,8 +7,8 @@ import myapplication.android.pixelpal.domain.model.publishers.PublisherDomain
 import myapplication.android.pixelpal.domain.wrapper.publishers.toDomain
 
 class PublishersRepositoryImpl(
-    private val remoteSource: PublishersRemoteSource,
-    private val localSource: PublishersLocalSource
+    private val localSource: PublishersLocalSource,
+    private val remoteSource: PublishersRemoteSource
 ) : PublishersRepository {
 
     override suspend fun getPublishers() : List<PublisherDomain> =

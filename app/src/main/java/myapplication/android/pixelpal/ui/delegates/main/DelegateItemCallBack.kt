@@ -1,8 +1,7 @@
-package myapplication.android.pixelpal.ui.delegates
+package myapplication.android.pixelpal.ui.delegates.main
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil
-import myapplication.android.pixelpal.ui.delegates.DelegateItem
 
 class DelegateItemCallBack : DiffUtil.ItemCallback<DelegateItem>() {
     override fun areItemsTheSame(oldItem: DelegateItem, newItem: DelegateItem): Boolean =

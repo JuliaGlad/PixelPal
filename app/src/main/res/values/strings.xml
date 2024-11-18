@@ -16,4 +16,7 @@
     <string name="where_to_buy">Stores</string>
     <string name="creation_date">Creation date:</string>
     <string name="playtime">Playtime:</string>
+    <string name="new_releases">New releases</string>
+    <string name="all_time_top">All time top</string>
+    <string name="release_this_month">Release this month</string>
 </resources>

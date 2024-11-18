@@ -8,6 +8,14 @@
     android:background="@drawable/background_main"
     tools:context=".ui.main.MainActivity">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/decor_items"
+        android:layout_marginEnd="16dp"/>
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/main_container"
         android:layout_width="0dp"

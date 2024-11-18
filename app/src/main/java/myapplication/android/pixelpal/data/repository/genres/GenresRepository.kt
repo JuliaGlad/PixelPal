@@ -1,7 +1,7 @@
 package myapplication.android.pixelpal.data.repository.genres
 
-import myapplication.android.pixelpal.data.models.genres.description.GenreDescription
-import myapplication.android.pixelpal.data.models.genres.genres.GenresList
+import myapplication.android.pixelpal.data.models.genres.GenreDescription
+import myapplication.android.pixelpal.data.models.genres.GenresList
 import myapplication.android.pixelpal.domain.model.genres.GenreDescriptionDomain
 import myapplication.android.pixelpal.domain.model.genres.GenreDomain
 

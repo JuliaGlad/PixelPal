@@ -1,13 +1,16 @@
-package myapplication.android.pixelpal.ui.delegates.delegates
+package myapplication.android.pixelpal.ui.delegates.delegates.news_main
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import myapplication.android.pixelpal.databinding.RecyclerViewMainNewsItemBinding
-import myapplication.android.pixelpal.ui.delegates.AdapterDelegate
-import myapplication.android.pixelpal.ui.delegates.DelegateItem
+import myapplication.android.pixelpal.ui.delegates.delegates.releases.ReleasesAdapter
+import myapplication.android.pixelpal.ui.delegates.delegates.releases.ReleasesModel
+import myapplication.android.pixelpal.ui.delegates.main.AdapterDelegate
+import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
 
-class NewsItemDelegate : AdapterDelegate {
+class NewsDelegate : AdapterDelegate {
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
         ViewHolder(
@@ -32,12 +35,17 @@ class NewsItemDelegate : AdapterDelegate {
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(model: NewsItemModel) {
-            binding.title
-//            binding.title = model.title
-//            binding.actionAll.setOnClickListener { model.listener.onClick() }
-//            val adapter =
-//                myapplication.android.pixelpal.ui.home.recycler_view.releases.ReleasesAdapter()
-//            binding.recyclerView.adapter = adapter
+            with(binding) {
+                title.setShimmerText(model.title)
+                actionAll.setOnClickListener { model.listener.onClick() }
+            }
+            initRecycler(model.items)
+        }
+
+        private fun initRecycler(items: List<ReleasesModel>) {
+            val adapter = ReleasesAdapter()
+            binding.recyclerView.adapter = adapter
+            adapter.submitList(items)
         }
     }
 }

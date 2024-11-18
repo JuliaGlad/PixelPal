@@ -1,4 +1,4 @@
-package myapplication.android.pixelpal.data.models.genres.genres
+package myapplication.android.pixelpal.data.models.genres
 
 import kotlinx.serialization.Serializable
 

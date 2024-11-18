@@ -4,8 +4,8 @@ import myapplication.android.pixelpal.data.models.creators.CreatorsList
 import myapplication.android.pixelpal.data.models.creators_roles.CreatorsRolesList
 import myapplication.android.pixelpal.data.models.gamesMain.GamesShortDataList
 import myapplication.android.pixelpal.data.models.gamesNews.GamesNewsList
-import myapplication.android.pixelpal.data.models.genres.description.GenreDescription
-import myapplication.android.pixelpal.data.models.genres.genres.GenresList
+import myapplication.android.pixelpal.data.models.genres.GenreDescription
+import myapplication.android.pixelpal.data.models.genres.GenresList
 import myapplication.android.pixelpal.data.models.platforms.PlatformsList
 import myapplication.android.pixelpal.data.models.publishers.PublishersList
 import myapplication.android.pixelpal.data.models.stores.StoresList
@@ -16,9 +16,9 @@ import retrofit2.http.Query
 interface GamesApi {
 
     @GET("games")
-    suspend fun getGamesByReleasesDate(@Query("date") date: String): GamesNewsList
+    suspend fun getGamesByReleasesDate(@Query("dates") dates: String): GamesNewsList
 
-    @GET("games?ordering=rating")
+    @GET("games?ordering=-metacritics")
     suspend fun getTopGames(): GamesNewsList
 
     @GET("games")
