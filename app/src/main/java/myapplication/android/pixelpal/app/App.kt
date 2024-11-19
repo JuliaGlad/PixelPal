@@ -12,7 +12,7 @@ import retrofit2.Retrofit
 import retrofit2.create
 
 internal class App : Application() {
-    lateinit var gamesApi: GamesApi
+    private lateinit var gamesApi: GamesApi
     private val cicerone = Cicerone.create()
     val router get() = cicerone.router
     val navigatorHolder get() = cicerone.getNavigatorHolder()
@@ -26,9 +26,6 @@ internal class App : Application() {
     private fun createClient() {
         val authClient = OkHttpClient.Builder().apply {
             addInterceptor(AuthQueryInterceptor())
-            addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            })
         }.build()
 
         val jsonSerializer = Json { ignoreUnknownKeys = true }

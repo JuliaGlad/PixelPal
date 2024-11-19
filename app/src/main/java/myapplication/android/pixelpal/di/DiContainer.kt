@@ -64,7 +64,7 @@ object DiContainer {
 
     private val gamesRepository by lazyNone { GamesRepositoryImpl(gamesLocalSource, gamesRemoteSource) }
 
-    private val creatorsRepository by lazyNone { CreatorsRepositoryImpl(creatorsLocalSource, creatorsRemoteSource) }
+    val creatorsRepository by lazyNone { CreatorsRepositoryImpl(creatorsLocalSource, creatorsRemoteSource) }
 
     private val genresRepository by lazyNone { GenresRepositoryImpl(genresLocalSource, genresRemoteSource) }
 

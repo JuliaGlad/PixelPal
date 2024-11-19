@@ -17,6 +17,9 @@ import kotlinx.coroutines.withContext
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.databinding.FragmentHomeBinding
 import myapplication.android.pixelpal.di.DiContainer
+import myapplication.android.pixelpal.ui.delegates.delegates.info_box.InfoBoxDelegate
+import myapplication.android.pixelpal.ui.delegates.delegates.info_box.InfoBoxDelegateItem
+import myapplication.android.pixelpal.ui.delegates.delegates.info_box.InfoBoxModel
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsItemModel
@@ -81,24 +84,30 @@ class HomeFragment :
 
             is LceState.Error -> {
                 binding.progressBar.root.visibility = GONE
-                Log.i("Error", "error ${state.ui.throwable.message}")
+                Log.i(TAG, "${state.ui.throwable.message}")
             }
 
             LceState.Loading -> binding.progressBar.root.visibility = VISIBLE
-
         }
     }
 
     private fun initRecycler(gamesNews: HomeContentResult) {
-        val adapter = MainAdapter()
-        adapter.addDelegate(NewsDelegate())
-        binding.recycler.adapter = adapter
+        val adapter = initAdapter()
+
 
         val released = addReleaseItems(gamesNews.gamesReleased)
         val releaseThisMonth = addReleaseItems(gamesNews.gameMonthReleases)
         val topGames = addReleaseItems(gamesNews.gamesTop)
 
         adapter.submitList(getMainItems(released, releaseThisMonth, topGames))
+    }
+
+    private fun initAdapter(): MainAdapter {
+        val adapter = MainAdapter()
+        adapter.addDelegate(NewsDelegate())
+        adapter.addDelegate(InfoBoxDelegate())
+        binding.recycler.adapter = adapter
+        return adapter
     }
 
     private fun getMainItems(
@@ -126,6 +135,17 @@ class HomeFragment :
                 object : ClickListener {
                     override fun onClick() {
                         TODO("Open all games releases in this month")
+                    }
+                }
+            )
+        ),
+        InfoBoxDelegateItem(
+            InfoBoxModel(
+                3,
+                getString(R.string.what_other_games_are_coming_out),
+                object : ClickListener {
+                    override fun onClick() {
+                        TODO("Open dates dialog")
                     }
                 }
             )
@@ -170,4 +190,6 @@ class HomeFragment :
         super.onDestroy()
         _binding = null
     }
+
+    private val TAG = "HomeFragmentException"
 }

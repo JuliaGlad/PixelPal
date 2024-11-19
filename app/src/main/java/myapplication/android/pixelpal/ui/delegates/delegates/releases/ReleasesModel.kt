@@ -7,4 +7,4 @@ data class ReleasesModel(
     val genres: String,
     val uri: String,
     val listener: myapplication.android.pixelpal.ui.listener.ClickListener
-) : myapplication.android.pixelpal.ui.home.recycler_view.NewsItem()
+)

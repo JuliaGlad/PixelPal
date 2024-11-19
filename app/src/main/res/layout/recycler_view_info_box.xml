@@ -2,6 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item"
+    android:layout_marginHorizontal="20dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/info_box_background">
@@ -49,7 +51,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:shimmerColor="@color/light_blue" />
 
-    <myapplication.android.pixelpal.ui.custom_view.IconShimmerView
+    <myapplication.android.pixelpal.ui.custom_view.TextShimmerView
         android:id="@+id/text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -57,7 +59,7 @@
         android:layout_marginEnd="20dp"
         android:fontFamily="@font/tektur_medium"
         android:textColor="@color/main_blue"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/icon_outline"
