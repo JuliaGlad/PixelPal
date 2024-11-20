@@ -9,7 +9,7 @@ interface CreatorsRepository {
 
     suspend fun getCreatorsRoles(): List<CreatorRoleDomain>
 
-    suspend fun getCreators(): List<CreatorDomain>
+    suspend fun getCreators(roleId: Long): List<CreatorDomain>
 
     fun getLocalCreators() : CreatorsList?
 

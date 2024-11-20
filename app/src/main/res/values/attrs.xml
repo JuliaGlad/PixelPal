@@ -26,4 +26,11 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="CreatorView">
+        <attr name="creator" format="string"/>
+        <attr name="android:textSize"/>
+        <attr name="creatorShimmerColor" format="color"/>
+        <attr name="android:textColor"/>
+    </declare-styleable>
+
 </resources>

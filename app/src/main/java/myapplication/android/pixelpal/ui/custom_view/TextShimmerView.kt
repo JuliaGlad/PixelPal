@@ -48,10 +48,6 @@ class TextShimmerView @JvmOverloads constructor(
         }
 
     var text: String = ""
-//        set(value) {
-//            field = value
-//            requestLayout()
-//        }
 
     init {
         LayoutInflater.from(context).inflate(R.layout.text_shimmer, this, true)

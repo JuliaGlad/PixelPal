@@ -15,7 +15,7 @@ class CreatorsRepositoryImpl(
     override suspend fun getCreatorsRoles() : List<CreatorRoleDomain> =
         (getLocalCreatorsRoles() ?: remoteSource.getCreatorsRoles()).toDomain()
 
-    override suspend fun getCreators() : List<CreatorDomain> =
+    override suspend fun getCreators(roleId: Long) : List<CreatorDomain> =
         (getLocalCreators() ?: remoteSource.getCreators()).toDomain()
 
     override fun getLocalCreators(): CreatorsList? = null

@@ -4,8 +4,10 @@
     <color name="transparent">#00010005</color>
     <color name="white">#FFFFFFFF</color>
     <color name="main_blue">#03FEF8</color>
+    <color name="ripple_color">#6603FEF8</color>
     <color name="light_blue">#B9FFFD</color>
     <color name="main_red">#FF0E4C</color>
     <color name="light_red">#FF7485</color>
     <color name="dark_blue">#0A364F</color>
+    <color name="dark_red">#700438</color>
 </resources>

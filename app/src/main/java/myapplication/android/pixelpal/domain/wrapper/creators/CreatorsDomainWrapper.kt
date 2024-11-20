@@ -11,8 +11,8 @@ fun CreatorsList.toDomain() =
                 CreatorDomain(
                     id = id,
                     name = name,
-                    role = role,
-                    rating = rating,
+//                    role = role,
+//                    rating = rating,
                     gamesCount = gamesCount,
                     image = image
                 )

@@ -27,7 +27,7 @@ interface GamesApi {
     @GET("creator-roles")
     suspend fun getCreatorsRoles(): CreatorsRolesList
 
-    @GET("creators")
+    @GET("creators?position?id=1")
     suspend fun getCreators(): CreatorsList
 
     @GET("publishers")

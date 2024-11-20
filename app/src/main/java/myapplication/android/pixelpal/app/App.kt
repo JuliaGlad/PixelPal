@@ -26,6 +26,9 @@ internal class App : Application() {
     private fun createClient() {
         val authClient = OkHttpClient.Builder().apply {
             addInterceptor(AuthQueryInterceptor())
+            addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
         }.build()
 
         val jsonSerializer = Json { ignoreUnknownKeys = true }

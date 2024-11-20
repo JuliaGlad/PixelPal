@@ -7,11 +7,9 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import myapplication.android.pixelpal.R
@@ -23,9 +21,7 @@ import myapplication.android.pixelpal.ui.delegates.delegates.info_box.InfoBoxMod
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsItemModel
-import myapplication.android.pixelpal.ui.delegates.delegates.releases.ReleasesAdapter
 import myapplication.android.pixelpal.ui.delegates.delegates.releases.ReleasesModel
-import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
 import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
 import myapplication.android.pixelpal.ui.home.model.GamesNewsUi
 import myapplication.android.pixelpal.ui.home.mvi.HomeContentResult
@@ -34,8 +30,8 @@ import myapplication.android.pixelpal.ui.home.mvi.HomeIntent
 import myapplication.android.pixelpal.ui.home.mvi.HomePartialState
 import myapplication.android.pixelpal.ui.home.mvi.HomeState
 import myapplication.android.pixelpal.ui.home.mvi.HomeStore
-import myapplication.android.pixelpal.ui.home.mvi.LceState
 import myapplication.android.pixelpal.ui.listener.ClickListener
+import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 
 
@@ -66,7 +62,13 @@ class HomeFragment :
         }
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                store.sendIntent(HomeIntent.GetGames("2024-11-18", "2024-11-30", "2024-11-01"))
+                store.sendIntent(
+                    HomeIntent.GetGames(
+                        "2024-11-18",
+                        "2024-11-30",
+                        "2024-11-01"
+                    )
+                )
             }
         }
     }
@@ -191,5 +193,8 @@ class HomeFragment :
         _binding = null
     }
 
-    private val TAG = "HomeFragmentException"
+    companion object {
+        private const val TAG = "HomeFragmentException"
+    }
+
 }

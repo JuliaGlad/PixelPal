@@ -27,53 +27,53 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_item" />
 
-    <View
-        android:id="@+id/background"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/blue_gradient_background"
-        app:layout_constraintBottom_toBottomOf="@id/title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/flex_box" />
+<!--    <View-->
+<!--        android:id="@+id/background"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:background="@drawable/blue_gradient_bg"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/title"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/flex_box" />-->
 
-    <myapplication.android.pixelpal.ui.custom_view.TextShimmerView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/tektur_medium"
-        android:padding="20dp"
-        android:textColor="@color/main_blue"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="@id/search_item"
-        app:layout_constraintTop_toTopOf="@id/background"
-        app:textShimmerColor="@color/main_blue"
-        tools:text="Программисты" />
+<!--    <myapplication.android.pixelpal.ui.custom_view.TextShimmerView-->
+<!--        android:id="@+id/title"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:fontFamily="@font/tektur_medium"-->
+<!--        android:padding="20dp"-->
+<!--        android:textColor="@color/main_blue"-->
+<!--        android:textSize="24sp"-->
+<!--        app:layout_constraintStart_toStartOf="@id/search_item"-->
+<!--        app:layout_constraintTop_toTopOf="@id/background"-->
+<!--        app:textShimmerColor="@color/main_blue"-->
+<!--        tools:text="Программисты" />-->
 
-    <myapplication.android.pixelpal.ui.custom_view.TextShimmerView
-        android:id="@+id/action_all"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:fontFamily="@font/tektur_medium"
-        android:text="@string/all"
-        android:textColor="@color/main_red"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@id/background"
-        app:layout_constraintEnd_toEndOf="@id/background"
-        app:layout_constraintTop_toTopOf="@id/background"
-        app:textShimmerColor="@color/main_red" />
+<!--    <myapplication.android.pixelpal.ui.custom_view.TextShimmerView-->
+<!--        android:id="@+id/action_all"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="20dp"-->
+<!--        android:fontFamily="@font/tektur_medium"-->
+<!--        android:text="@string/all"-->
+<!--        android:textColor="@color/main_red"-->
+<!--        android:textSize="20sp"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/background"-->
+<!--        app:layout_constraintEnd_toEndOf="@id/background"-->
+<!--        app:layout_constraintTop_toTopOf="@id/background"-->
+<!--        app:textShimmerColor="@color/main_red" />-->
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/background"/>
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/recycler_view"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"-->
+<!--        app:spanCount="2"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/background"/>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

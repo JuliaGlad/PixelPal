@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.ui.home.mvi
 
+import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviStore
 
 class HomeStore(
