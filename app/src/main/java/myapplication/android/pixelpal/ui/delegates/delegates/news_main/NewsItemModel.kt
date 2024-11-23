@@ -6,6 +6,7 @@ import myapplication.android.pixelpal.ui.listener.ClickListener
 data class NewsItemModel(
     val id: Int,
     val title: String,
+    val emptyTitle: String,
     val items: List<ReleasesModel>,
     val listener: ClickListener
 )

@@ -2,7 +2,7 @@ package myapplication.android.pixelpal.data.repository.games
 
 import myapplication.android.pixelpal.data.source.games.GamesLocalSource
 import myapplication.android.pixelpal.data.source.games.GamesRemoteSource
-import myapplication.android.pixelpal.domain.model.games.GamesNewsDomain
+import myapplication.android.pixelpal.domain.model.games.GamesNewsListDomain
 import myapplication.android.pixelpal.domain.model.games.GamesShortDomain
 import myapplication.android.pixelpal.domain.wrapper.games.toDomain
 
@@ -14,10 +14,10 @@ class GamesRepositoryImpl(
     override suspend fun getGamesShortData(): List<GamesShortDomain> =
         (getLocalGamesShortData() ?: remoteSource.getGamesShortData()).toDomain()
 
-    override suspend fun getTopGames(): List<GamesNewsDomain> =
+    override suspend fun getTopGames(): GamesNewsListDomain =
         (getLocalTopGames() ?: remoteSource.getTopGames()).toDomain()
 
-    override suspend fun getGameByReleasesDate(date: String): List<GamesNewsDomain> =
+    override suspend fun getGameByReleasesDate(date: String): GamesNewsListDomain =
         (getLocalTopGames() ?: remoteSource.getGameByReleasesDate(date)).toDomain()
 
     override fun getLocalTopGames() = null

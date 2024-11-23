@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import myapplication.android.pixelpal.databinding.RecyclerViewMainNewsItemBinding
+import myapplication.android.pixelpal.ui.delegates.delegates.emptyItems.EmptyItemAdapter
+import myapplication.android.pixelpal.ui.delegates.delegates.emptyItems.EmptyItemsModel
 import myapplication.android.pixelpal.ui.delegates.delegates.releases.ReleasesAdapter
 import myapplication.android.pixelpal.ui.delegates.delegates.releases.ReleasesModel
 import myapplication.android.pixelpal.ui.delegates.main.AdapterDelegate
@@ -39,13 +41,23 @@ class NewsDelegate : AdapterDelegate {
                 title.setShimmerText(model.title)
                 actionAll.setOnClickListener { model.listener.onClick() }
             }
-            initRecycler(model.items)
+            initRecycler(model.items, model.emptyTitle)
         }
 
-        private fun initRecycler(items: List<ReleasesModel>) {
-            val adapter = ReleasesAdapter()
-            binding.recyclerView.adapter = adapter
-            adapter.submitList(items)
+        private fun initRecycler(items: List<ReleasesModel>, emptyTitle: String) {
+            if (items.isNotEmpty()) {
+                val adapter = ReleasesAdapter()
+                binding.recyclerView.adapter = adapter
+                adapter.submitList(items)
+            } else {
+                val adapter = EmptyItemAdapter()
+                binding.recyclerView.adapter = adapter
+                val item = listOf(EmptyItemsModel(
+                    1,
+                    emptyTitle
+                ))
+                adapter.submitList(item)
+            }
         }
     }
 }

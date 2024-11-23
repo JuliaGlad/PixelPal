@@ -1,6 +1,6 @@
 package myapplication.android.pixelpal.ui.home.mvi
 
-import myapplication.android.pixelpal.ui.home.model.GamesNewsUi
+import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
 import myapplication.android.pixelpal.ui.mvi.MviEffect
 
 open class HomeEffect: MviEffect {
@@ -9,5 +9,5 @@ open class HomeEffect: MviEffect {
 
     data class OpenGameDetailsScreen(val gameId: Long): HomeEffect()
 
-    data class OpenAllGamesScreen(val games: List<GamesNewsUi>): HomeEffect()
+    data class OpenAllGamesScreen(val games: List<GamesNewsListUi>): HomeEffect()
 }

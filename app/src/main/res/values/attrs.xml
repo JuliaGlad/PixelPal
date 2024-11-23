@@ -13,6 +13,7 @@
         <attr name="android:text"/>
         <attr name="android:fontFamily"/>
         <attr name="android:textSize"/>
+        <attr name="android:gravity"/>
     </declare-styleable>
 
     <declare-styleable name="ShapeableImageView">

@@ -6,6 +6,7 @@ import android.graphics.BlurMaskFilter
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -22,6 +23,12 @@ class TextShimmerView @JvmOverloads constructor(
 
     private lateinit var mainTextView: TextView
     private lateinit var shimmerTextView: TextView
+
+    var gravity: Int = Gravity.START
+        set(value){
+            field = value
+            requestLayout()
+        }
 
     var font: Typeface? = null
         set(value) {
@@ -99,6 +106,7 @@ class TextShimmerView @JvmOverloads constructor(
 
     private fun TypedArray.initVariables() {
         val fontId = getResourceId(R.styleable.TextShimmerView_android_fontFamily, 0)
+        gravity = getInt(R.styleable.TextShimmerView_android_gravity, Gravity.START)
         font = ResourcesCompat.getFont(context, fontId)
         shimmerColor = getResourceId(R.styleable.TextShimmerView_textShimmerColor, 0)
         textColor = getResourceId(R.styleable.TextShimmerView_android_textColor, 0)
@@ -109,6 +117,7 @@ class TextShimmerView @JvmOverloads constructor(
     private fun initShimmerText() {
         shimmerTextView = findViewById(R.id.shimmer_text)
         shimmerTextView.text = text
+        shimmerTextView.gravity = gravity
         shimmerTextView.setTextColor(context.getColor(shimmerColor))
         shimmerTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
         shimmerTextView.typeface = font
@@ -119,6 +128,7 @@ class TextShimmerView @JvmOverloads constructor(
 
     private fun initMainText() {
         mainTextView = findViewById(R.id.main_text)
+        mainTextView.gravity = gravity
         mainTextView.text = text
         mainTextView.typeface = font
         mainTextView.setTextColor(context.getColor(textColor))

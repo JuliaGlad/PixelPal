@@ -1,16 +1,11 @@
 package myapplication.android.pixelpal.domain.wrapper.creators
 
-import myapplication.android.pixelpal.data.models.creators_roles.CreatorsRolesList
-import myapplication.android.pixelpal.domain.model.creator.CreatorRoleDomain
+import myapplication.android.pixelpal.data.models.creators_roles.RolesList
+import myapplication.android.pixelpal.domain.model.creator.RoleDomain
 import java.util.stream.Collectors
 
-fun CreatorsRolesList.toDomain() =
+fun RolesList.toDomain() =
     items.stream()
         .map {
-            with(it) {
-                CreatorRoleDomain(
-                    id = id,
-                    name = name
-                )
-            }
+            it.toDomain()
         }.collect(Collectors.toList())

@@ -12,10 +12,10 @@ class CreatorsReducer: MviReducer<CreatorsPartialState, CreatorsState> {
         when(partialState){
             is CreatorsPartialState.Error -> updateError(prevState, partialState.throwable)
             CreatorsPartialState.Loading -> updateLoading(prevState)
-            is CreatorsPartialState.DataLoaded -> updateDataPresentersLoaded(prevState, partialState.ui)
+            is CreatorsPartialState.DataLoaded -> updateDataCreatorsLoaded(prevState, partialState.ui)
         }
 
-    private fun updateDataPresentersLoaded(prevState: CreatorsState, ui: List<CreatorsUi>): CreatorsState{
+    private fun updateDataCreatorsLoaded(prevState: CreatorsState, ui: List<CreatorsUi>): CreatorsState{
         return prevState.copy(ui = LceState.Content(ui))
     }
 

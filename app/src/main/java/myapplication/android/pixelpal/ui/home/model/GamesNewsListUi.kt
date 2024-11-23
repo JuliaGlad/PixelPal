@@ -1,11 +1,14 @@
 package myapplication.android.pixelpal.ui.home.model
 
-class GamesNewsUi(
+class GamesNewsListUi(
+   val games: List<GamesUi>
+)
+
+class GamesUi(
     val gameId: Long,
     val name: String,
     val releaseDate: String?,
     val rating: Float?,
     val genre: String,
     val uri: String?
-    //   val genres: List<String>,
 )

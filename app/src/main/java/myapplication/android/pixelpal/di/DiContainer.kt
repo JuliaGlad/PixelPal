@@ -24,8 +24,12 @@ import myapplication.android.pixelpal.data.source.pulisher.PublishersLocalSource
 import myapplication.android.pixelpal.data.source.pulisher.PublishersRemoteSource
 import myapplication.android.pixelpal.data.source.stores.StoresLocalSource
 import myapplication.android.pixelpal.data.source.stores.StoresRemoteSource
+import myapplication.android.pixelpal.domain.usecase.creators.GetCreatorsUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetGamesReleasesUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetTopGamesUseCase
+import myapplication.android.pixelpal.ui.creators.mvi.CreatorsActor
+import myapplication.android.pixelpal.ui.creators.mvi.CreatorsReducer
+import myapplication.android.pixelpal.ui.creators.mvi.CreatorsStoreFactory
 import myapplication.android.pixelpal.ui.home.mvi.HomeActor
 import myapplication.android.pixelpal.ui.home.mvi.HomeReducer
 import myapplication.android.pixelpal.ui.home.mvi.HomeStoreFactory
@@ -56,11 +60,17 @@ object DiContainer {
     }.build()
     private val gamesApi : GamesApi = retrofit.create()
 
+    val creatorsStoreFactory by lazyNone { CreatorsStoreFactory(creatorsReducer, creatorActor) }
+
     val homeStoreFactory by lazyNone { HomeStoreFactory(homeReducer, homeActor) }
 
     private val homeReducer by lazyNone { HomeReducer() }
 
     private val homeActor by lazyNone { HomeActor(getTopGamesUseCase, getGamesReleasesUseCase) }
+
+    private val creatorsReducer by lazyNone { CreatorsReducer() }
+
+    private val creatorActor by lazyNone { CreatorsActor(getCreatorsUseCase) }
 
     private val gamesRepository by lazyNone { GamesRepositoryImpl(gamesLocalSource, gamesRemoteSource) }
 
@@ -97,6 +107,8 @@ object DiContainer {
     private val gamesRemoteSource by lazyNone { GamesRemoteSource(gamesApi) }
 
     private val gamesLocalSource by lazyNone { GamesLocalSource() }
+
+    private val getCreatorsUseCase by lazyNone { GetCreatorsUseCase(creatorsRepository) }
 
     private val getTopGamesUseCase by lazyNone { GetTopGamesUseCase(gamesRepository) }
 

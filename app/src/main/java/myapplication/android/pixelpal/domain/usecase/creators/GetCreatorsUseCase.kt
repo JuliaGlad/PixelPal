@@ -6,5 +6,5 @@ import myapplication.android.pixelpal.domain.model.creator.CreatorDomain
 class GetCreatorsUseCase(
     private val creatorsRepository: CreatorsRepository
 ) {
-    suspend fun invoke(roleId: Long): List<CreatorDomain> = creatorsRepository.getCreators(roleId)
+    suspend fun invoke(roleId: Int): List<CreatorDomain> = creatorsRepository.getCreators(roleId)
 }

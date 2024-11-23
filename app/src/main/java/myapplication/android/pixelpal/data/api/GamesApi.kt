@@ -1,7 +1,7 @@
 package myapplication.android.pixelpal.data.api
 
 import myapplication.android.pixelpal.data.models.creators.CreatorsList
-import myapplication.android.pixelpal.data.models.creators_roles.CreatorsRolesList
+import myapplication.android.pixelpal.data.models.creators_roles.RolesList
 import myapplication.android.pixelpal.data.models.gamesMain.GamesShortDataList
 import myapplication.android.pixelpal.data.models.gamesNews.GamesNewsList
 import myapplication.android.pixelpal.data.models.genres.GenreDescription
@@ -25,9 +25,9 @@ interface GamesApi {
     suspend fun getGamesShortData(): GamesShortDataList
 
     @GET("creator-roles")
-    suspend fun getCreatorsRoles(): CreatorsRolesList
+    suspend fun getCreatorsRoles(): RolesList
 
-    @GET("creators?position?id=1")
+    @GET("creators")
     suspend fun getCreators(): CreatorsList
 
     @GET("publishers")

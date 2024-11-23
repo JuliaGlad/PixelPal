@@ -5,7 +5,7 @@ import myapplication.android.pixelpal.ui.mvi.MviEffect
 
 open class CreatorsEffect: MviEffect {
 
-    data class openPresenterDetailsScreen(val presenterId: Long): CreatorsEffect()
+    data class openCreatorDetailsScreen(val creatorId: Long): CreatorsEffect()
 
-    data class openAllPresentersScreen(val presenters: List<CreatorsUi>): CreatorsEffect()
+    data class openAllCreatorsScreen(val creators: List<CreatorsUi>): CreatorsEffect()
 }

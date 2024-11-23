@@ -12,6 +12,7 @@
     <string name="release_date">Дата выхода:</string>
     <string name="released">Вышла:</string>
     <string name="search">Поиск</string>
+    <string name="roles">Роли:</string>
     <string name="rating">Рейтинг:</string>
     <string name="where_to_buy">Где купить?</string>
     <string name="creation_date">Создан:</string>
@@ -21,4 +22,6 @@
     <string name="all_time_top">Топ игры за все время</string>
     <string name="release_this_month">Выйдут в этом месяце</string>
     <string name="what_other_games_are_coming_out">Какие еще игры выйдут?</string>
+    <string name="there_is_no_games_releases_this_month">В этом месяце не будет новых релизов!</string>
+    <string name="there_is_no_new_games_released_this_month">В этом месяце пока что не было релизов!</string>
 </resources>

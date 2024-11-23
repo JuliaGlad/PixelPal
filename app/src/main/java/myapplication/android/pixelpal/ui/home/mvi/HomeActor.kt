@@ -1,17 +1,14 @@
 package myapplication.android.pixelpal.ui.home.mvi
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.toList
 import myapplication.android.pixelpal.domain.usecase.games.GetGamesReleasesUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetTopGamesUseCase
-import myapplication.android.pixelpal.ui.home.mvi.HomeExtensions.combine
-import myapplication.android.pixelpal.ui.home.mvi.HomeExtensions.flatten
-import myapplication.android.pixelpal.ui.home.mvi.HomeExtensions.toList
+import myapplication.android.pixelpal.ui.home.model.toUi
+import myapplication.android.pixelpal.ui.ktx.asyncAwait
+import myapplication.android.pixelpal.ui.ktx.runCatchingNonCancellation
 import myapplication.android.pixelpal.ui.mvi.MviActor
 
-//TODO("Add date param")
 class HomeActor(
     private val getTopGamesUseCase: GetTopGamesUseCase,
     private val getGamesReleasesUseCase: GetGamesReleasesUseCase
@@ -46,29 +43,11 @@ class HomeActor(
     ): Flow<HomePartialState> =
         flow {
             kotlin.runCatching {
-                val triple = combine(
-                    getTopGamesUseCase.invoke().asFlow(),
-                    getGamesReleasesUseCase.invoke("$startDate,$currentDate").asFlow(),
-                    getGamesReleasesUseCase.invoke("$currentDate,$endMonthDate").asFlow(),
-                ){ top, releases, nextReleases ->
-                   Triple(top, releases, nextReleases)
-                }
-                triple.toList()
+                getGames(currentDate, endMonthDate, startDate)
             }.fold(
                 onSuccess = { data ->
-                    val (topGames, gamesReleased, monthReleases) = data.flatten()
-                    val topUi = topGames.toList()
-                    val releasedUi = gamesReleased.toList()
-                    val monthReleasesUI = monthReleases.toList()
-
                     emit(
-                        HomePartialState.DataLoaded(
-                            HomeContentResult(
-                                topUi,
-                                releasedUi,
-                                monthReleasesUI
-                            )
-                        )
+                        HomePartialState.DataLoaded(data)
                     )
                 },
                 onFailure = { exception ->
@@ -76,4 +55,24 @@ class HomeActor(
                 }
             )
         }
+
+    private suspend fun getGames(
+        currentDate: String,
+        endMonthDate: String,
+        startDate: String
+    ): HomeContentResult =
+        runCatchingNonCancellation {
+            asyncAwait(
+                { getTopGamesUseCase.invoke() },
+                { getGamesReleasesUseCase.invoke("$startDate,$currentDate") },
+                { getGamesReleasesUseCase.invoke("$currentDate,$endMonthDate") },
+            ) { top, released, nextReleases ->
+                HomeContentResult(
+                    top.toUi(),
+                    released.toUi(),
+                    nextReleases.toUi()
+                )
+            }
+        }.getOrThrow()
+
 }

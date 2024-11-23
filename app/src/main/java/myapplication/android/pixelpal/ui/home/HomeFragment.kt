@@ -1,6 +1,8 @@
 package myapplication.android.pixelpal.ui.home
 
+import android.icu.util.Calendar
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +25,7 @@ import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsDeleg
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsItemModel
 import myapplication.android.pixelpal.ui.delegates.delegates.releases.ReleasesModel
 import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
-import myapplication.android.pixelpal.ui.home.model.GamesNewsUi
+import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
 import myapplication.android.pixelpal.ui.home.mvi.HomeContentResult
 import myapplication.android.pixelpal.ui.home.mvi.HomeEffect
 import myapplication.android.pixelpal.ui.home.mvi.HomeIntent
@@ -33,6 +35,7 @@ import myapplication.android.pixelpal.ui.home.mvi.HomeStore
 import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
+import java.util.Date
 
 
 class HomeFragment :
@@ -60,17 +63,7 @@ class HomeFragment :
         if (savedInstanceState == null) {
             store.sendIntent(HomeIntent.Init)
         }
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                store.sendIntent(
-                    HomeIntent.GetGames(
-                        "2024-11-18",
-                        "2024-11-30",
-                        "2024-11-01"
-                    )
-                )
-            }
-        }
+        getGames()
     }
 
     override fun resolveEffect(effect: HomeEffect) {
@@ -93,9 +86,35 @@ class HomeFragment :
         }
     }
 
+    private fun getGames() {
+        val (currentDate, monthEndDate, monthStartDate) = getVariables()
+
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                store.sendIntent(
+                    HomeIntent.GetGames(
+                        currentDate,
+                        monthEndDate,
+                        monthStartDate
+                    )
+                )
+            }
+        }
+    }
+
+    private fun getVariables(): Triple<String, String, String> {
+        val cal = Calendar.getInstance()
+
+        val currentDate = DateFormat.format("yyyy-MM-dd", Date()).toString()
+        val monthEndDate =
+            DateFormat.format("yyyy-MM-${cal.getActualMaximum(Calendar.DATE)}", Date()).toString()
+        val monthStartDate = DateFormat.format("yyyy-MM-01", Date()).toString()
+
+        return Triple(currentDate, monthEndDate, monthStartDate)
+    }
+
     private fun initRecycler(gamesNews: HomeContentResult) {
         val adapter = initAdapter()
-
 
         val released = addReleaseItems(gamesNews.gamesReleased)
         val releaseThisMonth = addReleaseItems(gamesNews.gameMonthReleases)
@@ -121,6 +140,7 @@ class HomeFragment :
             NewsItemModel(
                 1,
                 getString(R.string.new_releases),
+                getString(R.string.there_is_no_new_games_released_this_month),
                 released,
                 object : ClickListener {
                     override fun onClick() {
@@ -133,6 +153,7 @@ class HomeFragment :
             NewsItemModel(
                 2,
                 getString(R.string.release_this_month),
+                getString(R.string.there_is_no_games_releases_this_month),
                 releaseThisMonth,
                 object : ClickListener {
                     override fun onClick() {
@@ -156,23 +177,23 @@ class HomeFragment :
             NewsItemModel(
                 3,
                 getString(R.string.all_time_top),
+                "",
                 topGames,
                 object : ClickListener {
                     override fun onClick() {
                         TODO("open all top games")
                     }
-
                 }
             )
         )
     )
 
-    private fun addReleaseItems(list: List<GamesNewsUi>): List<ReleasesModel> {
+    private fun addReleaseItems(list: GamesNewsListUi): List<ReleasesModel> {
         val items = mutableListOf<ReleasesModel>()
-        for (i in list) {
+        for (i in list.games) {
             items.add(
                 ReleasesModel(
-                    list.indexOf(i),
+                    list.games.indexOf(i),
                     i.name,
                     i.releaseDate.toString(),
                     i.genre,

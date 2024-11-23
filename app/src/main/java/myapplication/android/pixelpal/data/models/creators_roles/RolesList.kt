@@ -4,6 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class CreatorsRolesList (
+class RolesList (
     @SerialName("results") val items: List<Role>
 )
