@@ -27,6 +27,7 @@ import myapplication.android.pixelpal.data.source.stores.StoresRemoteSource
 import myapplication.android.pixelpal.domain.usecase.creators.GetCreatorsUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetGamesReleasesUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetTopGamesUseCase
+import myapplication.android.pixelpal.domain.usecase.platofrms.GetPlatformsUseCase
 import myapplication.android.pixelpal.domain.usecase.stores.GetStoresUseCase
 import myapplication.android.pixelpal.ui.creators.mvi.CreatorsActor
 import myapplication.android.pixelpal.ui.creators.mvi.CreatorsReducer
@@ -34,6 +35,10 @@ import myapplication.android.pixelpal.ui.creators.mvi.CreatorsStoreFactory
 import myapplication.android.pixelpal.ui.home.mvi.HomeActor
 import myapplication.android.pixelpal.ui.home.mvi.HomeReducer
 import myapplication.android.pixelpal.ui.home.mvi.HomeStoreFactory
+import myapplication.android.pixelpal.ui.platforms.fragments.platform.mvi.PlatformActor
+import myapplication.android.pixelpal.ui.platforms.fragments.platform.mvi.PlatformReducer
+import myapplication.android.pixelpal.ui.platforms.fragments.platform.mvi.PlatformStore
+import myapplication.android.pixelpal.ui.platforms.fragments.platform.mvi.PlatformStoreFactory
 import myapplication.android.pixelpal.ui.platforms.fragments.store.mvi.StoresActor
 import myapplication.android.pixelpal.ui.platforms.fragments.store.mvi.StoresReducer
 import myapplication.android.pixelpal.ui.platforms.fragments.store.mvi.StoresStoreFactory
@@ -69,6 +74,12 @@ object DiContainer {
     val homeStoreFactory by lazyNone { HomeStoreFactory(homeReducer, homeActor) }
 
     val storesStoreFactory by lazyNone { StoresStoreFactory(storesReducer, storeActor) }
+
+    val platformStoreFactory by lazyNone { PlatformStoreFactory(platformActor, platformReducer) }
+
+    private val platformReducer by lazyNone { PlatformReducer() }
+
+    private val platformActor by lazyNone { PlatformActor(getPlatformsUseCase) }
 
     private val storesReducer by lazyNone { StoresReducer() }
 
@@ -121,6 +132,8 @@ object DiContainer {
     private val getCreatorsUseCase by lazyNone { GetCreatorsUseCase(creatorsRepository) }
 
     private val getStoresUseCase by lazyNone { GetStoresUseCase(storesRepository) }
+
+    private val getPlatformsUseCase by lazyNone { GetPlatformsUseCase(platformRepository) }
 
     private val getTopGamesUseCase by lazyNone { GetTopGamesUseCase(gamesRepository) }
 

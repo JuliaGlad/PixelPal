@@ -24,4 +24,5 @@
     <string name="what_other_games_are_coming_out">Какие еще игры выйдут?</string>
     <string name="there_is_no_games_releases_this_month">В этом месяце не будет новых релизов!</string>
     <string name="there_is_no_new_games_released_this_month">В этом месяце пока что не было релизов!</string>
+    <string name="unknown">Неизвестно</string>
 </resources>

@@ -1,21 +1,19 @@
-package myapplication.android.pixelpal.domain.wrapper.platforms
+package myapplication.android.pixelpal.ui.platforms.fragments.platform.model
 
-import myapplication.android.pixelpal.data.models.platforms.PlatformsList
 import myapplication.android.pixelpal.domain.model.platform.PlatformDomainList
-import myapplication.android.pixelpal.domain.model.platform.PlatformsDomain
 import java.util.stream.Collectors
 
-fun PlatformsList.toDomain() =
-    PlatformDomainList(
-        items.stream()
+fun PlatformDomainList.toUi() =
+    PlatformUiList(
+        platforms.stream()
             .map {
                 with(it) {
-                    PlatformsDomain(
+                    PlatformsUi(
                         id = id,
                         name = name,
                         gamesCount = gamesCount,
                         startYear = startYear,
-                        image = image
+                        background = image
                     )
                 }
             }.collect(Collectors.toList())

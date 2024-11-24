@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 class Platform(
     @SerialName("image_background") val image: String,
     @SerialName("games_count") val gamesCount: Int,
-    @SerialName("year_start") val startYear: Int,
+    @SerialName("year_start") val startYear: Int?,
     val id: Long,
     val name: String
 )
