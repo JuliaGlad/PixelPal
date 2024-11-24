@@ -1,16 +1,17 @@
-package myapplication.android.pixelpal.ui.creators.recycler_view.creators
+package myapplication.android.pixelpal.ui.delegates.delegates.creators
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.net.toUri
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import myapplication.android.pixelpal.databinding.RecyclerViewCreatorsItemBinding
+import myapplication.android.pixelpal.ui.delegates.main.AdapterDelegate
+import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
 
-class CreatorsAdapter :
-    ListAdapter<CreatorsModel, RecyclerView.ViewHolder>(CreatorsItemCallBack()) {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+class CreatorsDelegate : AdapterDelegate{
+
+    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
         ViewHolder(
             RecyclerViewCreatorsItemBinding.inflate(
                 LayoutInflater.from(
@@ -21,9 +22,15 @@ class CreatorsAdapter :
             )
         )
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as ViewHolder).bind(getItem(position))
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        item: DelegateItem,
+        position: Int
+    ) {
+        (holder as ViewHolder).bind(item.content() as CreatorsModel)
     }
+
+    override fun isOfViewType(item: DelegateItem): Boolean = item is CreatorsDelegateItem
 
     private class ViewHolder(val binding: RecyclerViewCreatorsItemBinding) :
         RecyclerView.ViewHolder(binding.root) {

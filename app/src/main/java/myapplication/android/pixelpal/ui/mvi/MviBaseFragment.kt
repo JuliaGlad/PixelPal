@@ -30,5 +30,4 @@ abstract class MviBaseFragment<
     protected abstract fun render(state: State)
 
     protected abstract fun resolveEffect(effect: Effect)
-
 }

@@ -28,6 +28,7 @@ import myapplication.android.pixelpal.domain.usecase.creators.GetCreatorsUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetGamesReleasesUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetTopGamesUseCase
 import myapplication.android.pixelpal.domain.usecase.platofrms.GetPlatformsUseCase
+import myapplication.android.pixelpal.domain.usecase.publishers.GetPublishersUseCase
 import myapplication.android.pixelpal.domain.usecase.stores.GetStoresUseCase
 import myapplication.android.pixelpal.ui.creators.mvi.CreatorsActor
 import myapplication.android.pixelpal.ui.creators.mvi.CreatorsReducer
@@ -91,7 +92,7 @@ object DiContainer {
 
     private val creatorsReducer by lazyNone { CreatorsReducer() }
 
-    private val creatorActor by lazyNone { CreatorsActor(getCreatorsUseCase) }
+    private val creatorActor by lazyNone { CreatorsActor(getCreatorsUseCase, getPublishersUseCase) }
 
     private val gamesRepository by lazyNone { GamesRepositoryImpl(gamesLocalSource, gamesRemoteSource) }
 
@@ -136,6 +137,8 @@ object DiContainer {
     private val getPlatformsUseCase by lazyNone { GetPlatformsUseCase(platformRepository) }
 
     private val getTopGamesUseCase by lazyNone { GetTopGamesUseCase(gamesRepository) }
+
+    private val getPublishersUseCase by lazyNone { GetPublishersUseCase(publishersRepository) }
 
     private val getGamesReleasesUseCase by lazyNone { GetGamesReleasesUseCase(gamesRepository) }
 }

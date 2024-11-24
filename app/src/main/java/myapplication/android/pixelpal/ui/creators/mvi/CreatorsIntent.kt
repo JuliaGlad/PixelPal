@@ -6,5 +6,7 @@ sealed interface CreatorsIntent: MviIntent {
 
     data object Init: CreatorsIntent
 
+    data object GetPublishers: CreatorsIntent
+
     data class GetRolesCreators(val roleId: Int): CreatorsIntent
 }

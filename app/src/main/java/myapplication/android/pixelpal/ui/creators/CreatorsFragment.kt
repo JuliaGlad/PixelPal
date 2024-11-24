@@ -14,15 +14,13 @@ import androidx.core.view.children
 import androidx.core.view.forEach
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.databinding.FragmentCreatorsBinding
 import myapplication.android.pixelpal.di.DiContainer
+import myapplication.android.pixelpal.ui.creators.model.creatores.CreatorUi
 import myapplication.android.pixelpal.ui.creators.model.creatores.CreatorsUiList
+import myapplication.android.pixelpal.ui.creators.model.publisher.PublisherUi
 import myapplication.android.pixelpal.ui.creators.model.roles.RolesUi
 import myapplication.android.pixelpal.ui.creators.mvi.CreatorsEffect
 import myapplication.android.pixelpal.ui.creators.mvi.CreatorsIntent
@@ -30,8 +28,14 @@ import myapplication.android.pixelpal.ui.creators.mvi.CreatorsPartialState
 import myapplication.android.pixelpal.ui.creators.mvi.CreatorsState
 import myapplication.android.pixelpal.ui.custom_view.flexBox.CreatorView
 import myapplication.android.pixelpal.ui.custom_view.flexBox.FlexBoxLayout
-import myapplication.android.pixelpal.ui.creators.recycler_view.creators.CreatorsAdapter
-import myapplication.android.pixelpal.ui.creators.recycler_view.creators.CreatorsModel
+import myapplication.android.pixelpal.ui.delegates.delegates.creators.CreatorsDelegate
+import myapplication.android.pixelpal.ui.delegates.delegates.creators.CreatorsDelegateItem
+import myapplication.android.pixelpal.ui.delegates.delegates.creators.CreatorsModel
+import myapplication.android.pixelpal.ui.delegates.delegates.publishers.PublisherDelegate
+import myapplication.android.pixelpal.ui.delegates.delegates.publishers.PublisherDelegateItem
+import myapplication.android.pixelpal.ui.delegates.delegates.publishers.PublisherModel
+import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
+import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
 import myapplication.android.pixelpal.ui.listener.ClickIntegerListener
 import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.mvi.LceState
@@ -39,14 +43,13 @@ import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.mvi.MviStore
 import java.util.stream.Collectors
 
-
 class CreatorsFragment :
     MviBaseFragment<
             CreatorsPartialState,
             CreatorsIntent,
             CreatorsState,
             CreatorsEffect>(R.layout.fragment_creators) {
-    private val adapter = CreatorsAdapter()
+    private val adapter = MainAdapter()
     private var isFirst = true
     private val viewModel: CreatorsViewModel by viewModels()
     private val roles: MutableList<RolesUi> = mutableListOf()
@@ -67,7 +70,7 @@ class CreatorsFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recyclerView.adapter = adapter
+        initAdapter()
         collectRoles()
         if (savedInstanceState == null) {
             store.sendIntent(CreatorsIntent.Init)
@@ -83,7 +86,9 @@ class CreatorsFragment :
         when (state.ui) {
             is LceState.Content -> {
                 binding.loading.root.visibility = GONE
+
                 initRecycler(state.ui.data)
+
                 binding.loadingRecycler.root.visibility = GONE
             }
 
@@ -96,6 +101,12 @@ class CreatorsFragment :
         }
     }
 
+    private fun initAdapter() {
+        adapter.addDelegate(PublisherDelegate())
+        adapter.addDelegate(CreatorsDelegate())
+        binding.recyclerView.adapter = adapter
+    }
+
     private fun collectRoles() {
         lifecycleScope.launch {
             viewModel.roles.collect { items ->
@@ -103,6 +114,10 @@ class CreatorsFragment :
                     roles.add(it)
                     binding.flexBox.addCreators(it.title, it.id)
                 }
+                val roleUi = RolesUi(PUBLISHER_ID, getString(R.string.publishers))
+                roles.add(roleUi)
+                binding.flexBox.addCreators(roleUi.title, roleUi.id)
+
                 val first = (binding.flexBox.children.first() as CreatorView)
                 first.isChosen = true
                 binding.title.setShimmerText(first.creator)
@@ -110,16 +125,42 @@ class CreatorsFragment :
         }
     }
 
-    private fun initRecycler(creators: CreatorsUiList) {
-        val creatorsModel = mutableListOf<CreatorsModel>()
-        for (i in creators.items) {
+    private fun initRecycler(creatorsUiList: CreatorsUiList) {
+        if (creatorsUiList.creators != null) {
+            initCreatorsRecycler(creatorsUiList.creators)
+        } else if (creatorsUiList.publishers != null) {
+            initPublishersRecycler(creatorsUiList.publishers)
+        }
+    }
+
+    private fun initPublishersRecycler(publishers: List<PublisherUi>) {
+        val publishersModel = mutableListOf<DelegateItem>()
+        for (i in publishers) {
+            with(i){
+                publishersModel.addPublisherItem(
+                    publishers.indexOf(i),
+                    id,
+                    name,
+                    gamesCount,
+                    background
+                )
+            }
+        }
+        adapter.submitList(publishersModel)
+        if (isFirst) isFirst = false
+        else adapter.onCurrentListChanged(adapter.currentList, publishersModel)
+    }
+
+    private fun initCreatorsRecycler(creators: List<CreatorUi>) {
+        val creatorsModel = mutableListOf<DelegateItem>()
+        for (i in creators) {
             val rolesStr = i.role
                 .stream()
                 .map { it.title }
                 .collect(Collectors.toList())
 
             creatorsModel.addCreatorItem(
-                creators.items.indexOf(i),
+                creators.indexOf(i),
                 i.id,
                 i.name,
                 rolesStr,
@@ -132,7 +173,7 @@ class CreatorsFragment :
         else adapter.onCurrentListChanged(adapter.currentList, creatorsModel)
     }
 
-    private fun MutableList<CreatorsModel>.addCreatorItem(
+    private fun MutableList<DelegateItem>.addCreatorItem(
         index: Int,
         creatorId: Long,
         name: String,
@@ -140,7 +181,7 @@ class CreatorsFragment :
         famousProjects: Int,
         image: String
     ) {
-        add(CreatorsModel(
+        add(CreatorsDelegateItem(CreatorsModel(
             index,
             creatorId,
             name,
@@ -152,7 +193,28 @@ class CreatorsFragment :
                     //TODO("Open details screen")
                 }
             }
-        ))
+        )))
+    }
+
+    private fun MutableList<DelegateItem>.addPublisherItem(
+        index: Int,
+        creatorId: Long,
+        name: String,
+        famousProjects: Int,
+        image: String
+    ) {
+        add(PublisherDelegateItem(PublisherModel(
+            index,
+            creatorId,
+            name,
+            famousProjects,
+            image,
+            object : ClickListener {
+                override fun onClick() {
+                    //TODO("Open details screen")
+                }
+            }
+        )))
     }
 
     private fun FlexBoxLayout.addCreators(title: String, id: Int) {
@@ -184,7 +246,11 @@ class CreatorsFragment :
 
                         }
                         binding.loadingRecycler.root.visibility = VISIBLE
-                        store.sendIntent(CreatorsIntent.GetRolesCreators(int))
+                        if (int != PUBLISHER_ID) {
+                            store.sendIntent(CreatorsIntent.GetRolesCreators(int))
+                        } else {
+                            store.sendIntent(CreatorsIntent.GetPublishers)
+                        }
                     }
                 }
             onViewClicked()
@@ -195,6 +261,10 @@ class CreatorsFragment :
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    companion object {
+        const val PUBLISHER_ID = 33
     }
 
 }

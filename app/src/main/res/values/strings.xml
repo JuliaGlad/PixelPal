@@ -24,4 +24,5 @@
     <string name="there_is_no_games_releases_this_month">There is no game releases in this month!</string>
     <string name="there_is_no_new_games_released_this_month">There is no new games released in this month!</string>
     <string name="unknown">No data</string>
+    <string name="publishers">Publishers</string>
 </resources>
