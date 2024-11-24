@@ -1,4 +1,4 @@
-package myapplication.android.pixelpal.ui.delegates.delegates.releases
+package myapplication.android.pixelpal.ui.home.recycler_view.releases
 
 data class ReleasesModel(
     val id: Int,

@@ -1,4 +1,4 @@
-package myapplication.android.pixelpal.ui.delegates.delegates.creators
+package myapplication.android.pixelpal.ui.creators.recycler_view.creators
 
 import myapplication.android.pixelpal.ui.listener.ClickListener
 

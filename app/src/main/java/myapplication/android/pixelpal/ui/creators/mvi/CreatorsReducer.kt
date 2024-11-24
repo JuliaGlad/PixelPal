@@ -1,6 +1,6 @@
 package myapplication.android.pixelpal.ui.creators.mvi
 
-import myapplication.android.pixelpal.ui.creators.model.creatores.CreatorsUi
+import myapplication.android.pixelpal.ui.creators.model.creatores.CreatorsUiList
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviReducer
 
@@ -15,7 +15,7 @@ class CreatorsReducer: MviReducer<CreatorsPartialState, CreatorsState> {
             is CreatorsPartialState.DataLoaded -> updateDataCreatorsLoaded(prevState, partialState.ui)
         }
 
-    private fun updateDataCreatorsLoaded(prevState: CreatorsState, ui: List<CreatorsUi>): CreatorsState{
+    private fun updateDataCreatorsLoaded(prevState: CreatorsState, ui: CreatorsUiList): CreatorsState{
         return prevState.copy(ui = LceState.Content(ui))
     }
 

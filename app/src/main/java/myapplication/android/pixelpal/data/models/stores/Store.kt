@@ -8,5 +8,6 @@ class Store(
     @SerialName("image_background") val image: String,
     val domain: String?,
     val id: Int,
-    val name: String
+    val name: String,
+    @SerialName("games_count") val projects: Int
 )

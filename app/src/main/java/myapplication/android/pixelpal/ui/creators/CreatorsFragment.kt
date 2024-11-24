@@ -14,11 +14,15 @@ import androidx.core.view.children
 import androidx.core.view.forEach
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.databinding.FragmentCreatorsBinding
 import myapplication.android.pixelpal.di.DiContainer
-import myapplication.android.pixelpal.ui.creators.model.creatores.CreatorsUi
+import myapplication.android.pixelpal.ui.creators.model.creatores.CreatorsUiList
 import myapplication.android.pixelpal.ui.creators.model.roles.RolesUi
 import myapplication.android.pixelpal.ui.creators.mvi.CreatorsEffect
 import myapplication.android.pixelpal.ui.creators.mvi.CreatorsIntent
@@ -26,8 +30,8 @@ import myapplication.android.pixelpal.ui.creators.mvi.CreatorsPartialState
 import myapplication.android.pixelpal.ui.creators.mvi.CreatorsState
 import myapplication.android.pixelpal.ui.custom_view.flexBox.CreatorView
 import myapplication.android.pixelpal.ui.custom_view.flexBox.FlexBoxLayout
-import myapplication.android.pixelpal.ui.delegates.delegates.creators.CreatorsAdapter
-import myapplication.android.pixelpal.ui.delegates.delegates.creators.CreatorsModel
+import myapplication.android.pixelpal.ui.creators.recycler_view.creators.CreatorsAdapter
+import myapplication.android.pixelpal.ui.creators.recycler_view.creators.CreatorsModel
 import myapplication.android.pixelpal.ui.listener.ClickIntegerListener
 import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.mvi.LceState
@@ -43,6 +47,7 @@ class CreatorsFragment :
             CreatorsState,
             CreatorsEffect>(R.layout.fragment_creators) {
     private val adapter = CreatorsAdapter()
+    private var isFirst = true
     private val viewModel: CreatorsViewModel by viewModels()
     private val roles: MutableList<RolesUi> = mutableListOf()
     private var _binding: FragmentCreatorsBinding? = null
@@ -62,11 +67,12 @@ class CreatorsFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.recyclerView.adapter = adapter
         collectRoles()
         if (savedInstanceState == null) {
             store.sendIntent(CreatorsIntent.Init)
         }
-        store.sendIntent(CreatorsIntent.GetRolesCreators(2))
+        store.sendIntent(CreatorsIntent.GetRolesCreators(1))
     }
 
     override fun resolveEffect(effect: CreatorsEffect) {
@@ -78,6 +84,7 @@ class CreatorsFragment :
             is LceState.Content -> {
                 binding.loading.root.visibility = GONE
                 initRecycler(state.ui.data)
+                binding.loadingRecycler.root.visibility = GONE
             }
 
             is LceState.Error -> {
@@ -94,7 +101,7 @@ class CreatorsFragment :
             viewModel.roles.collect { items ->
                 items.forEach {
                     roles.add(it)
-                    binding.flexBox.addCreators(it.title, items.indexOf(it))
+                    binding.flexBox.addCreators(it.title, it.id)
                 }
                 val first = (binding.flexBox.children.first() as CreatorView)
                 first.isChosen = true
@@ -103,17 +110,16 @@ class CreatorsFragment :
         }
     }
 
-    private fun initRecycler(creators: List<CreatorsUi>) {
-        binding.recyclerView.adapter = adapter
+    private fun initRecycler(creators: CreatorsUiList) {
         val creatorsModel = mutableListOf<CreatorsModel>()
-        for (i in creators) {
+        for (i in creators.items) {
             val rolesStr = i.role
                 .stream()
                 .map { it.title }
                 .collect(Collectors.toList())
 
             creatorsModel.addCreatorItem(
-                creators.indexOf(i),
+                creators.items.indexOf(i),
                 i.id,
                 i.name,
                 rolesStr,
@@ -122,6 +128,8 @@ class CreatorsFragment :
             )
         }
         adapter.submitList(creatorsModel)
+        if (isFirst) isFirst = false
+        else adapter.onCurrentListChanged(adapter.currentList, creatorsModel)
     }
 
     private fun MutableList<CreatorsModel>.addCreatorItem(
@@ -170,8 +178,13 @@ class CreatorsFragment :
                     override fun onClick(int: Int) {
                         binding.flexBox.forEach {
                             (it as CreatorView).isChosen = it.viewId == int
-                            if (it.isChosen) binding.title.setShimmerText(it.creator)
+                            if (it.isChosen) {
+                                binding.title.setShimmerText(it.creator)
+                            }
+
                         }
+                        binding.loadingRecycler.root.visibility = VISIBLE
+                        store.sendIntent(CreatorsIntent.GetRolesCreators(int))
                     }
                 }
             onViewClicked()

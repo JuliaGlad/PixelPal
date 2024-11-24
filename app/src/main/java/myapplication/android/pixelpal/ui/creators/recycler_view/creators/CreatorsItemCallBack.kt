@@ -1,4 +1,4 @@
-package myapplication.android.pixelpal.ui.delegates.delegates.creators
+package myapplication.android.pixelpal.ui.creators.recycler_view.creators
 
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView

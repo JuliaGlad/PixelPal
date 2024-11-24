@@ -12,16 +12,16 @@ class HomeReducer : MviReducer<HomePartialState, HomeState> {
             HomePartialState.Loading -> updateLoading(prevState)
         }
 
-    private fun updateDataLoaded(prevState: HomeState, ui: HomeContentResult): HomeState{
-        return prevState.copy(ui = LceState.Content(ui))
-    }
+    private fun updateDataLoaded(prevState: HomeState, ui: HomeContentResult) =
+        prevState.copy(ui = LceState.Content(ui))
 
-    private fun updateLoading(prevState: HomeState): HomeState{
-        return prevState.copy(ui = LceState.Loading)
-    }
 
-    private fun updateError(prevState: HomeState, throwable: Throwable): HomeState{
-        return prevState.copy(ui = LceState.Error(throwable))
-    }
+    private fun updateLoading(prevState: HomeState) =
+        prevState.copy(ui = LceState.Loading)
+
+
+    private fun updateError(prevState: HomeState, throwable: Throwable) =
+        prevState.copy(ui = LceState.Error(throwable))
+
 
 }

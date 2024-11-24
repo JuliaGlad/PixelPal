@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="20dp"
+    android:id="@+id/item"
+    android:layout_marginStart="14dp"
     android:layout_marginTop="20dp"
     android:background="@drawable/red_background"
     android:maxWidth="180dp">
@@ -37,7 +38,7 @@
             android:layout_height="120dp"
             android:layout_marginTop="5dp"
             android:scaleType="centerCrop"
-            android:background="#33010005"
+            android:background="#66010005"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -57,7 +58,20 @@
             tools:text="Название" />
 
         <TextView
-            android:id="@+id/release_title"
+            android:id="@+id/domain"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/tektur_medium"
+            android:textColor="@color/light_red"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            tools:text="domain.com"/>
+
+        <TextView
+            android:id="@+id/projects_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -67,10 +81,10 @@
             android:textColor="@color/light_red"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title" />
+            app:layout_constraintTop_toBottomOf="@id/domain" />
 
         <TextView
-            android:id="@+id/release_date"
+            android:id="@+id/projects"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -80,8 +94,8 @@
             android:textColor="@color/light_red"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/release_title"
-            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintStart_toEndOf="@id/projects_title"
+            app:layout_constraintTop_toBottomOf="@id/domain"
             tools:text="12222" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package myapplication.android.pixelpal.ui.delegates.delegates.creators
+package myapplication.android.pixelpal.ui.platforms.fragments.store.recycler_view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,13 +6,12 @@ import androidx.core.net.toUri
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import myapplication.android.pixelpal.databinding.RecyclerViewCreatorsItemBinding
+import myapplication.android.pixelpal.databinding.RecyclerViewStoresItemBinding
 
-class CreatorsAdapter :
-    ListAdapter<CreatorsModel, RecyclerView.ViewHolder>(CreatorsItemCallBack()) {
+class StoreAdapter : ListAdapter<StoreModel, RecyclerView.ViewHolder>(StoreItemCallBack()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         ViewHolder(
-            RecyclerViewCreatorsItemBinding.inflate(
+            RecyclerViewStoresItemBinding.inflate(
                 LayoutInflater.from(
                     parent.context
                 ),
@@ -25,20 +24,17 @@ class CreatorsAdapter :
         (holder as ViewHolder).bind(getItem(position))
     }
 
-    private class ViewHolder(val binding: RecyclerViewCreatorsItemBinding) :
+    private class ViewHolder(private val binding: RecyclerViewStoresItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        fun bind(model: StoreModel) {
+            binding.title.text = model.title
+            binding.domain.text = model.domain
+            binding.projects.text = "${model.projects}"
 
-        fun bind(model: CreatorsModel) {
-            binding.title.text = model.name
-            var roles= ""
-            for (i in model.roles){
-                val newRole = "$roles, $i"
-                roles = newRole
-            }
-            binding.roles.text = roles
-            binding.projects.text = "${model.famousProjects}"
+            binding.item.setOnClickListener { model.listener.onClick() }
+
             Glide.with(itemView.context)
-                .load(model.image.toUri())
+                .load(model.background.toUri())
                 .into(binding.image)
         }
     }

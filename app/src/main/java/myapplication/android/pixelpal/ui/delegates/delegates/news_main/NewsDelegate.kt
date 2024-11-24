@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import myapplication.android.pixelpal.databinding.RecyclerViewMainNewsItemBinding
 import myapplication.android.pixelpal.ui.delegates.delegates.emptyItems.EmptyItemAdapter
 import myapplication.android.pixelpal.ui.delegates.delegates.emptyItems.EmptyItemsModel
-import myapplication.android.pixelpal.ui.delegates.delegates.releases.ReleasesAdapter
-import myapplication.android.pixelpal.ui.delegates.delegates.releases.ReleasesModel
+import myapplication.android.pixelpal.ui.home.recycler_view.releases.ReleasesAdapter
+import myapplication.android.pixelpal.ui.home.recycler_view.releases.ReleasesModel
 import myapplication.android.pixelpal.ui.delegates.main.AdapterDelegate
 import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
 

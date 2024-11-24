@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class StoresList(
-   @SerialName("results") val items: List<myapplication.android.pixelpal.data.models.stores.Store>
+   @SerialName("results") val items: List<Store>
 )

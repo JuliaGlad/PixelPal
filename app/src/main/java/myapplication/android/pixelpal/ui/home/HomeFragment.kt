@@ -23,7 +23,7 @@ import myapplication.android.pixelpal.ui.delegates.delegates.info_box.InfoBoxMod
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsItemModel
-import myapplication.android.pixelpal.ui.delegates.delegates.releases.ReleasesModel
+import myapplication.android.pixelpal.ui.home.recycler_view.releases.ReleasesModel
 import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
 import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
 import myapplication.android.pixelpal.ui.home.mvi.HomeContentResult

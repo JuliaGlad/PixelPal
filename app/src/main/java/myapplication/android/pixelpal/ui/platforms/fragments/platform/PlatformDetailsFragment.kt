@@ -1,15 +1,15 @@
-package myapplication.android.pixelpal.ui.platforms.fragments
+package myapplication.android.pixelpal.ui.platforms.fragments.platform
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import myapplication.android.pixelpal.databinding.FragmnetStoreBinding
+import myapplication.android.pixelpal.databinding.FragmentPlatformDetailsBinding
 
-class StoresFragment : Fragment(){
+class PlatformDetailsFragment : Fragment(){
 
-    private var _binding: FragmnetStoreBinding? = null
+    private var _binding: FragmentPlatformDetailsBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -17,12 +17,13 @@ class StoresFragment : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmnetStoreBinding.inflate(layoutInflater)
+        _binding = FragmentPlatformDetailsBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
     }
 
     override fun onDestroy() {
@@ -31,6 +32,7 @@ class StoresFragment : Fragment(){
     }
 
     companion object {
-        fun getInstance() = myapplication.android.pixelpal.ui.platforms.fragments.StoresFragment()
+        fun getInstance() =
+            PlatformDetailsFragment()
     }
 }
