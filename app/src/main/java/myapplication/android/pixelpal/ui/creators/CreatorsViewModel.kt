@@ -24,7 +24,7 @@ class CreatorsViewModel : ViewModel() {
         getRoles()
     }
 
-    fun getRoles() {
+    private fun getRoles() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val roles =

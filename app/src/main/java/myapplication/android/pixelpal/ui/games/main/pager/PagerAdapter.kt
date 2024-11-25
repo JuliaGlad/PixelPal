@@ -1,4 +1,4 @@
-package myapplication.android.pixelpal.ui.platforms.pager
+package myapplication.android.pixelpal.ui.games.main.pager
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

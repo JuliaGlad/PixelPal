@@ -5,14 +5,14 @@ import myapplication.android.pixelpal.data.models.genres.GenresList
 import myapplication.android.pixelpal.data.source.genres.GenresLocalSource
 import myapplication.android.pixelpal.data.source.genres.GenresRemoteSource
 import myapplication.android.pixelpal.domain.model.genres.GenreDescriptionDomain
-import myapplication.android.pixelpal.domain.model.genres.GenreDomain
+import myapplication.android.pixelpal.domain.model.genres.GenreDomainList
 import myapplication.android.pixelpal.domain.wrapper.genres.toDomain
 
 class GenresRepositoryImpl(
     private val localSource: GenresLocalSource,
     private val remoteSource: GenresRemoteSource
 ) : GenresRepository {
-    override suspend fun getGenres(): List<GenreDomain> =
+    override suspend fun getGenres(): GenreDomainList =
         (getLocalGenres() ?: remoteSource.getGenresData()).toDomain()
 
     override suspend fun getGenresDescription(id: Long): GenreDescriptionDomain =

@@ -14,6 +14,7 @@
         <attr name="android:fontFamily"/>
         <attr name="android:textSize"/>
         <attr name="android:gravity"/>
+        <attr name="android:maxLines"/>
     </declare-styleable>
 
     <declare-styleable name="ShapeableImageView">

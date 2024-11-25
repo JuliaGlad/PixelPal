@@ -25,7 +25,7 @@
     </style>
 
     <style name="TabTextUnselected">
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="fontFamily">@font/tektur_medium</item>
         <item name="android:fontFamily">@font/tektur_medium</item>
     </style>

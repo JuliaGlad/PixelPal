@@ -4,10 +4,12 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.BlurMaskFilter
 import android.graphics.Typeface
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
@@ -25,7 +27,7 @@ class TextShimmerView @JvmOverloads constructor(
     private lateinit var shimmerTextView: TextView
 
     var gravity: Int = Gravity.START
-        set(value){
+        set(value) {
             field = value
             requestLayout()
         }
@@ -40,6 +42,14 @@ class TextShimmerView @JvmOverloads constructor(
         set(value) {
             field = value
             requestLayout()
+        }
+
+    var maxLineCount = 0
+        set(value) {
+            if (field != value) {
+                field = value
+                requestLayout()
+            }
         }
 
     var shimmerColor: Int = 0
@@ -85,7 +95,7 @@ class TextShimmerView @JvmOverloads constructor(
         onTextLayout(shimmerTextView)
     }
 
-    fun setShimmerText(text: String){
+    fun setShimmerText(text: String) {
         mainTextView.text = text
         shimmerTextView.text = text
         requestLayout()
@@ -107,6 +117,7 @@ class TextShimmerView @JvmOverloads constructor(
     private fun TypedArray.initVariables() {
         val fontId = getResourceId(R.styleable.TextShimmerView_android_fontFamily, 0)
         gravity = getInt(R.styleable.TextShimmerView_android_gravity, Gravity.START)
+        maxLineCount = getInt(R.styleable.TextShimmerView_android_maxLines, 0)
         font = ResourcesCompat.getFont(context, fontId)
         shimmerColor = getResourceId(R.styleable.TextShimmerView_textShimmerColor, 0)
         textColor = getResourceId(R.styleable.TextShimmerView_android_textColor, 0)
@@ -116,22 +127,39 @@ class TextShimmerView @JvmOverloads constructor(
 
     private fun initShimmerText() {
         shimmerTextView = findViewById(R.id.shimmer_text)
+
         shimmerTextView.text = text
         shimmerTextView.gravity = gravity
-        shimmerTextView.setTextColor(context.getColor(shimmerColor))
         shimmerTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-        shimmerTextView.typeface = font
-        val radius: Float = shimmerTextView.textSize / 3
-        val filter = BlurMaskFilter(radius, BlurMaskFilter.Blur.NORMAL)
-        shimmerTextView.paint.setMaskFilter(filter)
+
+        with(shimmerTextView) {
+            if (maxLineCount != 0) {
+                maxLines = maxLineCount
+                ellipsize = TextUtils.TruncateAt.END
+            }
+            setTextColor(context.getColor(shimmerColor))
+            typeface = font
+            val radius: Float = textSize / 3
+            val filter = BlurMaskFilter(radius, BlurMaskFilter.Blur.NORMAL)
+            paint.setMaskFilter(filter)
+        }
+
     }
 
     private fun initMainText() {
         mainTextView = findViewById(R.id.main_text)
         mainTextView.gravity = gravity
         mainTextView.text = text
-        mainTextView.typeface = font
-        mainTextView.setTextColor(context.getColor(textColor))
         mainTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+
+        with(mainTextView) {
+            typeface = font
+            if (maxLineCount != 0) {
+                ellipsize = TextUtils.TruncateAt.END
+                maxLines = maxLineCount
+            }
+            setTextColor(context.getColor(textColor))
+
+        }
     }
 }

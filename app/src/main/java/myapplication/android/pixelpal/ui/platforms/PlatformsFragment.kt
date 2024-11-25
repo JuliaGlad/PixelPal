@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.databinding.FragmentPlatformsBinding
-import myapplication.android.pixelpal.home.platforms.PagerAdapter
+import myapplication.android.pixelpal.ui.platforms.pager.PagerAdapter
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.PlatformDetailsFragment
 import myapplication.android.pixelpal.ui.platforms.fragments.store.StoresFragment
 

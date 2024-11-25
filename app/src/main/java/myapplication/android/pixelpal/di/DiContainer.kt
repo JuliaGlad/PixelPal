@@ -27,12 +27,17 @@ import myapplication.android.pixelpal.data.source.stores.StoresRemoteSource
 import myapplication.android.pixelpal.domain.usecase.creators.GetCreatorsUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetGamesReleasesUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetTopGamesUseCase
+import myapplication.android.pixelpal.domain.usecase.genres.GetGenreDescriptionUseCase
+import myapplication.android.pixelpal.domain.usecase.genres.GetGenresUseCase
 import myapplication.android.pixelpal.domain.usecase.platofrms.GetPlatformsUseCase
 import myapplication.android.pixelpal.domain.usecase.publishers.GetPublishersUseCase
 import myapplication.android.pixelpal.domain.usecase.stores.GetStoresUseCase
 import myapplication.android.pixelpal.ui.creators.mvi.CreatorsActor
 import myapplication.android.pixelpal.ui.creators.mvi.CreatorsReducer
 import myapplication.android.pixelpal.ui.creators.mvi.CreatorsStoreFactory
+import myapplication.android.pixelpal.ui.games.main.mvi.MainGamesActor
+import myapplication.android.pixelpal.ui.games.main.mvi.MainGamesReducer
+import myapplication.android.pixelpal.ui.games.main.mvi.MainGamesStoreFactory
 import myapplication.android.pixelpal.ui.home.mvi.HomeActor
 import myapplication.android.pixelpal.ui.home.mvi.HomeReducer
 import myapplication.android.pixelpal.ui.home.mvi.HomeStoreFactory
@@ -76,9 +81,15 @@ object DiContainer {
 
     val storesStoreFactory by lazyNone { StoresStoreFactory(storesReducer, storeActor) }
 
+    val mainGamesStoreFactory by lazyNone { MainGamesStoreFactory(mainGamesReducer, mainGamesActor) }
+
     val platformStoreFactory by lazyNone { PlatformStoreFactory(platformActor, platformReducer) }
 
     private val platformReducer by lazyNone { PlatformReducer() }
+
+    private val mainGamesActor by lazyNone { MainGamesActor(getGenresUseCase) }
+
+    private val mainGamesReducer by lazyNone { MainGamesReducer() }
 
     private val platformActor by lazyNone { PlatformActor(getPlatformsUseCase) }
 
@@ -141,6 +152,10 @@ object DiContainer {
     private val getPublishersUseCase by lazyNone { GetPublishersUseCase(publishersRepository) }
 
     private val getGamesReleasesUseCase by lazyNone { GetGamesReleasesUseCase(gamesRepository) }
+
+    val getGenresDescriptionUseCase by lazyNone { GetGenreDescriptionUseCase(genresRepository) }
+
+    private val getGenresUseCase by lazyNone { GetGenresUseCase(genresRepository) }
 }
 
 private fun <T> lazyNone(initializer: () -> T) = lazy(LazyThreadSafetyMode.NONE, initializer)

@@ -36,7 +36,7 @@ class InfoBoxDelegate : AdapterDelegate {
             with(binding) {
                 val margin = (root.layoutParams as MarginLayoutParams)
                 margin.bottomMargin = (20 * itemView.resources.displayMetrics.density).toInt()
-                text.setShimmerText(model.title)
+                description.setShimmerText(model.title)
                 item.setOnClickListener { model.listener.onClick() }
             }
         }
