@@ -4,11 +4,11 @@ import myapplication.android.pixelpal.data.api.GamesApi
 import myapplication.android.pixelpal.data.models.gamesMain.GamesShortDataList
 import myapplication.android.pixelpal.data.models.gamesNews.GamesNewsList
 
-public class GamesRemoteSource(
+class GamesRemoteSource(
     private val api: GamesApi,
 ) {
-    suspend fun getGamesShortData(): GamesShortDataList =
-        api.getGamesShortData()
+    suspend fun getGamesShortData(id: Long): GamesShortDataList =
+        api.getGamesShortDataByGenre(id)
 
     suspend fun getTopGames(): GamesNewsList =
         api.getTopGames()

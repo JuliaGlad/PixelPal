@@ -4,16 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="14dp"
+    android:layout_marginHorizontal="20dp"
     android:layout_marginTop="20dp"
-    android:background="@drawable/red_background"
-    android:maxWidth="190dp">
+    android:background="@drawable/red_background">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:maxWidth="190dp"
         android:paddingBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,105 +21,68 @@
         <myapplication.android.pixelpal.ui.custom_view.ShapeableImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:layout_marginTop="5dp"
+            android:layout_height="250dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginHorizontal="20dp"
             android:background="@drawable/background_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
 
-        <View
-            android:id="@+id/image_filter"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:scaleType="centerCrop"
-            android:background="#4D010005"
-            android:layout_marginTop="5dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="14dp"
+            android:layout_marginHorizontal="20dp"
             android:layout_marginTop="12dp"
             android:fontFamily="@font/tektur_bold"
             android:textColor="@color/main_blue"
-            android:textSize="18sp"
+            android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/image"
+            app:layout_constraintTop_toBottomOf="@id/image"
             tools:text="Название" />
-
-        <TextView
-            android:id="@+id/rating_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="14dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/tektur_medium"
-            android:text="@string/rating"
-            android:textColor="@color/light_red"
-            android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title" />
-
-        <TextView
-            android:id="@+id/rating"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="10dp"
-            android:fontFamily="@font/tektur_medium"
-            android:textColor="@color/light_red"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/rating_title"
-            app:layout_constraintTop_toBottomOf="@id/title"
-            tools:text="12222" />
 
         <TextView
             android:id="@+id/creation_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="14dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="@font/tektur_medium"
             android:text="@string/release_date"
             android:textColor="@color/light_red"
-            android:textSize="12sp"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rating" />
+            app:layout_constraintTop_toBottomOf="@+id/title" />
 
         <TextView
             android:id="@+id/creation_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="@font/tektur_medium"
             android:textColor="@color/light_red"
-            android:textSize="12sp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/creation_title"
-            app:layout_constraintTop_toBottomOf="@id/rating"
+            app:layout_constraintTop_toBottomOf="@+id/title"
             tools:text="28.12. 2007" />
 
         <TextView
             android:id="@+id/playtime_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="14dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="@font/tektur_medium"
             android:text="@string/playtime"
             android:textColor="@color/light_red"
-            android:textSize="12sp"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/creation_date" />
 
@@ -130,15 +91,25 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
             android:fontFamily="@font/tektur_medium"
             android:textColor="@color/light_red"
-            android:textSize="12sp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/playtime_title"
             app:layout_constraintTop_toBottomOf="@id/creation_date"
             tools:text="100ч." />
+
+        <include android:id="@+id/layout_rating"
+            layout="@layout/rating_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="14dp"
+            android:layout_marginTop="14dp"
+            app:layout_constraintEnd_toEndOf="@id/image"
+            app:layout_constraintTop_toTopOf="@id/image"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

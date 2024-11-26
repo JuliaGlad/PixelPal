@@ -22,7 +22,7 @@ interface GamesApi {
     suspend fun getTopGames(): GamesNewsList
 
     @GET("games")
-    suspend fun getGamesShortData(): GamesShortDataList
+    suspend fun getGamesShortDataByGenre(@Query("genres") genre: Long): GamesShortDataList
 
     @GET("creator-roles")
     suspend fun getCreatorsRoles(): RolesList

@@ -6,7 +6,6 @@ import myapplication.android.pixelpal.app.AuthQueryInterceptor
 import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.data.api.GamesApi
 import myapplication.android.pixelpal.data.repository.creators.CreatorsRepositoryImpl
-import myapplication.android.pixelpal.data.repository.games.GamesRepository
 import myapplication.android.pixelpal.data.repository.games.GamesRepositoryImpl
 import myapplication.android.pixelpal.data.repository.genres.GenresRepositoryImpl
 import myapplication.android.pixelpal.data.repository.platforms.PlatformsRepositoryImpl
@@ -26,6 +25,7 @@ import myapplication.android.pixelpal.data.source.stores.StoresLocalSource
 import myapplication.android.pixelpal.data.source.stores.StoresRemoteSource
 import myapplication.android.pixelpal.domain.usecase.creators.GetCreatorsUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetGamesReleasesUseCase
+import myapplication.android.pixelpal.domain.usecase.games.GetGamesShortDataUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetTopGamesUseCase
 import myapplication.android.pixelpal.domain.usecase.genres.GetGenreDescriptionUseCase
 import myapplication.android.pixelpal.domain.usecase.genres.GetGenresUseCase
@@ -35,6 +35,9 @@ import myapplication.android.pixelpal.domain.usecase.stores.GetStoresUseCase
 import myapplication.android.pixelpal.ui.creators.mvi.CreatorsActor
 import myapplication.android.pixelpal.ui.creators.mvi.CreatorsReducer
 import myapplication.android.pixelpal.ui.creators.mvi.CreatorsStoreFactory
+import myapplication.android.pixelpal.ui.games.games.mvi.GamesActor
+import myapplication.android.pixelpal.ui.games.games.mvi.GamesReducer
+import myapplication.android.pixelpal.ui.games.games.mvi.GamesStoreFactory
 import myapplication.android.pixelpal.ui.games.main.mvi.MainGamesActor
 import myapplication.android.pixelpal.ui.games.main.mvi.MainGamesReducer
 import myapplication.android.pixelpal.ui.games.main.mvi.MainGamesStoreFactory
@@ -43,7 +46,6 @@ import myapplication.android.pixelpal.ui.home.mvi.HomeReducer
 import myapplication.android.pixelpal.ui.home.mvi.HomeStoreFactory
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.mvi.PlatformActor
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.mvi.PlatformReducer
-import myapplication.android.pixelpal.ui.platforms.fragments.platform.mvi.PlatformStore
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.mvi.PlatformStoreFactory
 import myapplication.android.pixelpal.ui.platforms.fragments.store.mvi.StoresActor
 import myapplication.android.pixelpal.ui.platforms.fragments.store.mvi.StoresReducer
@@ -84,6 +86,12 @@ object DiContainer {
     val mainGamesStoreFactory by lazyNone { MainGamesStoreFactory(mainGamesReducer, mainGamesActor) }
 
     val platformStoreFactory by lazyNone { PlatformStoreFactory(platformActor, platformReducer) }
+
+    val gamesStoreFactory by lazyNone { GamesStoreFactory(gamesReducer, gamesActor) }
+
+    private val gamesReducer by lazyNone { GamesReducer() }
+
+    private val gamesActor by lazyNone { GamesActor(getGamesShortDataUseCase) }
 
     private val platformReducer by lazyNone { PlatformReducer() }
 
@@ -155,7 +163,11 @@ object DiContainer {
 
     val getGenresDescriptionUseCase by lazyNone { GetGenreDescriptionUseCase(genresRepository) }
 
+    val getGamesShortDataByGenreUseCase by lazyNone { GetGamesShortDataUseCase(gamesRepository) }
+
     private val getGenresUseCase by lazyNone { GetGenresUseCase(genresRepository) }
+
+    private val getGamesShortDataUseCase by lazyNone { GetGamesShortDataUseCase(gamesRepository) }
 }
 
 private fun <T> lazyNone(initializer: () -> T) = lazy(LazyThreadSafetyMode.NONE, initializer)

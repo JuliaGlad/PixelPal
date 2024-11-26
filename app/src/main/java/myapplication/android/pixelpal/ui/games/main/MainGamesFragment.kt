@@ -1,14 +1,13 @@
 package myapplication.android.pixelpal.ui.games.main
 
 import android.os.Bundle
-import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.core.text.HtmlCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayout
@@ -18,6 +17,7 @@ import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.databinding.FragmentMainGamesBinding
 import myapplication.android.pixelpal.di.DiContainer
 import myapplication.android.pixelpal.ui.games.games.FragmentGames
+import myapplication.android.pixelpal.ui.games.games.recycler_view.LayoutType
 import myapplication.android.pixelpal.ui.games.main.mvi.MainGamesEffects
 import myapplication.android.pixelpal.ui.games.main.mvi.MainGamesIntent
 import myapplication.android.pixelpal.ui.games.main.mvi.MainGamesPartialState
@@ -34,9 +34,14 @@ class MainGamesFragment : MviBaseFragment<
         MainGamesPartialState,
         MainGamesIntent,
         MainGamesState,
-        MainGamesEffects>(R.layout.fragment_main_games){
+        MainGamesEffects>(R.layout.fragment_main_games) {
+    private var chosenId: Long = ALL_ID
     private var _binding: FragmentMainGamesBinding? = null
+    private var layoutType: LayoutType = LayoutType.Grid
     private val binding get() = _binding!!
+    private val instances = mutableListOf<FragmentGames>()
+    private lateinit var genres: GenresUiList
+    private val pagerAdapter by lazy { PagerAdapter(childFragmentManager, lifecycle) }
     private val viewModel: MainGamesViewModel by viewModels()
 
     override val store: MainGamesStore by viewModels { DiContainer.mainGamesStoreFactory }
@@ -52,11 +57,12 @@ class MainGamesFragment : MviBaseFragment<
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             store.sendIntent(MainGamesIntent.Init)
         }
         store.sendIntent(MainGamesIntent.GetGenres)
         collectDescription()
+        initLayoutType()
     }
 
     override fun resolveEffect(effect: MainGamesEffects) {
@@ -64,40 +70,83 @@ class MainGamesFragment : MviBaseFragment<
     }
 
     override fun render(state: MainGamesState) {
-       when(state.ui){
-           is LceState.Content -> {
-               val genres = state.ui.data
-               initPager(genres)
-               initTabs(genres)
-               binding.loadingMain.root.visibility = GONE
-           }
-           is LceState.Error -> {
-               binding.loadingMain.root.visibility = GONE
-               Log.e("Error main games", state.ui.throwable.message.toString())
-           }
-           LceState.Loading -> binding.loadingMain.root.visibility = VISIBLE
-       }
+        when (state.ui) {
+            is LceState.Content -> {
+                val genresList = state.ui.data
+                this.genres = genresList
+                initPager()
+                initTabs()
+                binding.loadingMain.root.visibility = GONE
+            }
+
+            is LceState.Error -> {
+                binding.loadingMain.root.visibility = GONE
+                Log.e("Error main games", state.ui.throwable.message.toString())
+            }
+
+            LceState.Loading -> binding.loadingMain.root.visibility = VISIBLE
+        }
     }
 
-    private fun initTabs(genres: GenresUiList) {
+    private fun initLayoutType() {
+        binding.iconSort.setOnClickListener {
+            when (layoutType) {
+                LayoutType.Grid -> {
+                    setLayoutType(LayoutType.Linear, R.drawable.ic_linear_items)
+                }
+
+                LayoutType.Linear -> {
+                    setLayoutType(LayoutType.OneItem, R.drawable.ic_one_item)
+                }
+
+                LayoutType.OneItem -> {
+                    setLayoutType(LayoutType.Grid, R.drawable.ic_grid_items)
+                }
+            }
+        }
+    }
+
+    private fun setLayoutType(layoutType: LayoutType, drawable: Int) {
+        this.layoutType = layoutType
+        ResourcesCompat.getDrawable(
+            resources,
+            drawable,
+            context?.theme
+        )?.let {
+            binding.iconSort.setIcon(
+                it
+            )
+        }
+        var chosenIndex = 0
+        for (i in genres.items) {
+            val currentIndex = genres.items.indexOf(i)
+            instances[currentIndex].setLayoutType(layoutType)
+            if (chosenId != ALL_ID && chosenId == i.id) chosenIndex = currentIndex + 1
+            pagerAdapter.notifyItemChanged(currentIndex)
+        }
+
+        instances[chosenIndex].updateLayoutRecycler()
+    }
+
+    private fun initTabs() {
         val tabs = mutableListOf(GenreUi(ALL_ID, getString(R.string.all)))
         genres.items.forEach { tabs.add(it) }
 
-        TabLayoutMediator(binding.tabs, binding.viewPager){ tab, position ->
+        TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             tab.id = tabs[position].id.toInt()
             tab.text = tabs[position].title
         }.attach()
         binding.infoBox.root.visibility = GONE
 
-        binding.tabs.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener{
+        binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                Log.i("TabSelected", tab?.id.toString())
                 tab?.id?.toLong()?.let {
                     if (it != ALL_ID) {
                         binding.infoBox.root.visibility = VISIBLE
                         binding.infoBox.loading.visibility = VISIBLE
                         viewModel.getGenreDescription(it)
                     } else binding.infoBox.root.visibility = GONE
+                    chosenId = it
                 }
             }
 
@@ -111,25 +160,27 @@ class MainGamesFragment : MviBaseFragment<
         })
     }
 
-    private fun initPager(genres: GenresUiList) {
-        val pagerAdapter = PagerAdapter(childFragmentManager, lifecycle)
+    private fun initPager() {
         binding.viewPager.adapter = pagerAdapter
+        initPagerFragments(LayoutType.Grid)
+    }
 
-        val instances = mutableListOf<FragmentGames>()
-        for (i in genres.items){
+    private fun initPagerFragments(layoutType: LayoutType) {
+        instances.clear()
+        for (i in genres.items) {
             with(i) {
                 instances.add(
-                    FragmentGames.getInstance(id, title)
+                    FragmentGames.getInstance(id, layoutType)
                 )
             }
         }
-
         pagerAdapter.update(instances)
+        //   pagerAdapter.notifyItemChanged(chosenFragmentPosition)
     }
 
     private fun collectDescription() {
         lifecycleScope.launch {
-            viewModel.genre.collect{ description ->
+            viewModel.genre.collect { description ->
                 binding.infoBox.description.setShimmerText(description.text)
                 binding.infoBox.loading.visibility = GONE
             }
@@ -141,7 +192,7 @@ class MainGamesFragment : MviBaseFragment<
         _binding = null
     }
 
-    companion object{
+    companion object {
         const val ALL_ID = 33L
     }
 

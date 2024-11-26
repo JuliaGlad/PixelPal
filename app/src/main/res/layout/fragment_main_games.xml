@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/search_item"
+        layout="@layout/recycler_view_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <myapplication.android.pixelpal.ui.custom_view.IconShimmerView
+        android:id="@+id/filter_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawable="@drawable/ic_round_background"
+        app:iconColor="@color/main_blue"
+        app:layout_constraintBottom_toBottomOf="@id/icon_filter"
+        app:layout_constraintEnd_toEndOf="@id/icon_filter"
+        app:layout_constraintStart_toStartOf="@id/icon_filter"
+        app:layout_constraintTop_toBottomOf="@id/search_item"
+        app:layout_constraintTop_toTopOf="@id/icon_filter"
+        app:shimmerColor="@color/main_blue" />
+
+    <myapplication.android.pixelpal.ui.custom_view.IconShimmerView
+        android:id="@+id/icon_filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="34dp"
+        android:layout_marginTop="24dp"
+        android:drawable="@drawable/ic_games_filters"
+        app:iconColor="@color/light_blue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_item"
+        app:shimmerColor="@color/light_blue" />
+
+    <myapplication.android.pixelpal.ui.custom_view.IconShimmerView
+        android:id="@+id/sort_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawable="@drawable/ic_round_background"
+        app:iconColor="@color/main_blue"
+        app:layout_constraintBottom_toBottomOf="@id/icon_sort"
+        app:layout_constraintEnd_toEndOf="@id/icon_sort"
+        app:layout_constraintStart_toStartOf="@id/icon_sort"
+        app:layout_constraintTop_toBottomOf="@id/search_item"
+        app:layout_constraintTop_toTopOf="@id/icon_sort"
+        app:shimmerColor="@color/main_blue" />
+
+    <myapplication.android.pixelpal.ui.custom_view.IconShimmerView
+        android:id="@+id/icon_sort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="34dp"
+        android:drawable="@drawable/ic_grid_items"
+        app:iconColor="@color/light_blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_item"
+        app:shimmerColor="@color/light_blue" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sort_back"
+        app:tabMode="scrollable"
+        app:tabBackground="@drawable/tab_background"
+        app:tabIndicatorColor="#03FEF8"
+        app:tabPaddingTop="20dp"
+        app:tabPaddingBottom="20dp"
+        app:tabPaddingStart="36dp"
+        app:tabPaddingEnd="36dp"
+        app:tabSelectedTextAppearance="@style/TabTextSelected"
+        app:tabSelectedTextColor="@color/main_blue"
+        app:tabTextAppearance="@style/TabTextUnselected"
+        app:tabTextColor="@color/light_red" />
+
+    <include
+        android:id="@+id/info_box"
+        layout="@layout/recycler_view_info_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tabs" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/info_box"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <include
+        android:id="@+id/loading_main"
+        layout="@layout/loading_screen"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

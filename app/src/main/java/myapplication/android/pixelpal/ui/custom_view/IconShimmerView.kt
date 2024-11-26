@@ -35,11 +35,7 @@ class IconShimmerView @JvmOverloads constructor(
             requestLayout()
         }
 
-    var icon: Drawable? = null
-        set(value) {
-            field = value
-            requestLayout()
-        }
+    private var icon: Drawable? = null
 
     val shimmerIcon get() = icon!!
 
@@ -69,6 +65,12 @@ class IconShimmerView @JvmOverloads constructor(
         )
     }
 
+    fun setIcon(icon: Drawable){
+        this.icon = icon
+        mainImage.setImageDrawable(icon)
+        shimmerImage.setImageDrawable(icon)
+        requestLayout()
+    }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         onImageLayout(shimmerImage)

@@ -1,4 +1,4 @@
-package myapplication.android.pixelpal.data.models.gamesNews
+package myapplication.android.pixelpal.data.models
 
 import kotlinx.serialization.Serializable
 

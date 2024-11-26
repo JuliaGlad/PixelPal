@@ -3,6 +3,7 @@ package myapplication.android.pixelpal.data.models.gamesNews
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonArray
+import myapplication.android.pixelpal.data.models.GameRating
 
 @Serializable
 class GamesNews(
