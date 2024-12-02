@@ -1,8 +1,9 @@
 package myapplication.android.pixelpal.domain.usecase.platofrms
 
 import myapplication.android.pixelpal.data.repository.platforms.PlatformsRepository
+import javax.inject.Inject
 
-class GetPlatformsUseCase(
+class GetPlatformsUseCase @Inject constructor(
     private val repository: PlatformsRepository
 ) {
     suspend fun invoke() = repository.getPlatforms()

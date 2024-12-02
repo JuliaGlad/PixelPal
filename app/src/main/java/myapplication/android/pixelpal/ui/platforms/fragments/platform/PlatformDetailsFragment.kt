@@ -9,19 +9,22 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import myapplication.android.pixelpal.R
+import myapplication.android.pixelpal.app.App
 import myapplication.android.pixelpal.databinding.FragmentPlatformDetailsBinding
-import myapplication.android.pixelpal.di.DiContainer
 import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.model.PlatformUiList
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.mvi.PlatformEffect
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.mvi.PlatformIntent
+import myapplication.android.pixelpal.ui.platforms.fragments.platform.mvi.PlatformLocalDI
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.mvi.PlatformPartialState
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.mvi.PlatformState
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.mvi.PlatformStore
+import myapplication.android.pixelpal.ui.platforms.fragments.platform.mvi.PlatformStoreFactory
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.recycler_view.PlatformAdapter
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.recycler_view.PlatformModel
+import javax.inject.Inject
 
 class PlatformDetailsFragment : MviBaseFragment<
         PlatformPartialState,
@@ -32,7 +35,17 @@ class PlatformDetailsFragment : MviBaseFragment<
     private var _binding: FragmentPlatformDetailsBinding? = null
     private val binding get() = _binding!!
 
-    override val store: PlatformStore by viewModels { DiContainer.platformStoreFactory }
+    @Inject
+    lateinit var platformLocalDI: PlatformLocalDI
+
+    override val store: PlatformStore by viewModels {
+        PlatformStoreFactory(platformLocalDI.actor, platformLocalDI.reducer)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (activity?.application as App).appComponent.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

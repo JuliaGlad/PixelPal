@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.app
 
+import myapplication.android.pixelpal.di.RetrofitModule.Companion.API_KEY
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.Request
@@ -12,7 +13,7 @@ class AuthQueryInterceptor: Interceptor {
         val url: HttpUrl = request
             .url
             .newBuilder()
-            .addQueryParameter("key", Constants.API_KEY)
+            .addQueryParameter("key", API_KEY)
             .build()
         request = request.newBuilder().url(url).build()
         return chain.proceed(request)

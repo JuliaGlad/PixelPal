@@ -15,28 +15,30 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import myapplication.android.pixelpal.R
+import myapplication.android.pixelpal.app.App
 import myapplication.android.pixelpal.databinding.FragmentHomeBinding
-import myapplication.android.pixelpal.di.DiContainer
 import myapplication.android.pixelpal.ui.delegates.delegates.info_box.InfoBoxDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.info_box.InfoBoxDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.info_box.InfoBoxModel
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsItemModel
-import myapplication.android.pixelpal.ui.home.recycler_view.releases.ReleasesModel
 import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
 import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
 import myapplication.android.pixelpal.ui.home.mvi.HomeContentResult
 import myapplication.android.pixelpal.ui.home.mvi.HomeEffect
 import myapplication.android.pixelpal.ui.home.mvi.HomeIntent
+import myapplication.android.pixelpal.ui.home.mvi.HomeLocalDI
 import myapplication.android.pixelpal.ui.home.mvi.HomePartialState
 import myapplication.android.pixelpal.ui.home.mvi.HomeState
 import myapplication.android.pixelpal.ui.home.mvi.HomeStore
+import myapplication.android.pixelpal.ui.home.mvi.HomeStoreFactory
+import myapplication.android.pixelpal.ui.home.recycler_view.releases.ReleasesModel
 import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import java.util.Date
-
+import javax.inject.Inject
 
 class HomeFragment :
     MviBaseFragment<
@@ -48,7 +50,15 @@ class HomeFragment :
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    override val store: HomeStore by viewModels { DiContainer.homeStoreFactory }
+    @Inject
+    lateinit var homeLocalDI: HomeLocalDI
+
+    override val store: HomeStore by viewModels { HomeStoreFactory(homeLocalDI.reducer, homeLocalDI.actor)}
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+       (activity?.application as App).appComponent.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

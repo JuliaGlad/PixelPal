@@ -1,15 +1,12 @@
 package myapplication.android.pixelpal.data.source.genres
 
-import myapplication.android.pixelpal.data.api.GamesApi
 import myapplication.android.pixelpal.data.models.genres.GenreDescription
 import myapplication.android.pixelpal.data.models.genres.GenresList
 
-class GenresRemoteSource(
-    private val api: GamesApi
-) {
-    suspend fun getGenresDescription(id: Long): GenreDescription =
-        api.getGenreDescription(id)
+interface GenresRemoteSource {
 
-    suspend fun getGenresData(): GenresList =
-        api.getGenresData()
+    suspend fun getGenresDescription(id: Long): GenreDescription
+
+    suspend fun getGenresData(): GenresList
+
 }

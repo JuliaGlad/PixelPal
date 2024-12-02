@@ -9,19 +9,22 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import myapplication.android.pixelpal.R
+import myapplication.android.pixelpal.app.App
 import myapplication.android.pixelpal.databinding.FragmnetStoreBinding
-import myapplication.android.pixelpal.di.DiContainer
 import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.platforms.fragments.store.model.StoresUiList
 import myapplication.android.pixelpal.ui.platforms.fragments.store.mvi.StoresEffect
 import myapplication.android.pixelpal.ui.platforms.fragments.store.mvi.StoresIntent
+import myapplication.android.pixelpal.ui.platforms.fragments.store.mvi.StoresLocalDI
 import myapplication.android.pixelpal.ui.platforms.fragments.store.mvi.StoresPartialState
 import myapplication.android.pixelpal.ui.platforms.fragments.store.mvi.StoresState
 import myapplication.android.pixelpal.ui.platforms.fragments.store.mvi.StoresStore
+import myapplication.android.pixelpal.ui.platforms.fragments.store.mvi.StoresStoreFactory
 import myapplication.android.pixelpal.ui.platforms.fragments.store.recycler_view.StoreAdapter
 import myapplication.android.pixelpal.ui.platforms.fragments.store.recycler_view.StoreModel
+import javax.inject.Inject
 
 class StoresFragment : MviBaseFragment<
         StoresPartialState,
@@ -33,7 +36,15 @@ class StoresFragment : MviBaseFragment<
     private var _binding: FragmnetStoreBinding? = null
     private val binding get() = _binding!!
 
-    override val store: StoresStore by viewModels { DiContainer.storesStoreFactory }
+    @Inject
+    lateinit var storesLocalDI: StoresLocalDI
+
+    override val store: StoresStore by viewModels { StoresStoreFactory(storesLocalDI.reducer, storesLocalDI.actor) }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (activity?.application as App).appComponent.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

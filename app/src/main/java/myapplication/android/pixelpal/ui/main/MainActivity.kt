@@ -23,14 +23,15 @@ class MainActivity : AppCompatActivity() {
     private val binding get() = _binding!!
     private val navigator = AppNavigator(this, R.id.main_container)
     private val app : App by lazy { (application as App) }
-    private val presenter: myapplication.android.pixelpal.ui.main.MainPresenter by lazy {
-        myapplication.android.pixelpal.ui.main.MainPresenter(
+    private val presenter: MainPresenter by lazy {
+        MainPresenter(
             app.router
         )
     }
     private val navigationHolder: NavigatorHolder by lazy { app.navigatorHolder }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as App).appComponent.inject(this)
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

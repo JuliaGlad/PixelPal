@@ -14,20 +14,23 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
 import myapplication.android.pixelpal.R
+import myapplication.android.pixelpal.app.App
 import myapplication.android.pixelpal.databinding.FragmentMainGamesBinding
-import myapplication.android.pixelpal.di.DiContainer
-import myapplication.android.pixelpal.ui.games.games.FragmentGames
+import myapplication.android.pixelpal.ui.games.games.GamesFragment
 import myapplication.android.pixelpal.ui.games.games.recycler_view.LayoutType
 import myapplication.android.pixelpal.ui.games.main.mvi.MainGamesEffects
 import myapplication.android.pixelpal.ui.games.main.mvi.MainGamesIntent
+import myapplication.android.pixelpal.ui.games.main.mvi.MainGamesLocalDI
 import myapplication.android.pixelpal.ui.games.main.mvi.MainGamesPartialState
 import myapplication.android.pixelpal.ui.games.main.mvi.MainGamesState
 import myapplication.android.pixelpal.ui.games.main.mvi.MainGamesStore
+import myapplication.android.pixelpal.ui.games.main.mvi.MainGamesStoreFactory
 import myapplication.android.pixelpal.ui.games.model.GenreUi
 import myapplication.android.pixelpal.ui.games.model.GenresUiList
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.platforms.pager.PagerAdapter
+import javax.inject.Inject
 
 
 class MainGamesFragment : MviBaseFragment<
@@ -39,12 +42,27 @@ class MainGamesFragment : MviBaseFragment<
     private var _binding: FragmentMainGamesBinding? = null
     private var layoutType: LayoutType = LayoutType.Grid
     private val binding get() = _binding!!
-    private val instances = mutableListOf<FragmentGames>()
+    private val instances = mutableListOf<GamesFragment>()
     private lateinit var genres: GenresUiList
     private val pagerAdapter by lazy { PagerAdapter(childFragmentManager, lifecycle) }
-    private val viewModel: MainGamesViewModel by viewModels()
 
-    override val store: MainGamesStore by viewModels { DiContainer.mainGamesStoreFactory }
+    @Inject
+    lateinit var mainGamesLocalDI: MainGamesLocalDI
+
+    private val viewModel: MainGamesViewModel by viewModels{
+        MainGamesViewModel.Factory(
+            (activity?.application as App).appComponent.mainGamesViewModelFactory()
+        )
+    }
+
+    override val store: MainGamesStore by viewModels {
+        MainGamesStoreFactory(mainGamesLocalDI.reducer, mainGamesLocalDI.actor)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (activity?.application as App).appComponent.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -170,7 +188,7 @@ class MainGamesFragment : MviBaseFragment<
         for (i in genres.items) {
             with(i) {
                 instances.add(
-                    FragmentGames.getInstance(id, layoutType)
+                    GamesFragment.getInstance(id, layoutType)
                 )
             }
         }

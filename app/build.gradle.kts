@@ -1,12 +1,17 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.jetbrains.kotlin.kapt)
     kotlin("plugin.serialization") version "2.0.20"
 }
 
 android {
     namespace = "myapplication.android.pixelpal"
     compileSdk = 35
+
+    kapt {
+        generateStubs = true
+    }
 
     defaultConfig {
         applicationId = "myapplication.android.pixelpal"
@@ -59,6 +64,11 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
+    implementation(libs.play.services.base)
+    implementation ("com.google.dagger:dagger:2.52")
+    implementation ("com.google.dagger:dagger-android:2.52")
+    kapt ("com.google.dagger:dagger-compiler:2.52")
+    kapt ("com.google.dagger:dagger-android-processor:2.52")
     implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

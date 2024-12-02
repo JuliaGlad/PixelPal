@@ -11,14 +11,16 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import myapplication.android.pixelpal.R
+import myapplication.android.pixelpal.app.App
 import myapplication.android.pixelpal.databinding.FragmentGamesBinding
-import myapplication.android.pixelpal.di.DiContainer
 import myapplication.android.pixelpal.ui.games.games.model.GamesShortDataUi
 import myapplication.android.pixelpal.ui.games.games.mvi.GamesEffects
 import myapplication.android.pixelpal.ui.games.games.mvi.GamesIntent
+import myapplication.android.pixelpal.ui.games.games.mvi.GamesLocalDI
 import myapplication.android.pixelpal.ui.games.games.mvi.GamesPartialState
 import myapplication.android.pixelpal.ui.games.games.mvi.GamesState
 import myapplication.android.pixelpal.ui.games.games.mvi.GamesStore
+import myapplication.android.pixelpal.ui.games.games.mvi.GamesStoreFactory
 import myapplication.android.pixelpal.ui.games.games.recycler_view.GamesShortModel
 import myapplication.android.pixelpal.ui.games.games.recycler_view.LayoutType
 import myapplication.android.pixelpal.ui.games.games.recycler_view.gridItem.GamesShortGridAdapter
@@ -26,8 +28,9 @@ import myapplication.android.pixelpal.ui.games.games.recycler_view.linear.GamesS
 import myapplication.android.pixelpal.ui.games.games.recycler_view.one_item.GamesOneItemAdapter
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
+import javax.inject.Inject
 
-class FragmentGames : MviBaseFragment<
+class GamesFragment @Inject constructor() : MviBaseFragment<
         GamesPartialState,
         GamesIntent,
         GamesState,
@@ -37,7 +40,16 @@ class FragmentGames : MviBaseFragment<
     private var layoutType: LayoutType = LayoutType.Grid
     private var _binding: FragmentGamesBinding? = null
     private val binding get() = _binding!!
-    override val store: GamesStore by viewModels { DiContainer.gamesStoreFactory }
+
+    @Inject
+    lateinit var gamesLocalDI: GamesLocalDI
+
+    override val store: GamesStore by viewModels { GamesStoreFactory(gamesLocalDI.reducer, gamesLocalDI.actor) }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (activity?.application as App).appComponent.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -130,7 +142,7 @@ class FragmentGames : MviBaseFragment<
 
     companion object {
         fun getInstance(id: Long, layoutType: LayoutType) =
-            FragmentGames().apply {
+            GamesFragment().apply {
                 this.id = id
                 this.layoutType = layoutType
             }

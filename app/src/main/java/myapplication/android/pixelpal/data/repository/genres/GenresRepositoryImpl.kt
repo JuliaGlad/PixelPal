@@ -7,8 +7,9 @@ import myapplication.android.pixelpal.data.source.genres.GenresRemoteSource
 import myapplication.android.pixelpal.domain.model.genres.GenreDescriptionDomain
 import myapplication.android.pixelpal.domain.model.genres.GenreDomainList
 import myapplication.android.pixelpal.domain.wrapper.genres.toDomain
+import javax.inject.Inject
 
-class GenresRepositoryImpl(
+class GenresRepositoryImpl @Inject constructor(
     private val localSource: GenresLocalSource,
     private val remoteSource: GenresRemoteSource
 ) : GenresRepository {

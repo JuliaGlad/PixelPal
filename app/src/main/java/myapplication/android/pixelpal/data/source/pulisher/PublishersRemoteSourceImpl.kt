@@ -2,10 +2,11 @@ package myapplication.android.pixelpal.data.source.pulisher
 
 import myapplication.android.pixelpal.data.api.GamesApi
 import myapplication.android.pixelpal.data.models.publishers.PublishersList
+import javax.inject.Inject
 
-class PublishersRemoteSource(
+class PublishersRemoteSourceImpl @Inject constructor(
     private val api: GamesApi
-){
-    suspend fun getPublishers(): PublishersList =
+): PublisherRemoteSource{
+    override suspend fun getPublishers(): PublishersList =
         api.getPublishers()
 }

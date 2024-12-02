@@ -7,8 +7,9 @@ import myapplication.android.pixelpal.data.source.creators.CreatorsRemoteSource
 import myapplication.android.pixelpal.domain.model.creator.CreatorDomainList
 import myapplication.android.pixelpal.domain.model.creator.RoleDomain
 import myapplication.android.pixelpal.domain.wrapper.creators.toDomain
+import javax.inject.Inject
 
-class CreatorsRepositoryImpl(
+class CreatorsRepositoryImpl @Inject constructor(
     private val localSource: CreatorsLocalSource,
     private val remoteSource: CreatorsRemoteSource
 ) : CreatorsRepository {

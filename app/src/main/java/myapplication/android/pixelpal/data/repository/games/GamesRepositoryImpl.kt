@@ -5,8 +5,9 @@ import myapplication.android.pixelpal.data.source.games.GamesRemoteSource
 import myapplication.android.pixelpal.domain.model.games.GamesNewsListDomain
 import myapplication.android.pixelpal.domain.model.games.GamesShortDomainList
 import myapplication.android.pixelpal.domain.wrapper.games.toDomain
+import javax.inject.Inject
 
-class GamesRepositoryImpl(
+class GamesRepositoryImpl @Inject constructor(
     private val localSource: GamesLocalSource,
     private val remoteSource: GamesRemoteSource
 ) : GamesRepository {
@@ -20,7 +21,7 @@ class GamesRepositoryImpl(
     override suspend fun getGameByReleasesDate(date: String): GamesNewsListDomain =
         (getLocalTopGames() ?: remoteSource.getGameByReleasesDate(date)).toDomain()
 
-    override fun getLocalTopGames() = null
+    override fun getLocalTopGames() =  null
 
     override fun getLocalGamesShortData() = null
 

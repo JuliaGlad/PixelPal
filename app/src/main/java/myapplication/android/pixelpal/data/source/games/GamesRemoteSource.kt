@@ -1,19 +1,14 @@
 package myapplication.android.pixelpal.data.source.games
 
-import myapplication.android.pixelpal.data.api.GamesApi
 import myapplication.android.pixelpal.data.models.gamesMain.GamesShortDataList
 import myapplication.android.pixelpal.data.models.gamesNews.GamesNewsList
 
-class GamesRemoteSource(
-    private val api: GamesApi,
-) {
-    suspend fun getGamesShortData(id: Long): GamesShortDataList =
-        api.getGamesShortDataByGenre(id)
+interface GamesRemoteSource {
 
-    suspend fun getTopGames(): GamesNewsList =
-        api.getTopGames()
+    suspend fun getGamesShortData(id: Long): GamesShortDataList
 
-    suspend fun getGameByReleasesDate(date: String): GamesNewsList =
-        api.getGamesByReleasesDate(date)
+    suspend fun getTopGames(): GamesNewsList
+
+    suspend fun getGameByReleasesDate(date: String): GamesNewsList
 
 }

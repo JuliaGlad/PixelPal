@@ -16,16 +16,18 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import myapplication.android.pixelpal.R
+import myapplication.android.pixelpal.app.App
 import myapplication.android.pixelpal.databinding.FragmentCreatorsBinding
-import myapplication.android.pixelpal.di.DiContainer
 import myapplication.android.pixelpal.ui.creators.model.creatores.CreatorUi
 import myapplication.android.pixelpal.ui.creators.model.creatores.CreatorsUiList
 import myapplication.android.pixelpal.ui.creators.model.publisher.PublisherUi
 import myapplication.android.pixelpal.ui.creators.model.roles.RolesUi
 import myapplication.android.pixelpal.ui.creators.mvi.CreatorsEffect
 import myapplication.android.pixelpal.ui.creators.mvi.CreatorsIntent
+import myapplication.android.pixelpal.ui.creators.mvi.CreatorsLocalDI
 import myapplication.android.pixelpal.ui.creators.mvi.CreatorsPartialState
 import myapplication.android.pixelpal.ui.creators.mvi.CreatorsState
+import myapplication.android.pixelpal.ui.creators.mvi.CreatorsStoreFactory
 import myapplication.android.pixelpal.ui.custom_view.flexBox.CreatorView
 import myapplication.android.pixelpal.ui.custom_view.flexBox.FlexBoxLayout
 import myapplication.android.pixelpal.ui.delegates.delegates.creators.CreatorsDelegate
@@ -42,8 +44,9 @@ import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.mvi.MviStore
 import java.util.stream.Collectors
+import javax.inject.Inject
 
-class CreatorsFragment :
+class CreatorsFragment:
     MviBaseFragment<
             CreatorsPartialState,
             CreatorsIntent,
@@ -51,10 +54,22 @@ class CreatorsFragment :
             CreatorsEffect>(R.layout.fragment_creators) {
     private val adapter = MainAdapter()
     private var isFirst = true
-    private val viewModel: CreatorsViewModel by viewModels()
+    private val viewModel: CreatorsViewModel by viewModels {
+        CreatorsViewModel.Factory(
+            (activity?.application as App).appComponent.creatorsViewModelFactory()
+        )
+    }
     private val roles: MutableList<RolesUi> = mutableListOf()
     private var _binding: FragmentCreatorsBinding? = null
     private val binding get() = _binding!!
+
+    @Inject
+    lateinit var creatorsLocalDI: CreatorsLocalDI
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (activity?.application as App).appComponent.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,7 +81,10 @@ class CreatorsFragment :
     }
 
     override val store: MviStore<CreatorsPartialState, CreatorsIntent, CreatorsState, CreatorsEffect>
-            by viewModels { DiContainer.creatorsStoreFactory }
+            by viewModels { CreatorsStoreFactory(
+                creatorsLocalDI.reducer,
+                creatorsLocalDI.actor
+            ) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
