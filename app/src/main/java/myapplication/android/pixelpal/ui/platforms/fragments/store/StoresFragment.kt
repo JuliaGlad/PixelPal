@@ -31,19 +31,26 @@ class StoresFragment : MviBaseFragment<
         StoresIntent,
         StoresState,
         StoresEffect
-        >(R.layout.fragmnet_store){
-
+        >(R.layout.fragmnet_store) {
+    private val storesComponent by lazy {
+        (activity?.application as App).appComponent.storesComponent().create()
+    }
     private var _binding: FragmnetStoreBinding? = null
     private val binding get() = _binding!!
 
     @Inject
     lateinit var storesLocalDI: StoresLocalDI
 
-    override val store: StoresStore by viewModels { StoresStoreFactory(storesLocalDI.reducer, storesLocalDI.actor) }
+    override val store: StoresStore by viewModels {
+        StoresStoreFactory(
+            storesLocalDI.reducer,
+            storesLocalDI.actor
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity?.application as App).appComponent.inject(this)
+        storesComponent.inject(this)
     }
 
     override fun onCreateView(
@@ -57,7 +64,7 @@ class StoresFragment : MviBaseFragment<
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             store.sendIntent(StoresIntent.Init)
         }
         store.sendIntent(StoresIntent.GetStores)
@@ -68,25 +75,27 @@ class StoresFragment : MviBaseFragment<
     }
 
     override fun render(state: StoresState) {
-        when(state.ui){
+        when (state.ui) {
             is LceState.Content -> {
                 binding.loadingRecycler.root.visibility = GONE
                 initRecycler(state.ui.data)
             }
+
             is LceState.Error -> {
                 binding.loadingRecycler.root.visibility = GONE
                 Log.e("Stores error", state.ui.throwable.message.toString())
             }
+
             LceState.Loading -> binding.loadingRecycler.root.visibility = VISIBLE
         }
     }
 
-    private fun initRecycler(stores: StoresUiList){
+    private fun initRecycler(stores: StoresUiList) {
         val adapter = StoreAdapter()
         binding.recyclerView.adapter = adapter
 
         val models = mutableListOf<StoreModel>()
-        for (i in stores.stores){
+        for (i in stores.stores) {
             models.add(StoreModel(
                 1,
                 i.id,
@@ -94,7 +103,7 @@ class StoresFragment : MviBaseFragment<
                 i.domain,
                 i.projects,
                 i.image,
-                object : ClickListener{
+                object : ClickListener {
                     override fun onClick() {
                         TODO("open stores details fragment")
                     }

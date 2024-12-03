@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.app.App
 import myapplication.android.pixelpal.databinding.FragmentGamesBinding
+import myapplication.android.pixelpal.di.components.fragment.GamesComponent
 import myapplication.android.pixelpal.ui.games.games.model.GamesShortDataUi
 import myapplication.android.pixelpal.ui.games.games.mvi.GamesEffects
 import myapplication.android.pixelpal.ui.games.games.mvi.GamesIntent
@@ -35,6 +36,7 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
         GamesIntent,
         GamesState,
         GamesEffects>(R.layout.fragment_games) {
+            private val gamesComponent by lazy { (activity?.application as App).appComponent.gamesComponent().create() }
     private var id: Long = 0
     private val games = mutableListOf<GamesShortDataUi>()
     private var layoutType: LayoutType = LayoutType.Grid
@@ -48,7 +50,7 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity?.application as App).appComponent.inject(this)
+        gamesComponent.inject(this)
     }
 
     override fun onCreateView(

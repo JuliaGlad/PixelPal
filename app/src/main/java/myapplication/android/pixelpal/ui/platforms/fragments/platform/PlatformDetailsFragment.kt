@@ -30,8 +30,10 @@ class PlatformDetailsFragment : MviBaseFragment<
         PlatformPartialState,
         PlatformIntent,
         PlatformState,
-        PlatformEffect>(R.layout.fragment_platforms){
-
+        PlatformEffect>(R.layout.fragment_platforms) {
+    private val platformComponent by lazy {
+        (activity?.application as App).appComponent.platformComponent().create()
+    }
     private var _binding: FragmentPlatformDetailsBinding? = null
     private val binding get() = _binding!!
 
@@ -44,7 +46,7 @@ class PlatformDetailsFragment : MviBaseFragment<
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity?.application as App).appComponent.inject(this)
+        platformComponent.inject(this)
     }
 
     override fun onCreateView(
@@ -58,7 +60,7 @@ class PlatformDetailsFragment : MviBaseFragment<
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             store.sendIntent(PlatformIntent.Init)
         }
         store.sendIntent(PlatformIntent.GetPlatforms)
@@ -69,39 +71,41 @@ class PlatformDetailsFragment : MviBaseFragment<
     }
 
     override fun render(state: PlatformState) {
-       when(state.ui){
-           is LceState.Content -> {
-               binding.loadingRecycler.root.visibility = GONE
-               initRecycler(state.ui.data)
-           }
-           is LceState.Error -> {
-               binding.loadingRecycler.root.visibility = GONE
-               Log.e("Platform error", state.ui.throwable.message.toString())
-           }
-           LceState.Loading -> binding.loadingRecycler.root.visibility = VISIBLE
-       }
+        when (state.ui) {
+            is LceState.Content -> {
+                binding.loadingRecycler.root.visibility = GONE
+                initRecycler(state.ui.data)
+            }
+
+            is LceState.Error -> {
+                binding.loadingRecycler.root.visibility = GONE
+                Log.e("Platform error", state.ui.throwable.message.toString())
+            }
+
+            LceState.Loading -> binding.loadingRecycler.root.visibility = VISIBLE
+        }
     }
 
-    private fun initRecycler(platforms: PlatformUiList){
+    private fun initRecycler(platforms: PlatformUiList) {
         val adapter = PlatformAdapter()
         binding.recyclerView.adapter = adapter
 
         val models = mutableListOf<PlatformModel>()
-        for (i in platforms.list){
+        for (i in platforms.list) {
             models.add(
                 PlatformModel(
-                1,
-                i.id,
-                i.name,
-                i.startYear,
-                i.gamesCount,
-                i.background,
-                object : ClickListener{
-                    override fun onClick() {
-                        TODO("open platform details fragment")
+                    1,
+                    i.id,
+                    i.name,
+                    i.startYear,
+                    i.gamesCount,
+                    i.background,
+                    object : ClickListener {
+                        override fun onClick() {
+                            TODO("open platform details fragment")
+                        }
                     }
-                }
-            ))
+                ))
         }
         adapter.submitList(models)
     }

@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.app.App
 import myapplication.android.pixelpal.databinding.FragmentCreatorsBinding
+import myapplication.android.pixelpal.di.components.DaggerAppComponent
 import myapplication.android.pixelpal.ui.creators.model.creatores.CreatorUi
 import myapplication.android.pixelpal.ui.creators.model.creatores.CreatorsUiList
 import myapplication.android.pixelpal.ui.creators.model.publisher.PublisherUi
@@ -46,19 +47,23 @@ import myapplication.android.pixelpal.ui.mvi.MviStore
 import java.util.stream.Collectors
 import javax.inject.Inject
 
-class CreatorsFragment:
+class CreatorsFragment :
     MviBaseFragment<
             CreatorsPartialState,
             CreatorsIntent,
             CreatorsState,
             CreatorsEffect>(R.layout.fragment_creators) {
+    private val creatorsComponent by lazy {
+        (activity?.application as App).appComponent.creatorsComponent().create()
+    }
     private val adapter = MainAdapter()
     private var isFirst = true
     private val viewModel: CreatorsViewModel by viewModels {
         CreatorsViewModel.Factory(
-            (activity?.application as App).appComponent.creatorsViewModelFactory()
+            creatorsComponent.creatorsViewModelFactory()
         )
     }
+
     private val roles: MutableList<RolesUi> = mutableListOf()
     private var _binding: FragmentCreatorsBinding? = null
     private val binding get() = _binding!!
@@ -68,7 +73,7 @@ class CreatorsFragment:
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity?.application as App).appComponent.inject(this)
+        creatorsComponent.inject(this)
     }
 
     override fun onCreateView(
@@ -81,10 +86,12 @@ class CreatorsFragment:
     }
 
     override val store: MviStore<CreatorsPartialState, CreatorsIntent, CreatorsState, CreatorsEffect>
-            by viewModels { CreatorsStoreFactory(
-                creatorsLocalDI.reducer,
-                creatorsLocalDI.actor
-            ) }
+            by viewModels {
+                CreatorsStoreFactory(
+                    creatorsLocalDI.reducer,
+                    creatorsLocalDI.actor
+                )
+            }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -154,7 +161,7 @@ class CreatorsFragment:
     private fun initPublishersRecycler(publishers: List<PublisherUi>) {
         val publishersModel = mutableListOf<DelegateItem>()
         for (i in publishers) {
-            with(i){
+            with(i) {
                 publishersModel.addPublisherItem(
                     publishers.indexOf(i),
                     id,

@@ -38,6 +38,9 @@ class MainGamesFragment : MviBaseFragment<
         MainGamesIntent,
         MainGamesState,
         MainGamesEffects>(R.layout.fragment_main_games) {
+    private val mainGamesComponent by lazy {
+        (activity?.application as App).appComponent.mainGamesComponent().create()
+    }
     private var chosenId: Long = ALL_ID
     private var _binding: FragmentMainGamesBinding? = null
     private var layoutType: LayoutType = LayoutType.Grid
@@ -49,9 +52,9 @@ class MainGamesFragment : MviBaseFragment<
     @Inject
     lateinit var mainGamesLocalDI: MainGamesLocalDI
 
-    private val viewModel: MainGamesViewModel by viewModels{
+    private val viewModel: MainGamesViewModel by viewModels {
         MainGamesViewModel.Factory(
-            (activity?.application as App).appComponent.mainGamesViewModelFactory()
+            mainGamesComponent.mainGamesViewModelFactory()
         )
     }
 
@@ -61,7 +64,7 @@ class MainGamesFragment : MviBaseFragment<
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity?.application as App).appComponent.inject(this)
+        mainGamesComponent.inject(this)
     }
 
     override fun onCreateView(

@@ -47,17 +47,25 @@ class HomeFragment :
             HomeState,
             HomeEffect
             >(R.layout.fragment_home) {
+    private val homeComponent by lazy {
+        (activity?.application as App).appComponent.homeComponent().create()
+    }
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
     @Inject
     lateinit var homeLocalDI: HomeLocalDI
 
-    override val store: HomeStore by viewModels { HomeStoreFactory(homeLocalDI.reducer, homeLocalDI.actor)}
+    override val store: HomeStore by viewModels {
+        HomeStoreFactory(
+            homeLocalDI.reducer,
+            homeLocalDI.actor
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-       (activity?.application as App).appComponent.inject(this)
+        homeComponent.inject(this)
     }
 
     override fun onCreateView(

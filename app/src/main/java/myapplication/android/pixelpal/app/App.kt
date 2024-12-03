@@ -2,8 +2,8 @@ package myapplication.android.pixelpal.app
 
 import android.app.Application
 import com.github.terrakok.cicerone.Cicerone
-import myapplication.android.pixelpal.di.AppComponent
-import myapplication.android.pixelpal.di.DaggerAppComponent
+import myapplication.android.pixelpal.di.components.AppComponent
+import myapplication.android.pixelpal.di.components.DaggerAppComponent
 
 internal class App : Application() {
 

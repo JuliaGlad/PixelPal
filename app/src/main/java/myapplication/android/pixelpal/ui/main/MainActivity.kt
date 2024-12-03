@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     private val navigationHolder: NavigatorHolder by lazy { app.navigatorHolder }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as App).appComponent.inject(this)
+      //  (application as App).appComponent.inject(this)
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
