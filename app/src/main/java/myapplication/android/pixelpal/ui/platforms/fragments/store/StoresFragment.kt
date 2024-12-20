@@ -9,7 +9,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App
+import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmnetStoreBinding
 import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.mvi.LceState
@@ -33,7 +33,7 @@ class StoresFragment : MviBaseFragment<
         StoresEffect
         >(R.layout.fragmnet_store) {
     private val storesComponent by lazy {
-        (activity?.application as App).appComponent.storesComponent().create()
+        appComponent.storesComponent().create()
     }
     private var _binding: FragmnetStoreBinding? = null
     private val binding get() = _binding!!

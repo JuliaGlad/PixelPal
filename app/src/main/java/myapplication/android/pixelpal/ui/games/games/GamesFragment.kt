@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.app.App
+import myapplication.android.pixelpal.app.App.Companion.app
+import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmentGamesBinding
 import myapplication.android.pixelpal.di.components.fragment.GamesComponent
 import myapplication.android.pixelpal.ui.games.games.model.GamesShortDataUi
@@ -36,7 +38,9 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
         GamesIntent,
         GamesState,
         GamesEffects>(R.layout.fragment_games) {
-            private val gamesComponent by lazy { (activity?.application as App).appComponent.gamesComponent().create() }
+    private val gamesComponent by lazy {
+        appComponent.gamesComponent().create()
+    }
     private var id: Long = 0
     private val games = mutableListOf<GamesShortDataUi>()
     private var layoutType: LayoutType = LayoutType.Grid
@@ -46,7 +50,12 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
     @Inject
     lateinit var gamesLocalDI: GamesLocalDI
 
-    override val store: GamesStore by viewModels { GamesStoreFactory(gamesLocalDI.reducer, gamesLocalDI.actor) }
+    override val store: GamesStore by viewModels {
+        GamesStoreFactory(
+            gamesLocalDI.reducer,
+            gamesLocalDI.actor
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,13 +73,13 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             store.sendIntent(GamesIntent.Init)
         }
         store.sendIntent(GamesIntent.GetGames(id))
     }
 
-    fun setLayoutType(layoutType: LayoutType){
+    fun setLayoutType(layoutType: LayoutType) {
         this.layoutType = layoutType
     }
 
@@ -125,7 +134,7 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
         }
     }
 
-    private fun initRecycler(): List<GamesShortModel>{
+    private fun initRecycler(): List<GamesShortModel> {
         val shortModels = mutableListOf<GamesShortModel>()
         for (i in games) {
             with(i) {

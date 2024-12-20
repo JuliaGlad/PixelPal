@@ -3,9 +3,11 @@ agp = "8.7.2"
 cicerone = "7.1"
 dagger = "2.28.3"
 daggerCompiler = "2.43.2"
+daggerCompilerVersion = "2.52"
 daggerVersion = "2.43.2"
 fragmentKtx = "1.8.5"
 glide = "4.16.0"
+googleDagger = "2.52"
 gson = "2.11.0"
 jpGlideTransformations = "4.3.0"
 kotlin = "1.9.24"
@@ -23,15 +25,23 @@ okhttp = "4.9.2"
 retrofit = "2.9.0"
 retrofit2KotlinxSerializationConverter = "1.0.0"
 playServicesBase = "18.5.0"
+roomRuntime = "2.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 cicerone = { module = "com.github.terrakok:cicerone", version.ref = "cicerone" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+dagger-android = { module = "com.google.dagger:dagger-android", version.ref = "daggerCompilerVersion" }
+dagger-android-processor = { module = "com.google.dagger:dagger-android-processor", version.ref = "daggerCompilerVersion" }
 dagger-compiler-v2432 = { module = "com.google.dagger:dagger-compiler", version.ref = "daggerCompiler" }
+dagger-compiler-v252 = { module = "com.google.dagger:dagger-compiler", version.ref = "daggerCompilerVersion" }
 dagger-v2432 = { module = "com.google.dagger:dagger", version.ref = "daggerVersion" }
+dagger-v252 = { module = "com.google.dagger:dagger", version.ref = "googleDagger" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 jp-glide-transformations = { module = "jp.wasabeef:glide-transformations", version.ref = "jpGlideTransformations" }

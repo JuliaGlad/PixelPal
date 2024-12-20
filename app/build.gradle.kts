@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.kapt)
     kotlin("plugin.serialization") version "2.0.20"
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -65,12 +66,15 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.play.services.base)
-    implementation ("com.google.dagger:dagger:2.52")
-    implementation ("com.google.dagger:dagger-android:2.52")
-    kapt ("com.google.dagger:dagger-compiler:2.52")
-    kapt ("com.google.dagger:dagger-android-processor:2.52")
+    implementation (libs.dagger.v252)
+    implementation (libs.dagger.android)
+    kapt (libs.dagger.compiler.v252)
+    kapt (libs.dagger.android.processor)
+    ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
+    implementation (libs.androidx.room.runtime)
+    implementation (libs.androidx.room.ktx)
     androidTestImplementation(libs.androidx.espresso.core)
 }

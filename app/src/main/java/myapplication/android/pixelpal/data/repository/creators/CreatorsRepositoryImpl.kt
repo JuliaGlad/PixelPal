@@ -1,7 +1,6 @@
 package myapplication.android.pixelpal.data.repository.creators
 
-import myapplication.android.pixelpal.data.models.creators.CreatorsList
-import myapplication.android.pixelpal.data.models.creators_roles.RolesList
+import myapplication.android.pixelpal.data.repository.getAndCheckData
 import myapplication.android.pixelpal.data.source.creators.CreatorsLocalSource
 import myapplication.android.pixelpal.data.source.creators.CreatorsRemoteSource
 import myapplication.android.pixelpal.domain.model.creator.CreatorDomainList
@@ -13,14 +12,23 @@ class CreatorsRepositoryImpl @Inject constructor(
     private val localSource: CreatorsLocalSource,
     private val remoteSource: CreatorsRemoteSource
 ) : CreatorsRepository {
-    override suspend fun getCreatorsRoles() : List<RoleDomain> =
-        (getLocalCreatorsRoles() ?: remoteSource.getCreatorsRoles()).toDomain()
 
-    override suspend fun getCreators(roleId: Int) : CreatorDomainList =
-        (getLocalCreators() ?: remoteSource.getCreators()).toDomain(roleId)
+    override suspend fun getCreatorsRoles(): List<RoleDomain> =
+        getAndCheckData(
+            localSource::getCreatorsRoles,
+            remoteSource::getCreatorsRoles,
+            localSource::insertCreatorsRoles
+        ).toDomain()
 
-    override fun getLocalCreators(): CreatorsList? = null
-
-    override fun getLocalCreatorsRoles(): RolesList? = null
-
+    override suspend fun getCreators(roleId: Int): CreatorDomainList {
+        val local = localSource.getCreators(roleId)
+        val result =
+            if (local != null) local
+            else {
+                val remote = remoteSource.getCreators()
+                localSource.insertCreators(remote)
+                remote
+            }.toDomain(roleId)
+        return result
+    }
 }

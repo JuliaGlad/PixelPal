@@ -7,5 +7,4 @@ interface PublishersRepository {
 
     suspend fun getPublishers() : PublisherDomainList
 
-    fun getLocalPublishers(): PublishersList?
 }

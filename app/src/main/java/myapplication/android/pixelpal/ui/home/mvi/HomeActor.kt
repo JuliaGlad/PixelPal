@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.ui.home.mvi
 
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import myapplication.android.pixelpal.domain.usecase.games.GetGamesReleasesUseCase

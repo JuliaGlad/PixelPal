@@ -1,7 +1,5 @@
 package myapplication.android.pixelpal.di
 
-import com.google.android.gms.common.api.Api
-import com.google.gson.JsonSerializer
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -13,14 +11,12 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.create
-import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
 class RetrofitModule {
 
-    val jsonSerializer = Json { ignoreUnknownKeys = true }
+    private val jsonSerializer = Json { ignoreUnknownKeys = true }
 
     @Reusable
     @Provides

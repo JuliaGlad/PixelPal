@@ -16,6 +16,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.app.App
+import myapplication.android.pixelpal.app.App.Companion.app
+import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmentHomeBinding
 import myapplication.android.pixelpal.ui.delegates.delegates.info_box.InfoBoxDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.info_box.InfoBoxDelegateItem
@@ -48,7 +50,7 @@ class HomeFragment :
             HomeEffect
             >(R.layout.fragment_home) {
     private val homeComponent by lazy {
-        (activity?.application as App).appComponent.homeComponent().create()
+        appComponent.homeComponent().create()
     }
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -97,7 +99,7 @@ class HomeFragment :
 
             is LceState.Error -> {
                 binding.progressBar.root.visibility = GONE
-                Log.i(TAG, "${state.ui.throwable.message}")
+                Log.e(TAG, "${state.ui.throwable.message}")
             }
 
             LceState.Loading -> binding.progressBar.root.visibility = VISIBLE

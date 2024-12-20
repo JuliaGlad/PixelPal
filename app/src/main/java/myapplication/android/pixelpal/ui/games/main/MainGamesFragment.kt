@@ -15,6 +15,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.app.App
+import myapplication.android.pixelpal.app.App.Companion.app
+import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmentMainGamesBinding
 import myapplication.android.pixelpal.ui.games.games.GamesFragment
 import myapplication.android.pixelpal.ui.games.games.recycler_view.LayoutType
@@ -39,7 +41,7 @@ class MainGamesFragment : MviBaseFragment<
         MainGamesState,
         MainGamesEffects>(R.layout.fragment_main_games) {
     private val mainGamesComponent by lazy {
-        (activity?.application as App).appComponent.mainGamesComponent().create()
+        appComponent.mainGamesComponent().create()
     }
     private var chosenId: Long = ALL_ID
     private var _binding: FragmentMainGamesBinding? = null

@@ -1,6 +1,7 @@
 package myapplication.android.pixelpal.data.repository.publishers
 
 import myapplication.android.pixelpal.data.models.publishers.PublishersList
+import myapplication.android.pixelpal.data.repository.getAndCheckData
 import myapplication.android.pixelpal.data.source.pulisher.PublisherLocalSource
 import myapplication.android.pixelpal.data.source.pulisher.PublisherRemoteSource
 import myapplication.android.pixelpal.data.source.pulisher.PublishersLocalSourceImpl
@@ -14,8 +15,11 @@ class PublishersRepositoryImpl @Inject constructor(
     private val remoteSource: PublisherRemoteSource
 ) : PublishersRepository {
 
-    override suspend fun getPublishers() : PublisherDomainList =
-        (getLocalPublishers() ?: remoteSource.getPublishers()).toDomain()
+    override suspend fun getPublishers(): PublisherDomainList =
+        getAndCheckData(
+            localSource::getPublishers,
+            remoteSource::getPublishers,
+            localSource::insertPublishers
+        ).toDomain()
 
-    override fun getLocalPublishers(): PublishersList? = null
 }

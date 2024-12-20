@@ -13,10 +13,4 @@ interface GamesRepository {
 
     suspend fun getGameByReleasesDate(date: String): GamesNewsListDomain
 
-    fun getLocalTopGames() : GamesNewsList?
-
-    fun getLocalGamesShortData() : GamesShortDataList?
-
-    fun getLocalGamesByReleaseDate(date: String) : GamesNewsList?
-
 }

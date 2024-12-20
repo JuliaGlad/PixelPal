@@ -11,7 +11,4 @@ interface GenresRepository {
 
     suspend fun getGenresDescription(id: Long): GenreDescriptionDomain
 
-    fun getLocalGenres(): GenresList?
-
-    fun getLocalGenresDescription(id: Long) : GenreDescription?
 }

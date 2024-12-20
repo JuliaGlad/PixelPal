@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.ui.delegates.delegates.creators
 
+import android.app.ActionBar.LayoutParams
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.net.toUri
@@ -46,6 +47,7 @@ class CreatorsDelegate : AdapterDelegate{
             binding.projects.text = "${model.famousProjects}"
             Glide.with(itemView.context)
                 .load(model.image.toUri())
+                .override(LayoutParams.WRAP_CONTENT)
                 .into(binding.image)
         }
     }

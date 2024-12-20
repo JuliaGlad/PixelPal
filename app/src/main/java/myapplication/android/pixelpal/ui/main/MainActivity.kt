@@ -9,6 +9,7 @@ import com.github.terrakok.cicerone.Screen
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.app.App
+import myapplication.android.pixelpal.app.App.Companion.app
 import myapplication.android.pixelpal.databinding.ActivityMainBinding
 import myapplication.android.pixelpal.ui.main.BottomScreen.creators
 import myapplication.android.pixelpal.ui.main.BottomScreen.games
@@ -22,7 +23,6 @@ class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
     private val navigator = AppNavigator(this, R.id.main_container)
-    private val app : App by lazy { (application as App) }
     private val presenter: MainPresenter by lazy {
         MainPresenter(
             app.router

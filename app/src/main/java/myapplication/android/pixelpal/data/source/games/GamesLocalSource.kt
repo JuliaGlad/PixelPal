@@ -1,14 +1,18 @@
 package myapplication.android.pixelpal.data.source.games
 
-import myapplication.android.pixelpal.data.models.gamesMain.GamesShortDataList
 import myapplication.android.pixelpal.data.models.gamesNews.GamesNewsList
 
 interface GamesLocalSource {
 
-    suspend fun getGamesShortData(id: Long): GamesShortDataList?
+    fun getTopGames(): GamesNewsList?
 
-    suspend fun getTopGames(): GamesNewsList?
+    fun getGameReleases(): GamesNewsList?
 
-    suspend fun getGameByReleasesDate(date: String): GamesNewsList?
+    fun insertTopGames(games: GamesNewsList)
 
+    fun insertGameReleases(games: GamesNewsList)
+
+    fun deleteTopGames()
+
+    fun deleteGameReleases()
 }

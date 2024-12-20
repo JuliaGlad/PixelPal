@@ -6,6 +6,8 @@ import myapplication.android.pixelpal.data.source.creators.CreatorsLocalSource
 import myapplication.android.pixelpal.data.source.creators.CreatorsLocalSourceImpl
 import myapplication.android.pixelpal.data.source.games.GamesLocalSource
 import myapplication.android.pixelpal.data.source.games.GamesLocalSourceImpl
+import myapplication.android.pixelpal.data.source.games.GamesShortDataLocalSource
+import myapplication.android.pixelpal.data.source.games.GamesShortDataLocalSourceImpl
 import myapplication.android.pixelpal.data.source.genres.GenresLocalSource
 import myapplication.android.pixelpal.data.source.genres.GenresLocalSourceImpl
 import myapplication.android.pixelpal.data.source.platform.PlatformLocalSource
@@ -18,6 +20,11 @@ import javax.inject.Singleton
 
 @Module
 interface LocalSourceModule {
+
+    @Singleton
+    @Binds
+    fun bindLocalSourceGamesShortData(gamesShorRemoteSourceImpl: GamesShortDataLocalSourceImpl): GamesShortDataLocalSource
+
     @Singleton
     @Binds
     fun bindLocalSourceCreators(localSourceImpl: CreatorsLocalSourceImpl): CreatorsLocalSource

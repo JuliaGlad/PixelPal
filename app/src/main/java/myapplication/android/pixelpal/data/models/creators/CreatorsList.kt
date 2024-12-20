@@ -6,5 +6,5 @@ import myapplication.android.pixelpal.data.models.creators_roles.Role
 
 @Serializable
 class CreatorsList(
-    @SerialName("results") val items: List<Creator>
+    @SerialName("results") val items: List<Creator>?
 )

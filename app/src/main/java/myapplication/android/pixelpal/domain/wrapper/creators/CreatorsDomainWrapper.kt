@@ -8,7 +8,7 @@ import java.util.stream.Collectors
 
 fun CreatorsList.toDomain(requiredId: Int) =
     CreatorDomainList(
-        items.stream()
+        items!!.stream()
             .filter { getRoleId(it.role).contains(requiredId) }
             .map {
                 with(it) {

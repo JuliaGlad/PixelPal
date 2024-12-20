@@ -9,7 +9,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App
+import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmentPlatformDetailsBinding
 import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.mvi.LceState
@@ -32,7 +32,7 @@ class PlatformDetailsFragment : MviBaseFragment<
         PlatformState,
         PlatformEffect>(R.layout.fragment_platforms) {
     private val platformComponent by lazy {
-        (activity?.application as App).appComponent.platformComponent().create()
+        appComponent.platformComponent().create()
     }
     private var _binding: FragmentPlatformDetailsBinding? = null
     private val binding get() = _binding!!

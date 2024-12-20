@@ -6,6 +6,4 @@ import myapplication.android.pixelpal.domain.model.platform.PlatformDomainList
 interface PlatformsRepository {
 
     suspend fun getPlatforms(): PlatformDomainList
-
-    fun getLocalPlatforms(): PlatformsList?
 }

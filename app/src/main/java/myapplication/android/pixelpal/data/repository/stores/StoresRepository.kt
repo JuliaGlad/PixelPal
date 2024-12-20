@@ -7,5 +7,4 @@ interface StoresRepository {
 
     suspend fun getStores() : StoreDomainList
 
-    fun getLocalStores() : StoresList?
 }

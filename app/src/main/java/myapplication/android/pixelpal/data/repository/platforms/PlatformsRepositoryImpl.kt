@@ -1,6 +1,7 @@
 package myapplication.android.pixelpal.data.repository.platforms
 
 import myapplication.android.pixelpal.data.models.platforms.PlatformsList
+import myapplication.android.pixelpal.data.repository.getAndCheckData
 import myapplication.android.pixelpal.data.source.platform.PlatformLocalSource
 import myapplication.android.pixelpal.data.source.platform.PlatformLocalSourceImpl
 import myapplication.android.pixelpal.data.source.platform.PlatformRemoteSource
@@ -15,7 +16,10 @@ class PlatformsRepositoryImpl @Inject constructor(
 ) : PlatformsRepository {
 
     override suspend fun getPlatforms(): PlatformDomainList =
-        (getLocalPlatforms() ?: remoteSource.getPlatforms()).toDomain()
+        getAndCheckData(
+            localSource::getPlatforms,
+            remoteSource::getPlatforms,
+            localSource::insertPlatforms
+        ).toDomain()
 
-    override fun getLocalPlatforms(): PlatformsList? = null
 }

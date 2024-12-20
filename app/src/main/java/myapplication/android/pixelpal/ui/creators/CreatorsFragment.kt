@@ -16,9 +16,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App
+import myapplication.android.pixelpal.app.App.Companion.app
+import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmentCreatorsBinding
-import myapplication.android.pixelpal.di.components.DaggerAppComponent
 import myapplication.android.pixelpal.ui.creators.model.creatores.CreatorUi
 import myapplication.android.pixelpal.ui.creators.model.creatores.CreatorsUiList
 import myapplication.android.pixelpal.ui.creators.model.publisher.PublisherUi
@@ -54,7 +54,7 @@ class CreatorsFragment :
             CreatorsState,
             CreatorsEffect>(R.layout.fragment_creators) {
     private val creatorsComponent by lazy {
-        (activity?.application as App).appComponent.creatorsComponent().create()
+        appComponent.creatorsComponent().create()
     }
     private val adapter = MainAdapter()
     private var isFirst = true

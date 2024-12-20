@@ -1,7 +1,8 @@
 package myapplication.android.pixelpal.data.repository.genres
 
+import myapplication.android.pixelpal.data.database.entities.GenreEntity
 import myapplication.android.pixelpal.data.models.genres.GenreDescription
-import myapplication.android.pixelpal.data.models.genres.GenresList
+import myapplication.android.pixelpal.data.repository.getAndCheckData
 import myapplication.android.pixelpal.data.source.genres.GenresLocalSource
 import myapplication.android.pixelpal.data.source.genres.GenresRemoteSource
 import myapplication.android.pixelpal.domain.model.genres.GenreDescriptionDomain
@@ -14,13 +15,27 @@ class GenresRepositoryImpl @Inject constructor(
     private val remoteSource: GenresRemoteSource
 ) : GenresRepository {
     override suspend fun getGenres(): GenreDomainList =
-        (getLocalGenres() ?: remoteSource.getGenresData()).toDomain()
+        getAndCheckData(
+            localSource::getGenres,
+            remoteSource::getGenresData,
+            localSource::insertGenres
+        ).toDomain()
 
-    override suspend fun getGenresDescription(id: Long): GenreDescriptionDomain =
-        (getLocalGenresDescription(id) ?: remoteSource.getGenresDescription(id)).toDomain()
-
-    override fun getLocalGenres(): GenresList? = null
-
-    override fun getLocalGenresDescription(id: Long): GenreDescription? = null
+    override suspend fun getGenresDescription(id: Long): GenreDescriptionDomain {
+        val genres = localSource.getGenreEntities()
+        var chosenGenre: GenreEntity? = null
+        var description: GenreDescription? = null
+        if (genres != null) {
+            for (i in genres) {
+                if (i.genreId == id) {
+                    chosenGenre = i
+                    break
+                }
+            }
+            if (chosenGenre?.description != null) description = GenreDescription(chosenGenre.description!!)
+        }
+        if (description == null) remoteSource.getGenresDescription(id)
+        return description!!.toDomain()
+    }
 
 }
