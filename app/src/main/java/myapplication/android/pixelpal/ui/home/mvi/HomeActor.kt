@@ -1,9 +1,9 @@
 package myapplication.android.pixelpal.ui.home.mvi
 
-import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import myapplication.android.pixelpal.domain.usecase.games.GetGamesReleasesUseCase
+import myapplication.android.pixelpal.domain.usecase.games.GetGameMonthReleasesUseCase
+import myapplication.android.pixelpal.domain.usecase.games.GetGamesNewReleasesUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetTopGamesUseCase
 import myapplication.android.pixelpal.ui.home.model.toUi
 import myapplication.android.pixelpal.ui.ktx.asyncAwait
@@ -12,7 +12,8 @@ import myapplication.android.pixelpal.ui.mvi.MviActor
 
 class HomeActor(
     private val getTopGamesUseCase: GetTopGamesUseCase,
-    private val getGamesReleasesUseCase: GetGamesReleasesUseCase
+    private val getGamesNewReleasesUseCase: GetGamesNewReleasesUseCase,
+    private val getGameMonthReleasesUseCase: GetGameMonthReleasesUseCase
 ) : MviActor<
         HomePartialState,
         HomeIntent,
@@ -65,8 +66,8 @@ class HomeActor(
         runCatchingNonCancellation {
             asyncAwait(
                 { getTopGamesUseCase.invoke() },
-                { getGamesReleasesUseCase.invoke("$startDate,$currentDate") },
-                { getGamesReleasesUseCase.invoke("$currentDate,$endMonthDate") },
+                { getGamesNewReleasesUseCase.invoke("$startDate,$currentDate") },
+                { getGameMonthReleasesUseCase.invoke("$currentDate,$endMonthDate") },
             ) { top, released, nextReleases ->
                 HomeContentResult(
                     top.toUi(),

@@ -1,25 +1,57 @@
 package myapplication.android.pixelpal.data.database.provider
 
+import android.icu.util.Calendar
 import kotlinx.serialization.json.jsonObject
 import myapplication.android.pixelpal.app.App.Companion.app
 import myapplication.android.pixelpal.data.database.entities.GameReleaseEntity
 import myapplication.android.pixelpal.data.models.gamesNews.GamesNewsList
 
 class GameReleasesProvider {
-    fun getGameReleases(): List<GameReleaseEntity> =
-        app.database.gameReleasesDao().getAll()
 
-    fun deleteGamesReleases() { app.database.gameReleasesDao().deleteAll() }
+    fun getGameReleases(isReleased: Boolean): List<GameReleaseEntity>? {
+        val data: List<GameReleaseEntity> = app.database.gameReleasesDao().getAll()
+        var result: MutableList<GameReleaseEntity>? = mutableListOf()
+        if (data.isEmpty()) result = null
+        else {
+            val calendar = Calendar.getInstance()
+            val date = calendar.get(Calendar.DATE)
+            val number = calendar.get(Calendar.MONTH)
+
+            for (i in data) {
+                with(i) {
+                    if (monthNumber == number) {
+                        if (isReleased) {
+                            if (releaseDate <= date) {
+                                result?.add(i)
+                            }
+                        } else {
+                            if (releaseDate >= date) {
+                                result?.add(i)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return result
+    }
+
+    fun deleteGamesReleases() {
+        app.database.gameReleasesDao().deleteAll()
+    }
 
     fun insertGamesReleases(games: GamesNewsList) {
         val entities = mutableListOf<GameReleaseEntity>()
-        for (i in games.items){
-            with(i){
+        for (i in games.items) {
+            with(i) {
+                val date = releaseDate?.subSequence(releaseDate.length - 2, releaseDate.length)
                 genres?.get(0)?.jsonObject?.get("name")?.let {
                     GameReleaseEntity(
                         id,
                         name,
                         releaseDate,
+                        date.toString().toInt(),
+                        Calendar.getInstance().get(Calendar.MONTH),
                         image,
                         rating,
                         ageRating,

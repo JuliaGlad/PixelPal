@@ -1,7 +1,5 @@
 package myapplication.android.pixelpal.data.repository.games
 
-import myapplication.android.pixelpal.data.models.gamesMain.GamesShortDataList
-import myapplication.android.pixelpal.data.models.gamesNews.GamesNewsList
 import myapplication.android.pixelpal.domain.model.games.GamesNewsListDomain
 import myapplication.android.pixelpal.domain.model.games.GamesShortDomainList
 
@@ -11,6 +9,7 @@ interface GamesRepository {
 
     suspend fun getTopGames(): GamesNewsListDomain
 
-    suspend fun getGameByReleasesDate(date: String): GamesNewsListDomain
+    suspend fun getGameNewReleases(dates: String): GamesNewsListDomain
 
+    suspend fun getGameMonthReleases(dates: String): GamesNewsListDomain
 }

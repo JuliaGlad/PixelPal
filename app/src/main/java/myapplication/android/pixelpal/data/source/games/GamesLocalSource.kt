@@ -6,7 +6,9 @@ interface GamesLocalSource {
 
     fun getTopGames(): GamesNewsList?
 
-    fun getGameReleases(): GamesNewsList?
+    fun getGameMonthReleases(dates: String): GamesNewsList?
+
+    fun getGameNewReleases(dates: String): GamesNewsList?
 
     fun insertTopGames(games: GamesNewsList)
 

@@ -35,12 +35,22 @@ class GamesRepositoryImpl @Inject constructor(
             localSourceGames::insertTopGames
         ).toDomain()
 
-    override suspend fun getGameByReleasesDate(date: String): GamesNewsListDomain {
-        val local = localSourceGames.getGameReleases()
-        Log.i("Local", local.toString())
+    override suspend fun getGameNewReleases(dates: String): GamesNewsListDomain {
+        val local = localSourceGames.getGameNewReleases(dates)
         return if (local != null) local
         else {
-            val remote = remoteSourceGames.getGameByReleasesDate(date)
+            val remote = remoteSourceGames.getGameByReleasesDate(dates)
+            localSourceGames.insertGameReleases(remote)
+            remote
+        }.toDomain()
+    }
+
+    override suspend fun getGameMonthReleases(dates: String): GamesNewsListDomain {
+        val local = localSourceGames.getGameMonthReleases(dates)
+        Log.i("Local", local?.items?.size.toString())
+        return if (local != null) local
+        else {
+            val remote = remoteSourceGames.getGameByReleasesDate(dates)
             localSourceGames.insertGameReleases(remote)
             remote
         }.toDomain()

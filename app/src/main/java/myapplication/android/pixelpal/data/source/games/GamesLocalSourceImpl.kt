@@ -1,19 +1,9 @@
 package myapplication.android.pixelpal.data.source.games
 
-import android.util.Log
-import com.google.gson.JsonSerializer
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonEncoder
-import myapplication.android.pixelpal.data.database.converters.JsonArrayConverter
 import myapplication.android.pixelpal.data.database.entities.GameReleaseEntity
 import myapplication.android.pixelpal.data.database.entities.GameTopEntity
-import myapplication.android.pixelpal.data.database.entities.GamesShortEntity
 import myapplication.android.pixelpal.data.database.provider.GameReleasesProvider
 import myapplication.android.pixelpal.data.database.provider.GamesTopProvider
-import myapplication.android.pixelpal.data.database.provider.GamesShortProvider
-import myapplication.android.pixelpal.data.models.gamesMain.GameShortData
-import myapplication.android.pixelpal.data.models.gamesMain.GamesShortDataList
 import myapplication.android.pixelpal.data.models.gamesNews.GamesNews
 import myapplication.android.pixelpal.data.models.gamesNews.GamesNewsList
 import java.util.stream.Collectors
@@ -21,8 +11,11 @@ import javax.inject.Inject
 
 class GamesLocalSourceImpl @Inject constructor() : GamesLocalSource {
 
+    private val gameReleasesProvider = GameReleasesProvider()
+    private val gameTopProvider = GamesTopProvider()
+
     override fun getTopGames(): GamesNewsList? {
-        val data = GamesTopProvider().getTopGames()
+        val data = gameTopProvider.getTopGames()
         return if (data.isNotEmpty()) {
             GamesNewsList(
                 data.stream()
@@ -32,37 +25,38 @@ class GamesLocalSourceImpl @Inject constructor() : GamesLocalSource {
         } else null
     }
 
+    override fun getGameMonthReleases(dates: String): GamesNewsList? =
+        gameReleasesProvider.getGameReleases(false)?.toGamesNewsList()
+
     override fun insertTopGames(games: GamesNewsList) {
-        GamesTopProvider().insertGamesNews(games)
+        gameTopProvider.insertGamesNews(games)
     }
 
     override fun deleteTopGames() {
-        GamesTopProvider().deleteGamesNews()
+        gameTopProvider.deleteGamesNews()
     }
 
     override fun insertGameReleases(games: GamesNewsList) {
-        GameReleasesProvider().insertGamesReleases(games)
+        gameReleasesProvider.insertGamesReleases(games)
     }
 
     override fun deleteGameReleases() {
-        GameReleasesProvider().deleteGamesReleases()
+        gameReleasesProvider.deleteGamesReleases()
     }
 
-    override fun getGameReleases(): GamesNewsList? {
-        val data = GameReleasesProvider().getGameReleases()
-        return if (data.isNotEmpty()) {
-            GamesNewsList(
-                data.stream()
-                    .map { it.toGameNews() }
-                    .collect(Collectors.toList())
-            )
-        } else null
-    }
+    override fun getGameNewReleases(dates: String): GamesNewsList? =
+        gameReleasesProvider.getGameReleases(true)?.toGamesNewsList()
+
+
+    private fun List<GameReleaseEntity>.toGamesNewsList() =
+        GamesNewsList(
+            stream()
+                .map { it.toGameNews() }
+                .collect(Collectors.toList())
+        )
 
     private fun GameReleaseEntity.toGameNews() =
-        GamesNews(releaseDate, image, rating, ageRating, gameId, title, null, genres)
-
-
+        GamesNews(releaseFullDate, image, rating, ageRating, gameId, title, null, genres)
 
     private fun GameTopEntity.toGameNews() =
         GamesNews(releaseDate, image, rating, ageRating, gameId, title, null, genres)

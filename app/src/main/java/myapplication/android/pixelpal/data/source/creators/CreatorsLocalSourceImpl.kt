@@ -12,25 +12,7 @@ import java.util.stream.Collectors
 import javax.inject.Inject
 
 class CreatorsLocalSourceImpl @Inject constructor() : CreatorsLocalSource {
-    //TODO("Check ids")
     override fun getCreators(roleId: Int): CreatorsList? {
-//        val data = CreatorProvider().getCreators()
-//        var containId = false
-//        data.first().roles.stream()
-//            .forEach { if (it.id == roleId) containId = true }
-//
-//        val result = if (data.isNotEmpty() && containId) {
-//            CreatorsList(
-//                data
-//                    .stream()
-//                    .map { it.toCreator() }
-//                    .collect(Collectors.toList())
-//            )
-//        } else null
-//
-//        if (data.isNotEmpty() && !containId) CreatorProvider().deleteCreators()
-//
-//        return result
         val data = CreatorProvider().getCreators()
         return if (data.isNotEmpty()) {
             CreatorsList(
