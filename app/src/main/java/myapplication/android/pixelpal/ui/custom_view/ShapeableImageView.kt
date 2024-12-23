@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.ui.custom_view
 
+import android.app.ActionBar.LayoutParams
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -35,6 +36,7 @@ class ShapeableImageView @JvmOverloads constructor(
     fun setImageUri(uri: Uri){
         Glide.with(context)
             .load(uri)
+            .override(LayoutParams.WRAP_CONTENT)
             .into(this)
     }
 

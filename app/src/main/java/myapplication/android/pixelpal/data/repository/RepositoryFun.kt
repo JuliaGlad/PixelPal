@@ -1,5 +1,8 @@
 package myapplication.android.pixelpal.data.repository
 
+import myapplication.android.pixelpal.data.models.gamesNews.GamesNewsList
+import kotlin.reflect.KSuspendFunction1
+
 suspend fun <T> getAndCheckData(
     localFunc: () -> T?,
     remoteFunc: suspend () -> T?,
@@ -15,3 +18,19 @@ suspend fun <T> getAndCheckData(
         }
     return result
 }
+//
+//suspend fun <T> getAndCheckDataK(
+//    localFunc: () -> T?,
+//    remoteFunc: KSuspendFunction1<Int, GamesNewsList>,
+//    addToLocal: (value: T) -> Unit
+//): T {
+//    val local = localFunc.invoke()
+//    val result =
+//        if (local != null) local
+//        else {
+//            val remote = remoteFunc.invoke()
+//            addToLocal(remote!!)
+//            remote
+//        }
+//    return result
+//}

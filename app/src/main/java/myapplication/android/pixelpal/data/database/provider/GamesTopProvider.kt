@@ -7,30 +7,42 @@ import myapplication.android.pixelpal.data.models.gamesNews.GamesNewsList
 
 class GamesTopProvider {
 
-    fun getTopGames(): List<GameTopEntity> =
-        app.database.gameTopDao().getAll()
+    fun getTopGames(currentPage: Int): List<GameTopEntity>? {
+        val data = app.database.gameTopDao().getAll()
+        var result: MutableList<GameTopEntity>? = mutableListOf()
+        if (data.isEmpty()) result = null
+        else {
+            for (i in data) {
+                with(i) {
+                    if (page == currentPage) {
+                        result?.add(i)
+                    }
+                }
+            }
+        }
+        return result
+    }
 
     fun deleteGamesNews() {
         app.database.gameTopDao().deleteAll()
     }
 
-    fun insertGamesNews(games: GamesNewsList) {
+    fun insertGamesNews(games: GamesNewsList, page: Int) {
         val entities = mutableListOf<GameTopEntity>()
         for (i in games.items) {
             with(i) {
-                genres?.get(0)?.jsonObject?.get("name")?.let {
-                    GameTopEntity(
-                        id,
-                        name,
-                        releaseDate,
-                        image,
-                        rating,
-                        ageRating,
-                        it.toString()
-                    )
-                }?.let {
+                if (!genres.isNullOrEmpty()) {
                     entities.add(
-                        it
+                        GameTopEntity(
+                            id,
+                            page,
+                            name,
+                            releaseDate,
+                            image,
+                            rating,
+                            ageRating,
+                            genres[0].jsonObject["name"].toString()
+                        )
                     )
                 }
             }

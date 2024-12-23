@@ -7,5 +7,5 @@ import javax.inject.Inject
 class GetGamesNewReleasesUseCase @Inject constructor(
     private val repository: GamesRepository
 ) {
-    suspend fun invoke(date: String): GamesNewsListDomain = repository.getGameNewReleases(date)
+    suspend fun invoke(date: String, page: Int): GamesNewsListDomain = repository.getGameNewReleases(date, page)
 }

@@ -8,5 +8,5 @@ import javax.inject.Inject
 class GetTopGamesUseCase @Inject constructor(
     private val repository: GamesRepository
 ) {
-    suspend fun invoke(): GamesNewsListDomain = repository.getTopGames()
+    suspend fun invoke(page: Int): GamesNewsListDomain = repository.getTopGames(page)
 }

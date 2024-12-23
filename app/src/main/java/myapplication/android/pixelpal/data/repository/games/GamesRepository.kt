@@ -7,9 +7,9 @@ interface GamesRepository {
 
     suspend fun getGamesShortData(genres: Long) : GamesShortDomainList
 
-    suspend fun getTopGames(): GamesNewsListDomain
+    suspend fun getTopGames(page: Int): GamesNewsListDomain
 
-    suspend fun getGameNewReleases(dates: String): GamesNewsListDomain
+    suspend fun getGameNewReleases(dates: String, page: Int): GamesNewsListDomain
 
-    suspend fun getGameMonthReleases(dates: String): GamesNewsListDomain
+    suspend fun getGameMonthReleases(dates: String, page: Int): GamesNewsListDomain
 }

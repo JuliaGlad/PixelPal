@@ -32,7 +32,9 @@ class ReleasesAdapter :
                 releaseDate.text = model.releaseDate
                 title.text = model.title
                 genres.text = model.genres
-                image.setImageUri(model.uri.toUri())
+                if (model.uri.isNotEmpty()) {
+                    image.setImageUri(model.uri.toUri())
+                }
             }
         }
     }

@@ -15,8 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App
-import myapplication.android.pixelpal.app.App.Companion.app
 import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmentHomeBinding
 import myapplication.android.pixelpal.ui.delegates.delegates.info_box.InfoBoxDelegate
@@ -25,11 +23,13 @@ import myapplication.android.pixelpal.ui.delegates.delegates.info_box.InfoBoxMod
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsItemModel
+import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
 import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
 import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
 import myapplication.android.pixelpal.ui.home.mvi.HomeContentResult
 import myapplication.android.pixelpal.ui.home.mvi.HomeEffect
 import myapplication.android.pixelpal.ui.home.mvi.HomeIntent
+import myapplication.android.pixelpal.ui.home.mvi.HomeLceState
 import myapplication.android.pixelpal.ui.home.mvi.HomeLocalDI
 import myapplication.android.pixelpal.ui.home.mvi.HomePartialState
 import myapplication.android.pixelpal.ui.home.mvi.HomeState
@@ -37,10 +37,11 @@ import myapplication.android.pixelpal.ui.home.mvi.HomeStore
 import myapplication.android.pixelpal.ui.home.mvi.HomeStoreFactory
 import myapplication.android.pixelpal.ui.home.recycler_view.releases.ReleasesModel
 import myapplication.android.pixelpal.ui.listener.ClickListener
-import myapplication.android.pixelpal.ui.mvi.LceState
+import myapplication.android.pixelpal.ui.listener.RecyclerEndListener
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import java.util.Date
 import javax.inject.Inject
+
 
 class HomeFragment :
     MviBaseFragment<
@@ -52,6 +53,8 @@ class HomeFragment :
     private val homeComponent by lazy {
         appComponent.homeComponent().create()
     }
+    private val adapter : MainAdapter by lazy(LazyThreadSafetyMode.NONE) { initAdapter() }
+    private var recyclerItems: MutableList<DelegateItem> = mutableListOf()
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
@@ -92,17 +95,38 @@ class HomeFragment :
 
     override fun render(state: HomeState) {
         when (state.ui) {
-            is LceState.Content -> {
+            is HomeLceState.Content -> {
                 binding.progressBar.root.visibility = GONE
                 initRecycler(state.ui.data)
             }
 
-            is LceState.Error -> {
+            is HomeLceState.Error -> {
                 binding.progressBar.root.visibility = GONE
                 Log.e(TAG, "${state.ui.throwable.message}")
             }
 
-            LceState.Loading -> binding.progressBar.root.visibility = VISIBLE
+            HomeLceState.Loading -> binding.progressBar.root.visibility = VISIBLE
+
+            is HomeLceState.UpdateTopContent -> updateRecycler(state.ui.data, TOP_ID)
+
+            is HomeLceState.UpdateNextReleasesContent -> updateRecycler(state.ui.data, NEXT_ID)
+
+            is HomeLceState.UpdateReleasesContent -> updateRecycler(state.ui.data, NEW_RELEASES_ID)
+        }
+    }
+
+    private fun updateRecycler(items: GamesNewsListUi, requiredId: Int) {
+        recyclerItems.forEach {
+            if (it is NewsDelegateItem) {
+                with((it.content() as NewsItemModel)) {
+                    if (id == requiredId) {
+                        isUpdated = true
+                        val models = addReleaseItems(items)
+                        newItems.addAll(models)
+                        adapter.notifyItemChanged(recyclerItems.indexOf(it))
+                    }
+                }
+            }
         }
     }
 
@@ -134,13 +158,22 @@ class HomeFragment :
     }
 
     private fun initRecycler(gamesNews: HomeContentResult) {
-        val adapter = initAdapter()
+        val (currentDate, monthEndDate, monthStartDate) = getVariables()
 
         val released = addReleaseItems(gamesNews.gamesReleased)
         val releaseThisMonth = addReleaseItems(gamesNews.gameMonthReleases)
         val topGames = addReleaseItems(gamesNews.gamesTop)
-
-        adapter.submitList(getMainItems(released, releaseThisMonth, topGames))
+        recyclerItems = getMainItems(
+            released,
+            releaseThisMonth,
+            topGames,
+            currentDate,
+            monthEndDate,
+            monthStartDate
+        )
+        adapter.submitList(
+            recyclerItems
+        )
     }
 
     private fun initAdapter(): MainAdapter {
@@ -148,43 +181,63 @@ class HomeFragment :
         adapter.addDelegate(NewsDelegate())
         adapter.addDelegate(InfoBoxDelegate())
         binding.recycler.adapter = adapter
+
         return adapter
     }
 
     private fun getMainItems(
-        released: List<ReleasesModel>,
-        releaseThisMonth: List<ReleasesModel>,
-        topGames: List<ReleasesModel>
-    ) = listOf(
+        released: MutableList<ReleasesModel>,
+        releaseThisMonth: MutableList<ReleasesModel>,
+        topGames: MutableList<ReleasesModel>,
+        currentDate: String,
+        monthEndDate: String,
+        monthStartDate: String
+    ) = mutableListOf(
         NewsDelegateItem(
             NewsItemModel(
-                1,
+                NEW_RELEASES_ID,
                 getString(R.string.new_releases),
                 getString(R.string.there_is_no_new_games_released_this_month),
                 released,
+                mutableListOf(),
                 object : ClickListener {
                     override fun onClick() {
                         TODO("open all new releases")
+                    }
+                },
+                object : RecyclerEndListener {
+                    override fun onEndReached() {
+                        if (checkRecyclerForUpdate()) {
+                            store.sendIntent(HomeIntent.GetReleases(monthStartDate, currentDate))
+                        }
                     }
                 }
             )
         ),
         NewsDelegateItem(
             NewsItemModel(
-                2,
+                NEXT_ID,
                 getString(R.string.release_this_month),
                 getString(R.string.there_is_no_games_releases_this_month),
                 releaseThisMonth,
+                mutableListOf(),
                 object : ClickListener {
                     override fun onClick() {
                         TODO("Open all games releases in this month")
+                    }
+                },
+                object : RecyclerEndListener {
+                    override fun onEndReached() {
+                        if (checkRecyclerForUpdate()) {
+                            store.sendIntent(HomeIntent.GetNextReleases(currentDate, monthEndDate))
+                        }
                     }
                 }
             )
         ),
         InfoBoxDelegateItem(
             InfoBoxModel(
-                3,
+                4,
                 getString(R.string.what_other_games_are_coming_out),
                 object : ClickListener {
                     override fun onClick() {
@@ -195,20 +248,28 @@ class HomeFragment :
         ),
         NewsDelegateItem(
             NewsItemModel(
-                3,
+                TOP_ID,
                 getString(R.string.all_time_top),
                 "",
                 topGames,
+                mutableListOf(),
                 object : ClickListener {
                     override fun onClick() {
                         TODO("open all top games")
+                    }
+                },
+                object : RecyclerEndListener {
+                    override fun onEndReached() {
+                        if (checkRecyclerForUpdate()) {
+                            store.sendIntent(HomeIntent.GetTop)
+                        }
                     }
                 }
             )
         )
     )
 
-    private fun addReleaseItems(list: GamesNewsListUi): List<ReleasesModel> {
+    private fun addReleaseItems(list: GamesNewsListUi): MutableList<ReleasesModel> {
         val items = mutableListOf<ReleasesModel>()
         for (i in list.games) {
             items.add(
@@ -229,6 +290,9 @@ class HomeFragment :
         return items
     }
 
+    private fun checkRecyclerForUpdate(): Boolean =
+        !binding.recycler.isComputingLayout
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
@@ -236,6 +300,9 @@ class HomeFragment :
 
     companion object {
         private const val TAG = "HomeFragmentException"
+        private const val NEW_RELEASES_ID = 1
+        private const val TOP_ID = 2
+        private const val NEXT_ID = 3
     }
 
 }

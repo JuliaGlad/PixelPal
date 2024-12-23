@@ -56,6 +56,7 @@ class CreatorsFragment :
     private val creatorsComponent by lazy {
         appComponent.creatorsComponent().create()
     }
+    private val page = 1
     private val adapter = MainAdapter()
     private var isFirst = true
     private val viewModel: CreatorsViewModel by viewModels {

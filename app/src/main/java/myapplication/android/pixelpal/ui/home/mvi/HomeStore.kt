@@ -1,6 +1,5 @@
 package myapplication.android.pixelpal.ui.home.mvi
 
-import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviStore
 
 class HomeStore(
@@ -9,5 +8,5 @@ class HomeStore(
 ) : MviStore<HomePartialState, HomeIntent, HomeState, HomeEffect>(
     reducer, actor
 ){
-    override fun initialStateCreator(): HomeState = HomeState(ui = LceState.Loading)
+    override fun initialStateCreator(): HomeState = HomeState(ui = HomeLceState.Loading)
 }

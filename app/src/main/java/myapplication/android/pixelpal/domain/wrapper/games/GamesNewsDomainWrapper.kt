@@ -14,7 +14,11 @@ fun GamesNewsList.toDomain(): GamesNewsListDomain =
         .map {
             with(it) {
                 val genre =
-                    if (genres != null) genres[0].jsonObject["name"].toString()
+                    if (genres != null) {
+                        if (genres.isNotEmpty()) {
+                            genres[0].jsonObject["name"].toString()
+                        } else "unknown"
+                    }
                     else genreName
                 GamesNewsDomain(
                     gameId = id,

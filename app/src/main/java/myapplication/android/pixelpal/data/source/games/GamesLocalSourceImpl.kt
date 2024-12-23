@@ -14,9 +14,9 @@ class GamesLocalSourceImpl @Inject constructor() : GamesLocalSource {
     private val gameReleasesProvider = GameReleasesProvider()
     private val gameTopProvider = GamesTopProvider()
 
-    override fun getTopGames(): GamesNewsList? {
-        val data = gameTopProvider.getTopGames()
-        return if (data.isNotEmpty()) {
+    override fun getTopGames(currentPage: Int): GamesNewsList? {
+        val data = gameTopProvider.getTopGames(currentPage)
+        return if (data?.isNotEmpty() == true) {
             GamesNewsList(
                 data.stream()
                     .map { it.toGameNews() }
@@ -25,27 +25,27 @@ class GamesLocalSourceImpl @Inject constructor() : GamesLocalSource {
         } else null
     }
 
-    override fun getGameMonthReleases(dates: String): GamesNewsList? =
-        gameReleasesProvider.getGameReleases(false)?.toGamesNewsList()
+    override fun getGameMonthReleases(dates: String, page: Int): GamesNewsList? =
+        gameReleasesProvider.getGameReleases(false, page)?.toGamesNewsList()
 
-    override fun insertTopGames(games: GamesNewsList) {
-        gameTopProvider.insertGamesNews(games)
+    override fun insertTopGames(games: GamesNewsList, currentPage: Int) {
+        gameTopProvider.insertGamesNews(games, currentPage)
     }
 
     override fun deleteTopGames() {
         gameTopProvider.deleteGamesNews()
     }
 
-    override fun insertGameReleases(games: GamesNewsList) {
-        gameReleasesProvider.insertGamesReleases(games)
+    override fun insertGameReleases(games: GamesNewsList, currentPage: Int) {
+        gameReleasesProvider.insertGamesReleases(games, currentPage)
     }
 
     override fun deleteGameReleases() {
         gameReleasesProvider.deleteGamesReleases()
     }
 
-    override fun getGameNewReleases(dates: String): GamesNewsList? =
-        gameReleasesProvider.getGameReleases(true)?.toGamesNewsList()
+    override fun getGameNewReleases(dates: String, page: Int): GamesNewsList? =
+        gameReleasesProvider.getGameReleases(true, page)?.toGamesNewsList()
 
 
     private fun List<GameReleaseEntity>.toGamesNewsList() =

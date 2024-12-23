@@ -11,7 +11,7 @@ abstract class MviActor<
         State : MviState,
         Effect : MviEffect> {
 
-    protected val _effects: MutableSharedFlow<Effect> = MutableSharedFlow()
+    private val _effects: MutableSharedFlow<Effect> = MutableSharedFlow()
     val effects: SharedFlow<Effect> = _effects.asSharedFlow()
 
     abstract fun resolve(intent: Intent, state: State): Flow<PartialState>

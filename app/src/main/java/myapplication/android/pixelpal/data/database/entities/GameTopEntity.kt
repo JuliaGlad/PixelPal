@@ -8,6 +8,7 @@ import myapplication.android.pixelpal.data.models.GameRating
 @Entity(tableName = "gameTop")
 class GameTopEntity(
     val gameId: Long,
+    val page: Int,
     val title: String,
     val releaseDate: String?,
     val image: String?,

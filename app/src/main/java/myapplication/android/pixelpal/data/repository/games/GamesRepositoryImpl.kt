@@ -1,7 +1,6 @@
 package myapplication.android.pixelpal.data.repository.games
 
 import android.util.Log
-import myapplication.android.pixelpal.data.repository.getAndCheckData
 import myapplication.android.pixelpal.data.source.games.GamesLocalSource
 import myapplication.android.pixelpal.data.source.games.GamesRemoteSource
 import myapplication.android.pixelpal.data.source.games.GamesShortDataLocalSource
@@ -16,7 +15,7 @@ class GamesRepositoryImpl @Inject constructor(
     private val localSourceShortGames: GamesShortDataLocalSource,
 ) : GamesRepository {
 
-    override suspend fun getGamesShortData(genres: Long): GamesShortDomainList {
+    override suspend fun getGamesShortData(genres: Long,): GamesShortDomainList {
         val local = localSourceShortGames.getGamesShortData()
         val result =
             if (local != null) local
@@ -28,30 +27,34 @@ class GamesRepositoryImpl @Inject constructor(
         return result
     }
 
-    override suspend fun getTopGames(): GamesNewsListDomain =
-        getAndCheckData(
-            localSourceGames::getTopGames,
-            remoteSourceGames::getTopGames,
-            localSourceGames::insertTopGames
-        ).toDomain()
+    override suspend fun getTopGames(page: Int): GamesNewsListDomain {
+        val local = localSourceGames.getTopGames(page)
+        val result =
+            if (local != null) local
+            else {
+                val remote = remoteSourceGames.getTopGames(page)
+                localSourceGames.insertTopGames(remote, page)
+                remote
+            }
+        return result.toDomain()
+    }
 
-    override suspend fun getGameNewReleases(dates: String): GamesNewsListDomain {
-        val local = localSourceGames.getGameNewReleases(dates)
+    override suspend fun getGameNewReleases(dates: String, page: Int): GamesNewsListDomain {
+        val local = localSourceGames.getGameNewReleases(dates, page)
         return if (local != null) local
         else {
-            val remote = remoteSourceGames.getGameByReleasesDate(dates)
-            localSourceGames.insertGameReleases(remote)
+            val remote = remoteSourceGames.getGameByReleasesDate(dates, page)
+            localSourceGames.insertGameReleases(remote, page)
             remote
         }.toDomain()
     }
 
-    override suspend fun getGameMonthReleases(dates: String): GamesNewsListDomain {
-        val local = localSourceGames.getGameMonthReleases(dates)
-        Log.i("Local", local?.items?.size.toString())
+    override suspend fun getGameMonthReleases(dates: String, page: Int): GamesNewsListDomain {
+        val local = localSourceGames.getGameMonthReleases(dates, page)
         return if (local != null) local
         else {
-            val remote = remoteSourceGames.getGameByReleasesDate(dates)
-            localSourceGames.insertGameReleases(remote)
+            val remote = remoteSourceGames.getGameByReleasesDate(dates, page)
+            localSourceGames.insertGameReleases(remote, page)
             remote
         }.toDomain()
     }

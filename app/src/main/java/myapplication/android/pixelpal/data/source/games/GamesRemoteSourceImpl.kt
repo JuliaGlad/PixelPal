@@ -11,10 +11,10 @@ class GamesRemoteSourceImpl @Inject constructor(
     override suspend fun getGamesShortData(id: Long): GamesShortDataList =
         api.getGamesShortDataByGenre(id)
 
-    override suspend fun getTopGames(): GamesNewsList =
-        api.getTopGames()
+    override suspend fun getTopGames(page: Int): GamesNewsList =
+        api.getTopGames(page)
 
-    override suspend fun getGameByReleasesDate(date: String): GamesNewsList =
-        api.getGamesByReleasesDate(date)
+    override suspend fun getGameByReleasesDate(date: String, page: Int): GamesNewsList =
+        api.getGamesByReleasesDate(date, page)
 
 }

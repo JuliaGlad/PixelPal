@@ -1,10 +1,12 @@
 package myapplication.android.pixelpal.ui.home.mvi
 
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import myapplication.android.pixelpal.domain.usecase.games.GetGameMonthReleasesUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetGamesNewReleasesUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetTopGamesUseCase
+import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
 import myapplication.android.pixelpal.ui.home.model.toUi
 import myapplication.android.pixelpal.ui.ktx.asyncAwait
 import myapplication.android.pixelpal.ui.ktx.runCatchingNonCancellation
@@ -31,11 +33,83 @@ class HomeActor(
                 intent.monthEndDate,
                 intent.monthStartDate
             )
+
+            is HomeIntent.GetTop -> {
+                loadTopGames(state.topPage + 1)
+            }
+
+            is HomeIntent.GetNextReleases -> loadNextReleases(
+                intent.monthEndDate,
+                intent.currentDate,
+                state.nextReleasesPage + 1
+            )
+
+            is HomeIntent.GetReleases -> loadReleases(
+                intent.startDate,
+                intent.currentDate,
+                state.newReleasesPage + 1
+            )
         }
 
     private fun init() =
         flow {
             emit(HomePartialState.Loading)
+        }
+
+    private fun loadTopGames(page: Int): Flow<HomePartialState> =
+        flow {
+            kotlin.runCatching {
+                getTopGames(page)
+            }.fold(
+                onSuccess = { data ->
+                    emit(
+                        HomePartialState.TopReleasesUpdated(data)
+                    )
+                },
+                onFailure = { throwable ->
+                    emit(HomePartialState.Error(throwable))
+                }
+            )
+        }
+
+    private fun loadReleases(
+        startDate: String,
+        currentDate: String,
+        page: Int
+    ): Flow<HomePartialState> =
+        flow {
+            kotlin.runCatching {
+                getReleasesGames("$startDate,$currentDate", page)
+            }.fold(
+                onSuccess = { data ->
+                    emit(
+                        HomePartialState.ReleasesUpdated(data)
+                    )
+                },
+                onFailure = { throwable ->
+                    emit(HomePartialState.Error(throwable))
+                }
+            )
+        }
+
+    private fun loadNextReleases(
+        endMonthDate: String,
+        currentDate: String,
+        page: Int
+    ): Flow<HomePartialState> =
+        flow {
+            kotlin.runCatching {
+                getNextReleasesGames("$currentDate,$endMonthDate", page)
+            }.fold(
+                onSuccess = { data ->
+                    emit(
+                        HomePartialState.NextReleasesUpdated(data)
+                    )
+                },
+                onFailure = { throwable ->
+                    emit(HomePartialState.Error(throwable))
+                }
+            )
         }
 
     private fun loadGames(
@@ -58,6 +132,41 @@ class HomeActor(
             )
         }
 
+    private suspend fun getReleasesGames(
+        date: String,
+        page: Int
+    ): GamesNewsListUi =
+        runCatchingNonCancellation {
+            asyncAwait(
+                { getGamesNewReleasesUseCase.invoke(date, page) }
+            ) { result ->
+                result.toUi()
+            }
+        }.getOrThrow()
+
+    private suspend fun getNextReleasesGames(
+        date: String,
+        page: Int
+    ): GamesNewsListUi =
+        runCatchingNonCancellation {
+            asyncAwait(
+                { getGameMonthReleasesUseCase.invoke(date, page) }
+            ) { result ->
+                result.toUi()
+            }
+        }.getOrThrow()
+
+    private suspend fun getTopGames(
+        page: Int
+    ): GamesNewsListUi =
+        runCatchingNonCancellation {
+            asyncAwait(
+                { getTopGamesUseCase.invoke(page) }
+            ) { result ->
+                result.toUi()
+            }
+        }.getOrThrow()
+
     private suspend fun getGames(
         currentDate: String,
         endMonthDate: String,
@@ -65,9 +174,9 @@ class HomeActor(
     ): HomeContentResult =
         runCatchingNonCancellation {
             asyncAwait(
-                { getTopGamesUseCase.invoke() },
-                { getGamesNewReleasesUseCase.invoke("$startDate,$currentDate") },
-                { getGameMonthReleasesUseCase.invoke("$currentDate,$endMonthDate") },
+                { getTopGamesUseCase.invoke(1) },
+                { getGamesNewReleasesUseCase.invoke("$startDate,$currentDate", 1) },
+                { getGameMonthReleasesUseCase.invoke("$currentDate,$endMonthDate", 1) },
             ) { top, released, nextReleases ->
                 HomeContentResult(
                     top.toUi(),

@@ -16,10 +16,10 @@ import retrofit2.http.Query
 interface GamesApi {
 
     @GET("games")
-    suspend fun getGamesByReleasesDate(@Query("dates") dates: String): GamesNewsList
+    suspend fun getGamesByReleasesDate(@Query("dates") dates: String, @Query("page") page: Int): GamesNewsList
 
     @GET("games?ordering=-metacritics")
-    suspend fun getTopGames(): GamesNewsList
+    suspend fun getTopGames(@Query("page") page: Int): GamesNewsList
 
     @GET("games")
     suspend fun getGamesShortDataByGenre(@Query("genres") genre: Long): GamesShortDataList
