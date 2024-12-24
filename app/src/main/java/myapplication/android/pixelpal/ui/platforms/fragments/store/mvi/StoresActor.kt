@@ -22,20 +22,19 @@ class StoresActor(
         state: StoresState
     ): Flow<StoresPartialState> =
         when (intent) {
-            StoresIntent.GetStores -> loadStores()
+            StoresIntent.GetStores -> loadStores(state.page + 1)
             StoresIntent.Init -> init()
         }
-
 
     private fun init() =
         flow {
             emit(StoresPartialState.Loading)
         }
 
-    private fun loadStores(): Flow<StoresPartialState> =
+    private fun loadStores(page: Int): Flow<StoresPartialState> =
         flow {
             kotlin.runCatching {
-                getStores()
+                getStores(page)
             }.fold(
                 onSuccess = { data ->
                     emit(
@@ -48,10 +47,10 @@ class StoresActor(
             )
         }
 
-    private suspend fun getStores(): StoresUiList =
+    private suspend fun getStores(page: Int): StoresUiList =
         runCatchingNonCancellation {
             asyncAwait(
-                { getStoresUseCase.invoke() }
+                { getStoresUseCase.invoke(page) }
             ) { stores ->
                 stores.toUi()
             }

@@ -4,6 +4,6 @@ import myapplication.android.pixelpal.data.models.stores.StoresList
 
 interface StoresRemoteSource {
 
-    suspend fun getStores(): StoresList
+    suspend fun getStores(page: Int): StoresList
 
 }

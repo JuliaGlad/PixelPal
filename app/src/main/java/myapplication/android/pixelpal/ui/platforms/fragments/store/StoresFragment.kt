@@ -8,12 +8,16 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmnetStoreBinding
 import myapplication.android.pixelpal.ui.listener.ClickListener
+import myapplication.android.pixelpal.ui.listener.GridPaginationScrollListener
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
+import myapplication.android.pixelpal.ui.platforms.fragments.store.model.StoreUi
 import myapplication.android.pixelpal.ui.platforms.fragments.store.model.StoresUiList
 import myapplication.android.pixelpal.ui.platforms.fragments.store.mvi.StoresEffect
 import myapplication.android.pixelpal.ui.platforms.fragments.store.mvi.StoresIntent
@@ -26,25 +30,25 @@ import myapplication.android.pixelpal.ui.platforms.fragments.store.recycler_view
 import myapplication.android.pixelpal.ui.platforms.fragments.store.recycler_view.StoreModel
 import javax.inject.Inject
 
-class StoresFragment : MviBaseFragment<
-        StoresPartialState,
-        StoresIntent,
-        StoresState,
-        StoresEffect
-        >(R.layout.fragmnet_store) {
+class StoresFragment :
+    MviBaseFragment<StoresPartialState, StoresIntent, StoresState, StoresEffect>(R.layout.fragmnet_store) {
     private val storesComponent by lazy {
         appComponent.storesComponent().create()
     }
+    private val adapter = StoreAdapter()
+    private val models = mutableListOf<StoreModel>()
     private var _binding: FragmnetStoreBinding? = null
     private val binding get() = _binding!!
 
     @Inject
     lateinit var storesLocalDI: StoresLocalDI
 
+    var loading = false
+    var lastPage = false
+
     override val store: StoresStore by viewModels {
         StoresStoreFactory(
-            storesLocalDI.reducer,
-            storesLocalDI.actor
+            storesLocalDI.reducer, storesLocalDI.actor
         )
     }
 
@@ -54,9 +58,7 @@ class StoresFragment : MviBaseFragment<
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmnetStoreBinding.inflate(layoutInflater)
         return binding.root
@@ -78,7 +80,11 @@ class StoresFragment : MviBaseFragment<
         when (state.ui) {
             is LceState.Content -> {
                 binding.loadingRecycler.root.visibility = GONE
-                initRecycler(state.ui.data)
+                if (!lastPage) {
+                    initRecycler(state.ui.data)
+                } else {
+                    updateRecycler(state.ui.data.stores)
+                }
             }
 
             is LceState.Error -> {
@@ -90,27 +96,60 @@ class StoresFragment : MviBaseFragment<
         }
     }
 
-    private fun initRecycler(stores: StoresUiList) {
-        val adapter = StoreAdapter()
-        binding.recyclerView.adapter = adapter
+    private fun updateRecycler(stores: List<StoreUi>) {
+        val newItems = mutableListOf<StoreModel>()
+        for (i in stores) {
+            with(i){
+                newItems.add(
+                    stores.indexOf(i), id, name, domain, projects, image
+                )
+            }
+        }
+        val positionStart = models.size
+        models.addAll(newItems)
+        adapter.notifyItemRangeInserted(positionStart, newItems.size)
+        loading = false
+        lastPage = false
+    }
 
-        val models = mutableListOf<StoreModel>()
+    private fun initRecycler(stores: StoresUiList) {
+        binding.recyclerView.adapter = adapter
         for (i in stores.stores) {
-            models.add(StoreModel(
-                1,
-                i.id,
-                i.name,
-                i.domain,
-                i.projects,
-                i.image,
-                object : ClickListener {
-                    override fun onClick() {
-                        TODO("open stores details fragment")
-                    }
-                }
-            ))
+            models.add(stores.stores.indexOf(i), i.id, i.name, i.domain, i.projects, i.image)
         }
         adapter.submitList(models)
+        addScrollRecyclerListener()
+    }
+
+    private fun addScrollRecyclerListener(){
+        with(binding.recyclerView){
+            addOnScrollListener(object : GridPaginationScrollListener(
+                layoutManager as GridLayoutManager
+            ){
+                override fun isLastPage(): Boolean = lastPage
+
+                override fun isLoading(): Boolean = loading
+
+                override fun loadMoreItems() {
+                    if (!isComputingLayout && scrollState == RecyclerView.SCROLL_STATE_IDLE) {
+                        lastPage = true
+                        loading = true
+                        store.sendIntent(StoresIntent.GetStores)
+                    }
+                }
+
+            })
+        }
+    }
+
+    private fun MutableList<StoreModel>.add(
+        id: Int, storeId: Int, name: String, domain: String?, projects: Int?, image: String
+    ) {
+        add(StoreModel(id, storeId, name, domain, projects, image, object : ClickListener {
+            override fun onClick() {
+                TODO("open stores details fragment")
+            }
+        }))
     }
 
     override fun onDestroy() {

@@ -34,10 +34,10 @@ interface GamesApi {
     suspend fun getPublishers(@Query("page")page: Int): PublishersList
 
     @GET("stores")
-    suspend fun getStores(): StoresList
+    suspend fun getStores(@Query("page")page: Int): StoresList
 
     @GET("platforms")
-    suspend fun getPlatforms(): PlatformsList
+    suspend fun getPlatforms(@Query("page")page: Int): PlatformsList
 
     @GET("genres")
     suspend fun getGenresData(): GenresList

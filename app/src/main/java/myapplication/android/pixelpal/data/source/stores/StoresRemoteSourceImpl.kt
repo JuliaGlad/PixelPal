@@ -7,6 +7,6 @@ import javax.inject.Inject
 class StoresRemoteSourceImpl @Inject constructor(
     private val api: GamesApi
 ): StoresRemoteSource {
-    override suspend fun getStores(): StoresList =
-        api.getStores()
+    override suspend fun getStores(page: Int): StoresList =
+        api.getStores(page)
 }

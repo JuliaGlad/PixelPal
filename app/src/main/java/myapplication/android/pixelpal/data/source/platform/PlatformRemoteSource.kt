@@ -4,6 +4,6 @@ import myapplication.android.pixelpal.data.models.platforms.PlatformsList
 
 interface PlatformRemoteSource {
 
-    suspend fun getPlatforms(): PlatformsList
+    suspend fun getPlatforms(page: Int): PlatformsList
 
 }

@@ -7,5 +7,5 @@ import javax.inject.Inject
 class GetStoresUseCase @Inject constructor(
     val repository: StoresRepository
 ) {
-    suspend fun invoke(): StoreDomainList = repository.getStores()
+    suspend fun invoke(page: Int): StoreDomainList = repository.getStores(page)
 }

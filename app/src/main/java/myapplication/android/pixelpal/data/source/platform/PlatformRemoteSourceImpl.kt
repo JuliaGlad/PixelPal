@@ -7,6 +7,6 @@ import javax.inject.Inject
 class PlatformRemoteSourceImpl @Inject constructor(
     private val api: GamesApi
 ): PlatformRemoteSource {
-    override suspend fun getPlatforms(): PlatformsList =
-        api.getPlatforms()
+    override suspend fun getPlatforms(page: Int): PlatformsList =
+        api.getPlatforms(page)
 }

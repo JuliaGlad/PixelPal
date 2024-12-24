@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "platforms")
 class PlatformEntity(
     val platformId: Long,
+    val page: Int,
     val title: String,
     val image: String,
     val gamesCount: Int,

@@ -16,7 +16,7 @@ class PlatformReducer: MviReducer<PlatformPartialState, PlatformState> {
         }
 
     private fun updateDataLoaded(prevState: PlatformState, ui: PlatformUiList) =
-        prevState.copy(ui = LceState.Content(ui))
+        prevState.copy(ui = LceState.Content(ui), page = prevState.page + 1)
 
     private fun updateError(prevState: PlatformState, throwable: Throwable) =
         prevState.copy(ui = LceState.Error(throwable))

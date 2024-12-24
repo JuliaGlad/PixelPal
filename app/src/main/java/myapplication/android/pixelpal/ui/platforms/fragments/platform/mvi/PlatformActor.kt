@@ -19,16 +19,16 @@ class PlatformActor(
 
     override fun resolve(intent: PlatformIntent, state: PlatformState): Flow<PlatformPartialState> =
         when (intent) {
-            is PlatformIntent.GetPlatforms -> loadPlatforms()
+            is PlatformIntent.GetPlatforms -> loadPlatforms(state.page + 1)
             PlatformIntent.Init -> init()
         }
 
     private fun init() = flow { emit(PlatformPartialState.Loading) }
 
-    private fun loadPlatforms() =
+    private fun loadPlatforms(page: Int) =
         flow {
             kotlin.runCatching {
-                getPlatforms()
+                getPlatforms(page)
             }.fold(
                 onSuccess = { data ->
                     emit(PlatformPartialState.DataLoaded(data))
@@ -39,10 +39,10 @@ class PlatformActor(
             )
         }
 
-    private suspend fun getPlatforms(): PlatformUiList =
+    private suspend fun getPlatforms(page: Int): PlatformUiList =
         runCatchingNonCancellation {
              asyncAwait(
-                {getPlatformsUseCase.invoke()}
+                {getPlatformsUseCase.invoke(page)}
             ){ platforms ->
                  platforms.toUi()
              }

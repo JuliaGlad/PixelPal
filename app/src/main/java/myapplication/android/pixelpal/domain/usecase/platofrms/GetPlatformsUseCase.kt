@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetPlatformsUseCase @Inject constructor(
     private val repository: PlatformsRepository
 ) {
-    suspend fun invoke() = repository.getPlatforms()
+    suspend fun invoke(page: Int) = repository.getPlatforms(page)
 }

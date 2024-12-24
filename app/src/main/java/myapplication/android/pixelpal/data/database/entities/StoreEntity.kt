@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "stores")
 class StoreEntity(
     val storeId: Int,
+    val page: Int,
     val image: String,
     val domain: String?,
     val name: String,

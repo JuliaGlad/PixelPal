@@ -13,7 +13,7 @@ class StoresReducer : MviReducer<StoresPartialState, StoresState> {
         }
 
     private fun updateDataLoaded(prevState: StoresState, ui: StoresUiList) =
-        prevState.copy(ui = LceState.Content(ui))
+        prevState.copy(ui = LceState.Content(ui), page = prevState.page + 1)
 
     private fun updateLoading(prevState: StoresState) =
         prevState.copy(ui = LceState.Loading)

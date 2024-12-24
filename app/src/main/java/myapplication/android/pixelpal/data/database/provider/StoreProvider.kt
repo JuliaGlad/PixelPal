@@ -1,24 +1,32 @@
 package myapplication.android.pixelpal.data.database.provider
 
 import myapplication.android.pixelpal.app.App.Companion.app
-import myapplication.android.pixelpal.data.database.entities.PublisherEntity
 import myapplication.android.pixelpal.data.database.entities.StoreEntity
-import myapplication.android.pixelpal.data.models.publishers.PublishersList
 import myapplication.android.pixelpal.data.models.stores.StoresList
 
 class StoreProvider {
 
-    fun getStores(): List<StoreEntity> =
-        app.database.storeDao().getAll()
+    fun getStores(page: Int): List<StoreEntity> {
+        val data = app.database.storeDao().getAll()
+        val result = mutableListOf<StoreEntity>()
+        for (i in data) {
+            if (i.page == page) {
+                result.add(i)
+            }
+        }
+        return result
+    }
 
-    fun deleteStores() { app.database.storeDao().deleteAll() }
+    fun deleteStores() {
+        app.database.storeDao().deleteAll()
+    }
 
-    fun insertStores(stores: StoresList) {
+    fun insertStores(currentPage: Int, stores: StoresList) {
         val entities = mutableListOf<StoreEntity>()
-        for (i in stores.items){
-            with(i){
+        for (i in stores.items) {
+            with(i) {
                 entities.add(
-                    StoreEntity(id, image, domain, name, projects)
+                    StoreEntity(id, currentPage, image, domain, name, projects)
                 )
             }
         }

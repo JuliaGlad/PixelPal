@@ -4,9 +4,9 @@ import myapplication.android.pixelpal.data.models.platforms.PlatformsList
 
 interface PlatformLocalSource {
 
-    fun getPlatforms() : PlatformsList?
+    fun getPlatforms(page: Int) : PlatformsList?
 
     fun deletePlatforms()
 
-    fun insertPlatforms(platforms: PlatformsList)
+    fun insertPlatforms(currentPage: Int, platforms: PlatformsList)
 }

@@ -4,9 +4,9 @@ import myapplication.android.pixelpal.data.models.stores.StoresList
 
 interface StoresLocalSource {
 
-    fun getStores() : StoresList?
+    fun getStores(page: Int) : StoresList?
 
     fun deleteStores()
 
-    fun insertStores(stores: StoresList)
+    fun insertStores(currentPage: Int, stores: StoresList)
 }

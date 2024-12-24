@@ -8,8 +8,8 @@ import java.util.stream.Collectors
 import javax.inject.Inject
 
 class PlatformLocalSourceImpl @Inject constructor() : PlatformLocalSource {
-    override fun getPlatforms(): PlatformsList? {
-        val data = PlatformProvider().getPlatforms()
+    override fun getPlatforms(page: Int): PlatformsList? {
+        val data = PlatformProvider().getPlatforms(page)
         return if (data.isNotEmpty()) {
             PlatformsList(
                 data.stream()
@@ -23,8 +23,8 @@ class PlatformLocalSourceImpl @Inject constructor() : PlatformLocalSource {
         PlatformProvider().deletePlatforms()
     }
 
-    override fun insertPlatforms(platforms: PlatformsList) {
-        PlatformProvider().insertPlatforms(platforms)
+    override fun insertPlatforms(currentPage: Int, platforms: PlatformsList) {
+        PlatformProvider().insertPlatforms(currentPage, platforms)
     }
 
     private fun PlatformEntity.toPlatform() =

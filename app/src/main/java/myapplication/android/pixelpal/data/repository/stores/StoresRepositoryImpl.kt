@@ -1,6 +1,5 @@
 package myapplication.android.pixelpal.data.repository.stores
 
-import myapplication.android.pixelpal.data.repository.getAndCheckData
 import myapplication.android.pixelpal.data.source.stores.StoresLocalSource
 import myapplication.android.pixelpal.data.source.stores.StoresRemoteSource
 import myapplication.android.pixelpal.domain.model.stores.StoreDomainList
@@ -12,11 +11,15 @@ class StoresRepositoryImpl @Inject constructor(
     private val remoteSource: StoresRemoteSource
 ) : StoresRepository {
 
-    override suspend fun getStores(): StoreDomainList =
-        getAndCheckData(
-            localSource::getStores,
-            remoteSource::getStores,
-            localSource::insertStores
-        ).toDomain()
-
+    override suspend fun getStores(page: Int): StoreDomainList {
+        val local = localSource.getStores(page)
+        val result =
+            if (local != null) local
+            else {
+                val remote = remoteSource.getStores(page)
+                localSource.insertStores(page, remote)
+                remote
+            }.toDomain()
+        return result
+    }
 }

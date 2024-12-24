@@ -4,4 +4,4 @@ import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviState
 import myapplication.android.pixelpal.ui.platforms.fragments.store.model.StoresUiList
 
-data class StoresState(val ui: LceState<StoresUiList>): MviState
+data class StoresState(val ui: LceState<StoresUiList>, val page: Int = 0): MviState

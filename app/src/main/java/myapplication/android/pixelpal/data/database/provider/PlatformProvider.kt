@@ -6,17 +6,25 @@ import myapplication.android.pixelpal.data.models.platforms.PlatformsList
 
 class PlatformProvider {
 
-    fun getPlatforms(): List<PlatformEntity> =
-        app.database.platformDao().getAll()
+    fun getPlatforms(page: Int): List<PlatformEntity> {
+        val data = app.database.platformDao().getAll()
+        val result = mutableListOf<PlatformEntity>()
+        for (i in data){
+            if (i.page == page){
+                result.add(i)
+            }
+        }
+        return result
+    }
 
     fun deletePlatforms() { app.database.platformDao().deleteAll() }
 
-    fun insertPlatforms(platforms: PlatformsList) {
+    fun insertPlatforms(currentPage: Int, platforms: PlatformsList) {
         val entities = mutableListOf<PlatformEntity>()
         for (i in platforms.items){
             with(i){
                 entities.add(
-                    PlatformEntity(id, name, image, gamesCount, startYear)
+                    PlatformEntity(id, currentPage, name, image, gamesCount, startYear)
                 )
             }
         }

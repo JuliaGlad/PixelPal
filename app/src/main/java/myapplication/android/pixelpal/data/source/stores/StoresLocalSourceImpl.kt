@@ -8,8 +8,8 @@ import java.util.stream.Collectors
 import javax.inject.Inject
 
 class StoresLocalSourceImpl @Inject constructor(): StoresLocalSource {
-    override fun getStores(): StoresList? {
-        val data = StoreProvider().getStores()
+    override fun getStores(page: Int): StoresList? {
+        val data = StoreProvider().getStores(page)
         return if (data.isNotEmpty()) {
             StoresList(
                 data.stream()
@@ -23,8 +23,8 @@ class StoresLocalSourceImpl @Inject constructor(): StoresLocalSource {
         StoreProvider().deleteStores()
     }
 
-    override fun insertStores(stores: StoresList) {
-        StoreProvider().insertStores(stores)
+    override fun insertStores(currentPage: Int, stores: StoresList) {
+        StoreProvider().insertStores(currentPage, stores)
     }
 
     private fun StoreEntity.toStore() = Store(image, domain, storeId, name, projects)
