@@ -4,12 +4,7 @@ import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class PaginationScrollListener
-/**
- * Supporting only LinearLayoutManager for now.
- *
- * @param layoutManager
- */
+abstract class LinearPaginationScrollListener
     (var layoutManager: LinearLayoutManager) : RecyclerView.OnScrollListener() {
 
     abstract fun isLastPage(): Boolean

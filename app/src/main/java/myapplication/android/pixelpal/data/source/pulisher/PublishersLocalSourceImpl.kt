@@ -8,8 +8,8 @@ import java.util.stream.Collectors
 import javax.inject.Inject
 
 class PublishersLocalSourceImpl @Inject constructor(): PublisherLocalSource {
-    override fun getPublishers(): PublishersList? {
-        val data = PublisherProvider().getPublishers()
+    override fun getPublishers(page: Int): PublishersList? {
+        val data = PublisherProvider().getPublishers(page)
         return if (data.isNotEmpty()) {
             PublishersList(
                 data.stream()
@@ -23,8 +23,8 @@ class PublishersLocalSourceImpl @Inject constructor(): PublisherLocalSource {
         PublisherProvider().deletePublishers()
     }
 
-    override fun insertPublishers(publishersList: PublishersList) {
-        PublisherProvider().insertPublishers(publishersList)
+    override fun insertPublishers(currentPage: Int, publishersList: PublishersList) {
+        PublisherProvider().insertPublishers(currentPage, publishersList)
     }
 
     private fun PublisherEntity.toPublisher() = Publisher(gamesCount, image, publisherId, title)

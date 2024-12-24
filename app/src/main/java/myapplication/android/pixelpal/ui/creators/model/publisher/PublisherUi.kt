@@ -4,5 +4,5 @@ class PublisherUi(
     val id: Long,
     val name: String,
     val gamesCount: Int,
-    val background: String
+    val background: String?
 )

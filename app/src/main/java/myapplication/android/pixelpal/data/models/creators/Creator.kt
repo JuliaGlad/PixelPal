@@ -10,6 +10,6 @@ class Creator(
     val id: Long,
     val name: String,
     @SerialName("positions") val role: List<Role>,
-    val image: String
+    val image: String?
 )
 //"positions":[{"id":2,"name":"director","slug":"director"},{"id":5,"name":"producer","slug":"producer"},{"id":7,"name":"programmer","slug":"programmer"}]

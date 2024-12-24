@@ -38,9 +38,11 @@ class PublisherDelegate : AdapterDelegate {
                 title.text = model.title
                 projects.text = "${model.projects}"
 
-                Glide.with(itemView.context)
-                    .load(model.background.toUri())
-                    .into(image)
+                model.background?.let {
+                    Glide.with(itemView.context)
+                        .load(model.background.toUri())
+                        .into(image)
+                }
 
                 item.setOnClickListener { model.clickListener.onClick() }
             }

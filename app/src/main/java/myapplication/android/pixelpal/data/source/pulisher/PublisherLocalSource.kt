@@ -4,9 +4,9 @@ import myapplication.android.pixelpal.data.models.publishers.PublishersList
 
 interface PublisherLocalSource {
 
-    fun getPublishers(): PublishersList?
+    fun getPublishers(page: Int): PublishersList?
 
     fun deletePublisher()
 
-    fun insertPublishers(publishersList: PublishersList)
+    fun insertPublishers(currentPage: Int, publishersList: PublishersList)
 }

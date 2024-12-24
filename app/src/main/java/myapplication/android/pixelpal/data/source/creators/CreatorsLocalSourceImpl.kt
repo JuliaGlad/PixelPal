@@ -12,8 +12,8 @@ import java.util.stream.Collectors
 import javax.inject.Inject
 
 class CreatorsLocalSourceImpl @Inject constructor() : CreatorsLocalSource {
-    override fun getCreators(roleId: Int): CreatorsList? {
-        val data = CreatorProvider().getCreators()
+    override fun getCreators(page: Int, roleId: Int): CreatorsList? {
+        val data = CreatorProvider().getCreators(page)
         return if (data.isNotEmpty()) {
             CreatorsList(
                 data
@@ -24,8 +24,8 @@ class CreatorsLocalSourceImpl @Inject constructor() : CreatorsLocalSource {
         } else null
     }
 
-    override fun insertCreators(creators: CreatorsList) {
-        CreatorProvider().insertCreators(creators)
+    override fun insertCreators(currentPage: Int, creators: CreatorsList) {
+        CreatorProvider().insertCreators(creators, currentPage)
     }
 
     override fun deleteCreators() {

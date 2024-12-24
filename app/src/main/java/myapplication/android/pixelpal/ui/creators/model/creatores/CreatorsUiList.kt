@@ -13,5 +13,5 @@ class CreatorUi(
     val name: String,
     val role: List<RolesUi>,
     val famousProjects: Int,
-    val image: String
+    val image: String?
 )

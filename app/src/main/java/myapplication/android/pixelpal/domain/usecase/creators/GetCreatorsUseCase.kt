@@ -7,5 +7,6 @@ import javax.inject.Inject
 class GetCreatorsUseCase @Inject constructor(
     private val creatorsRepository: CreatorsRepository
 ) {
-    suspend fun invoke(roleId: Int): CreatorDomainList = creatorsRepository.getCreators(roleId)
+    suspend fun invoke(page: Int, roleId: Int): CreatorDomainList =
+        creatorsRepository.getCreators(page, roleId)
 }

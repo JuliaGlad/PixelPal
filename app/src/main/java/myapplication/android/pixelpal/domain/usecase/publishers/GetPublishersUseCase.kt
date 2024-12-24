@@ -7,5 +7,5 @@ import javax.inject.Inject
 class GetPublishersUseCase @Inject constructor(
     private val repository: PublishersRepository
 ) {
-    suspend fun invoke(): PublisherDomainList = repository.getPublishers()
+    suspend fun invoke(page: Int): PublisherDomainList = repository.getPublishers(page)
 }

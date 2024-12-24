@@ -9,5 +9,5 @@ class CreatorDomain(
     val name: String,
     val role: List<RoleDomain>,
     val gamesCount: Int,
-    val image: String
+    val image: String?
 )

@@ -7,5 +7,5 @@ class PublisherDomain(
     val id: Long,
     val name: String,
     val gamesCount: Int,
-    val image: String
+    val image: String?
 )

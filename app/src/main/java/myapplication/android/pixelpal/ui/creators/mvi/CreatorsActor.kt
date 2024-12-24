@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.ui.creators.mvi
 
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import myapplication.android.pixelpal.domain.usecase.creators.GetCreatorsUseCase
@@ -25,15 +26,15 @@ class CreatorsActor(
         state: CreatorsState
     ): Flow<CreatorsPartialState> =
         when (intent) {
-            is CreatorsIntent.GetRolesCreators -> loadCreators(intent.roleId)
+            is CreatorsIntent.GetRolesCreators -> loadCreators(state.page + 1, intent.roleId)
             CreatorsIntent.Init -> init()
-            CreatorsIntent.GetPublishers -> loadPublishers()
+            CreatorsIntent.GetPublishers -> loadPublishers(state.page + 1)
         }
 
-    private fun loadPublishers(): Flow<CreatorsPartialState> =
+    private fun loadPublishers(page: Int): Flow<CreatorsPartialState> =
         flow {
             kotlin.runCatching {
-                getPublishers()
+                getPublishers(page)
             }.fold(
                 onSuccess = { data ->
                     emit(CreatorsPartialState.DataLoaded(data))
@@ -47,11 +48,13 @@ class CreatorsActor(
     private fun init() = flow { emit(CreatorsPartialState.Loading) }
 
     private fun loadCreators(
+        page: Int,
         roleId: Int
     ): Flow<CreatorsPartialState> =
         flow {
             kotlin.runCatching {
-               getCreators(roleId)
+                Log.i("Page", page.toString())
+               getCreators(page, roleId)
             }.fold(
                 onSuccess = { data ->
                     emit(CreatorsPartialState.DataLoaded(data))
@@ -62,21 +65,22 @@ class CreatorsActor(
             )
         }
 
-    private suspend fun getPublishers() =
+    private suspend fun getPublishers(page: Int) =
         runCatchingNonCancellation {
             asyncAwait(
-                {getPublishersUseCase.invoke()}
+                {getPublishersUseCase.invoke(page)}
             ){ publishers ->
                 publishers.toUi()
             }
         }.getOrThrow()
 
     private suspend fun getCreators(
+        page: Int,
         roleId: Int
     ): CreatorsUiList =
         runCatchingNonCancellation {
             asyncAwait(
-                { getCreatorsUseCase.invoke(roleId) }
+                { getCreatorsUseCase.invoke(page, roleId) }
             ) { creators ->
                 creators.toUi()
             }

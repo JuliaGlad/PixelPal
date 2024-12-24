@@ -5,9 +5,9 @@ import myapplication.android.pixelpal.data.models.creators_roles.RolesList
 
 interface CreatorsLocalSource{
 
-    fun getCreators(roleId: Int) : CreatorsList?
+    fun getCreators(page: Int, roleId: Int) : CreatorsList?
 
-    fun insertCreators(creators: CreatorsList)
+    fun insertCreators(currentPage: Int, creators: CreatorsList)
 
     fun deleteCreators()
 

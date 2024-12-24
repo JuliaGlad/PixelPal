@@ -28,10 +28,10 @@ interface GamesApi {
     suspend fun getCreatorsRoles(): RolesList
 
     @GET("creators")
-    suspend fun getCreators(): CreatorsList
+    suspend fun getCreators(@Query("page")page: Int): CreatorsList
 
     @GET("publishers")
-    suspend fun getPublishers(): PublishersList
+    suspend fun getPublishers(@Query("page")page: Int): PublishersList
 
     @GET("stores")
     suspend fun getStores(): StoresList

@@ -20,13 +20,13 @@ class CreatorsRepositoryImpl @Inject constructor(
             localSource::insertCreatorsRoles
         ).toDomain()
 
-    override suspend fun getCreators(roleId: Int): CreatorDomainList {
-        val local = localSource.getCreators(roleId)
+    override suspend fun getCreators(page: Int, roleId: Int): CreatorDomainList {
+        val local = localSource.getCreators(page, roleId)
         val result =
             if (local != null) local
             else {
-                val remote = remoteSource.getCreators()
-                localSource.insertCreators(remote)
+                val remote = remoteSource.getCreators(page)
+                localSource.insertCreators(page,remote)
                 remote
             }.toDomain(roleId)
         return result

@@ -11,6 +11,6 @@ class CreatorsRemoteSourceImpl @Inject constructor(
     override suspend fun getCreatorsRoles(): RolesList =
         api.getCreatorsRoles()
 
-    override suspend fun getCreators(): CreatorsList =
-        api.getCreators()
+    override suspend fun getCreators(page: Int): CreatorsList =
+        api.getCreators(page)
 }

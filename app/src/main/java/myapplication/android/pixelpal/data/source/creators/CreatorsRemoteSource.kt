@@ -7,5 +7,5 @@ interface CreatorsRemoteSource {
 
     suspend fun getCreatorsRoles(): RolesList
 
-    suspend fun getCreators(): CreatorsList
+    suspend fun getCreators(page: Int): CreatorsList
 }

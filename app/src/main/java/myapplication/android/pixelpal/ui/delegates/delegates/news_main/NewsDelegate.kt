@@ -12,7 +12,7 @@ import myapplication.android.pixelpal.ui.delegates.main.AdapterDelegate
 import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
 import myapplication.android.pixelpal.ui.home.recycler_view.releases.ReleasesAdapter
 import myapplication.android.pixelpal.ui.home.recycler_view.releases.ReleasesModel
-import myapplication.android.pixelpal.ui.listener.PaginationScrollListener
+import myapplication.android.pixelpal.ui.listener.LinearPaginationScrollListener
 
 class NewsDelegate : AdapterDelegate {
 
@@ -66,15 +66,7 @@ class NewsDelegate : AdapterDelegate {
         private fun checkRecyclerEnd(
             model: NewsItemModel
         ) {
-
-
-//            if (model.isUpdated){
-//                model.setIsUpdated(false)
-//                loading = false
-//                lastPage = false
-//            }
-
-            binding.recyclerView.addOnScrollListener(object : PaginationScrollListener(
+            binding.recyclerView.addOnScrollListener(object : LinearPaginationScrollListener(
                 binding.recyclerView.layoutManager!! as LinearLayoutManager
             ) {
                 override fun isLastPage(): Boolean = lastPage

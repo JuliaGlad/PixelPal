@@ -8,6 +8,6 @@ data class CreatorsModel(
     val name: String,
     val famousProjects: Int,
     val roles: List<String>,
-    val image: String,
+    val image: String?,
     val clickListener: ClickListener
 )

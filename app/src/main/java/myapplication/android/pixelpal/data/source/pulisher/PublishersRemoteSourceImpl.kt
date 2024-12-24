@@ -7,6 +7,6 @@ import javax.inject.Inject
 class PublishersRemoteSourceImpl @Inject constructor(
     private val api: GamesApi
 ): PublisherRemoteSource{
-    override suspend fun getPublishers(): PublishersList =
-        api.getPublishers()
+    override suspend fun getPublishers(page: Int): PublishersList =
+        api.getPublishers(page)
 }

@@ -6,18 +6,31 @@ import myapplication.android.pixelpal.data.models.publishers.PublishersList
 
 class PublisherProvider {
 
-    fun getPublishers(): List<PublisherEntity> =
-        app.database.publisherDao().getAll()
+    fun getPublishers(page: Int): List<PublisherEntity> {
+        val data = app.database.publisherDao().getAll()
+        val result = mutableListOf<PublisherEntity>()
+        if (data.isNotEmpty()) {
+            for (i in data){
+                if (i.page == page){
+                    result.add(i)
+                }
+            }
+        }
+        return result
+    }
 
-    fun deletePublishers() { app.database.publisherDao().deleteAll() }
+    fun deletePublishers() {
+        app.database.publisherDao().deleteAll()
+    }
 
-    fun insertPublishers(publishers: PublishersList) {
+    fun insertPublishers(currentPage: Int, publishers: PublishersList) {
         val entities = mutableListOf<PublisherEntity>()
-        for (i in publishers.items){
-            with(i){
+        for (i in publishers.items) {
+            with(i) {
                 entities.add(
                     PublisherEntity(
                         id,
+                        currentPage,
                         name,
                         gamesCount,
                         image

@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.ui.creators
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.ContextThemeWrapper
@@ -14,9 +15,9 @@ import androidx.core.view.children
 import androidx.core.view.forEach
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.coroutines.launch
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App.Companion.app
 import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmentCreatorsBinding
 import myapplication.android.pixelpal.ui.creators.model.creatores.CreatorUi
@@ -41,6 +42,7 @@ import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
 import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
 import myapplication.android.pixelpal.ui.listener.ClickIntegerListener
 import myapplication.android.pixelpal.ui.listener.ClickListener
+import myapplication.android.pixelpal.ui.listener.GridPaginationScrollListener
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.mvi.MviStore
@@ -56,7 +58,6 @@ class CreatorsFragment :
     private val creatorsComponent by lazy {
         appComponent.creatorsComponent().create()
     }
-    private val page = 1
     private val adapter = MainAdapter()
     private var isFirst = true
     private val viewModel: CreatorsViewModel by viewModels {
@@ -64,7 +65,11 @@ class CreatorsFragment :
             creatorsComponent.creatorsViewModelFactory()
         )
     }
-
+    private var chosenRole = 1
+    private var needUpdate = false
+    private var loading = false
+    private var lastPage = false
+    private val items: MutableList<DelegateItem> = mutableListOf()
     private val roles: MutableList<RolesUi> = mutableListOf()
     private var _binding: FragmentCreatorsBinding? = null
     private val binding get() = _binding!!
@@ -101,7 +106,7 @@ class CreatorsFragment :
         if (savedInstanceState == null) {
             store.sendIntent(CreatorsIntent.Init)
         }
-        store.sendIntent(CreatorsIntent.GetRolesCreators(1))
+        store.sendIntent(CreatorsIntent.GetRolesCreators(chosenRole))
     }
 
     override fun resolveEffect(effect: CreatorsEffect) {
@@ -112,9 +117,12 @@ class CreatorsFragment :
         when (state.ui) {
             is LceState.Content -> {
                 binding.loading.root.visibility = GONE
-
-                initRecycler(state.ui.data)
-
+                if (!needUpdate) {
+                    initRecycler(state.ui.data)
+                } else {
+                    Log.i("Ui data", state.ui.data.toString())
+                    updateRecycler(state.ui.data)
+                }
                 binding.loadingRecycler.root.visibility = GONE
             }
 
@@ -125,6 +133,55 @@ class CreatorsFragment :
 
             LceState.Loading -> binding.loading.root.visibility = VISIBLE
         }
+    }
+
+    private fun updateRecycler(creatorsUiList: CreatorsUiList){
+        val startPosition = items.size
+        if (creatorsUiList.creators != null){
+           updateCreatorsRecycler(startPosition, creatorsUiList.creators)
+        } else if (creatorsUiList.publishers != null){
+            updatePublisherRecycler(startPosition, creatorsUiList.publishers)
+        }
+        needUpdate = false
+        loading = false
+        lastPage = false
+    }
+
+    private fun updatePublisherRecycler(startPosition: Int, publishers: List<PublisherUi>) {
+        for (i in publishers) {
+            items.addPublisherItem(
+                publishers.indexOf(i),
+                i.id,
+                i.name,
+                i.gamesCount,
+                i.background
+            )
+        }
+        binding.recyclerView.post {
+            adapter.notifyItemRangeInserted(startPosition, publishers.size)
+        }
+    }
+
+    private fun updateCreatorsRecycler(startPosition: Int, creators: List<CreatorUi>) {
+        for (i in creators) {
+            val rolesStr = i.role
+                .stream()
+                .map { it.title }
+                .collect(Collectors.toList())
+
+            items.addCreatorItem(
+                creators.indexOf(i),
+                i.id,
+                i.name,
+                rolesStr,
+                i.famousProjects,
+                i.image
+            )
+        }
+        binding.recyclerView.post {
+            adapter.notifyItemRangeInserted(startPosition, creators.size)
+        }
+
     }
 
     private fun initAdapter() {
@@ -157,6 +214,30 @@ class CreatorsFragment :
         } else if (creatorsUiList.publishers != null) {
             initPublishersRecycler(creatorsUiList.publishers)
         }
+        addScrollRecyclerListener()
+    }
+
+    private fun addScrollRecyclerListener() {
+        binding.recyclerView.addOnScrollListener(object : GridPaginationScrollListener(
+            binding.recyclerView.layoutManager as GridLayoutManager
+        ) {
+            override fun isLastPage(): Boolean = lastPage
+
+            override fun isLoading(): Boolean = loading
+
+            override fun loadMoreItems() {
+                if (!binding.recyclerView.isComputingLayout) {
+                    loading = true
+                    lastPage = true
+                    needUpdate = true
+                    if (chosenRole != PUBLISHER_ID) {
+                        store.sendIntent(CreatorsIntent.GetRolesCreators(chosenRole))
+                    } else {
+                        store.sendIntent(CreatorsIntent.GetPublishers)
+                    }
+                }
+            }
+        })
     }
 
     private fun initPublishersRecycler(publishers: List<PublisherUi>) {
@@ -178,14 +259,13 @@ class CreatorsFragment :
     }
 
     private fun initCreatorsRecycler(creators: List<CreatorUi>) {
-        val creatorsModel = mutableListOf<DelegateItem>()
         for (i in creators) {
             val rolesStr = i.role
                 .stream()
                 .map { it.title }
                 .collect(Collectors.toList())
 
-            creatorsModel.addCreatorItem(
+            items.addCreatorItem(
                 creators.indexOf(i),
                 i.id,
                 i.name,
@@ -194,9 +274,9 @@ class CreatorsFragment :
                 i.image
             )
         }
-        adapter.submitList(creatorsModel)
+        adapter.submitList(items)
         if (isFirst) isFirst = false
-        else adapter.onCurrentListChanged(adapter.currentList, creatorsModel)
+        else adapter.onCurrentListChanged(adapter.currentList, items)
     }
 
     private fun MutableList<DelegateItem>.addCreatorItem(
@@ -205,7 +285,7 @@ class CreatorsFragment :
         name: String,
         roles: List<String>,
         famousProjects: Int,
-        image: String
+        image: String?
     ) {
         add(CreatorsDelegateItem(CreatorsModel(
             index,
@@ -227,7 +307,7 @@ class CreatorsFragment :
         creatorId: Long,
         name: String,
         famousProjects: Int,
-        image: String
+        image: String?
     ) {
         add(PublisherDelegateItem(PublisherModel(
             index,
@@ -264,24 +344,34 @@ class CreatorsFragment :
             clickListener =
                 object : ClickIntegerListener {
                     override fun onClick(int: Int) {
-                        binding.flexBox.forEach {
-                            (it as CreatorView).isChosen = it.viewId == int
-                            if (it.isChosen) {
-                                binding.title.setShimmerText(it.creator)
-                            }
-
-                        }
-                        binding.loadingRecycler.root.visibility = VISIBLE
-                        if (int != PUBLISHER_ID) {
-                            store.sendIntent(CreatorsIntent.GetRolesCreators(int))
-                        } else {
-                            store.sendIntent(CreatorsIntent.GetPublishers)
-                        }
+                        onFlexBoxItemClicked(int)
                     }
                 }
             onViewClicked()
         }
         addView(view, childCount, params)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun onFlexBoxItemClicked(int: Int) {
+        binding.flexBox.forEach {
+            (it as CreatorView).isChosen = it.viewId == int
+            if (it.isChosen) {
+                chosenRole = int
+                binding.title.setShimmerText(it.creator)
+            }
+        }
+        store.sendIntent(CreatorsIntent.Init)
+        items.clear()
+        binding.recyclerView.post {
+            adapter.notifyDataSetChanged()
+        }
+        needUpdate = true
+        if (chosenRole != PUBLISHER_ID) {
+            store.sendIntent(CreatorsIntent.GetRolesCreators(chosenRole))
+        } else {
+            store.sendIntent(CreatorsIntent.GetPublishers)
+        }
     }
 
     override fun onDestroy() {

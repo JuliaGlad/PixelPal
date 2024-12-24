@@ -1,6 +1,5 @@
 package myapplication.android.pixelpal.ui.delegates.delegates.creators
 
-import android.app.ActionBar.LayoutParams
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.net.toUri
@@ -37,18 +36,23 @@ class CreatorsDelegate : AdapterDelegate{
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(model: CreatorsModel) {
-            binding.title.text = model.name
-            var roles= ""
-            for (i in model.roles){
-                val newRole = "$roles $i"
-                roles = newRole
+            with(binding) {
+                title.text = model.name
+                var rolesText = ""
+                for (i in model.roles) {
+                    val newRole = "$rolesText $i"
+                    rolesText = newRole
+                }
+                roles.text = rolesText
+                projects.text = "${model.famousProjects}"
+
+                if (model.image != null) {
+                    Glide.with(itemView.context)
+                        .load(model.image.toUri())
+                        .override(100, 100)
+                        .into(image)
+                }
             }
-            binding.roles.text = roles
-            binding.projects.text = "${model.famousProjects}"
-            Glide.with(itemView.context)
-                .load(model.image.toUri())
-                .override(LayoutParams.WRAP_CONTENT)
-                .into(binding.image)
         }
     }
 }

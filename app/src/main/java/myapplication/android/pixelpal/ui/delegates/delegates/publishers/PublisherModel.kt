@@ -7,6 +7,6 @@ data class PublisherModel(
     val publisherId: Long,
     val title: String,
     val projects: Int,
-    val background: String,
+    val background: String?,
     val clickListener: ClickListener
 )
