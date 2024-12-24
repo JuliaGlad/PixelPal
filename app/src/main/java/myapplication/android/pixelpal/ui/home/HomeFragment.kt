@@ -122,8 +122,7 @@ class HomeFragment :
                     if (id == requiredId) {
                         isUpdated = true
                         val models = addReleaseItems(items)
-                        newItems.addAll(models)
-                        adapter.notifyItemChanged(recyclerItems.indexOf(it))
+                        adapter.notifyItemChanged(recyclerItems.indexOf(it), models)
                     }
                 }
             }
@@ -199,7 +198,6 @@ class HomeFragment :
                 getString(R.string.new_releases),
                 getString(R.string.there_is_no_new_games_released_this_month),
                 released,
-                mutableListOf(),
                 object : ClickListener {
                     override fun onClick() {
                         TODO("open all new releases")
@@ -220,7 +218,6 @@ class HomeFragment :
                 getString(R.string.release_this_month),
                 getString(R.string.there_is_no_games_releases_this_month),
                 releaseThisMonth,
-                mutableListOf(),
                 object : ClickListener {
                     override fun onClick() {
                         TODO("Open all games releases in this month")
@@ -252,7 +249,6 @@ class HomeFragment :
                 getString(R.string.all_time_top),
                 "",
                 topGames,
-                mutableListOf(),
                 object : ClickListener {
                     override fun onClick() {
                         TODO("open all top games")

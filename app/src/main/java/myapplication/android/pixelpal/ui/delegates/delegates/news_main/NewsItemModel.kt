@@ -1,6 +1,5 @@
 package myapplication.android.pixelpal.ui.delegates.delegates.news_main
 
-import myapplication.android.pixelpal.ui.home.recycler_view.releases.ReleasesAdapter
 import myapplication.android.pixelpal.ui.home.recycler_view.releases.ReleasesModel
 import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.listener.RecyclerEndListener
@@ -10,7 +9,6 @@ data class NewsItemModel(
     val title: String,
     val emptyTitle: String,
     val items: MutableList<ReleasesModel>,
-    var newItems: MutableList<ReleasesModel>,
     val listener: ClickListener,
     val onGetNewItems: RecyclerEndListener,
     var isUpdated: Boolean = false

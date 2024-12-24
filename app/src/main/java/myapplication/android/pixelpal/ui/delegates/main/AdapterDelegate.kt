@@ -10,7 +10,7 @@ interface AdapterDelegate {
 
     fun isOfViewType(item: DelegateItem): Boolean
 
-    fun onBindViewHolder( holder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>) = Unit
+    fun onBindViewHolder( holder: RecyclerView.ViewHolder, item: DelegateItem, position: Int, payloads: MutableList<Any>) = Unit
 
     fun getItem(position: Int) : DelegateItem? = null
 }

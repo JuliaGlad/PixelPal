@@ -22,10 +22,11 @@ class MainAdapter : ListAdapter<DelegateItem, RecyclerView.ViewHolder>(
         position: Int,
         payloads: MutableList<Any>
     ) {
+
         if (payloads.isEmpty()){
             onBindViewHolder(holder, position)
         } else {
-            delegates[getItemViewType(position)].onBindViewHolder(holder, position, payloads)
+            delegates[getItemViewType(position)].onBindViewHolder(holder, getItem(position), position, payloads)
         }
     }
 

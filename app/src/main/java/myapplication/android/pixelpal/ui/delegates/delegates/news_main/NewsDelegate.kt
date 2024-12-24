@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.ui.delegates.delegates.news_main
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,31 +33,46 @@ class NewsDelegate : AdapterDelegate {
         (holder as ViewHolder).bind(item.content() as NewsItemModel)
     }
 
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        item: DelegateItem,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        Log.i("Items size", (item.content() as NewsItemModel).items.toString())
+        (holder as ViewHolder).updateRecycler(
+            payloads[0] as MutableList<ReleasesModel>,
+            (item.content() as NewsItemModel).items
+        )
+    }
+
     override fun isOfViewType(item: DelegateItem): Boolean = item is NewsDelegateItem
 
     private class ViewHolder(private val binding: RecyclerViewMainNewsItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        val adapter = ReleasesAdapter()
+        var loading = false
+        var lastPage = false
 
         fun bind(model: NewsItemModel) {
             with(binding) {
                 title.setShimmerText(model.title)
                 actionAll.setOnClickListener { model.listener.onClick() }
             }
-            initRecycler(model.newItems, model.items, model.emptyTitle)
+            initRecycler(model.items, model.emptyTitle)
             checkRecyclerEnd(model)
         }
 
         private fun checkRecyclerEnd(
             model: NewsItemModel
         ) {
-            var loading = false
-            var lastPage = false
 
-            if (model.isUpdated){
-                model.setIsUpdated(false)
-                loading = false
-                lastPage = false
-            }
+
+//            if (model.isUpdated){
+//                model.setIsUpdated(false)
+//                loading = false
+//                lastPage = false
+//            }
 
             binding.recyclerView.addOnScrollListener(object : PaginationScrollListener(
                 binding.recyclerView.layoutManager!! as LinearLayoutManager
@@ -74,18 +90,12 @@ class NewsDelegate : AdapterDelegate {
         }
 
         private fun initRecycler(
-            newItems: MutableList<ReleasesModel>,
             items: MutableList<ReleasesModel>,
             emptyTitle: String
         ) {
             if (items.isNotEmpty()) {
-                val adapter = ReleasesAdapter()
                 binding.recyclerView.adapter = adapter
                 adapter.submitList(items)
-                if (newItems.isNotEmpty()){
-                    val previousPosition = updateRecycler(newItems, items, adapter)
-                    binding.recyclerView.scrollToPosition(previousPosition + 1)
-                }
             } else {
                 val emptyAdapter = EmptyItemAdapter()
                 binding.recyclerView.adapter = emptyAdapter
@@ -99,17 +109,17 @@ class NewsDelegate : AdapterDelegate {
             }
         }
 
-        private fun updateRecycler(
+
+        fun updateRecycler(
             newItems: MutableList<ReleasesModel>,
-            items: MutableList<ReleasesModel>,
-            adapter: ReleasesAdapter
-        ): Int {
+            items: MutableList<ReleasesModel>
+        ) {
             val previousPosition = items.size - 1
             val itemsCount = newItems.size
             items.addAll(newItems)
-            newItems.clear()
             adapter.notifyItemRangeInserted(previousPosition, itemsCount)
-            return previousPosition
+            loading = false
+            lastPage = false
         }
     }
 }
