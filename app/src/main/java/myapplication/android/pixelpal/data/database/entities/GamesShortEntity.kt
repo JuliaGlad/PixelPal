@@ -8,6 +8,7 @@ import myapplication.android.pixelpal.data.models.GameRating
 class GamesShortEntity(
     val gameId: Long,
     val page: Int,
+    val genre: Long,
     val title: String,
     val playTime: Int,
     val releaseDate: String,

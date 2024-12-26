@@ -7,17 +7,17 @@ import myapplication.android.pixelpal.data.models.gamesMain.GamesShortDataList
 import java.util.stream.Collectors
 import javax.inject.Inject
 
-class GamesShortDataLocalSourceImpl @Inject constructor(): GamesShortDataLocalSource {
+class GamesShortDataLocalSourceImpl @Inject constructor() : GamesShortDataLocalSource {
 
     private fun GamesShortEntity.toGameShortData() =
         GameShortData(releaseDate, image, ageRating, rating, playTime, gameId, title)
 
-    override fun insertGamesShortData(currentPage: Int, games: GamesShortDataList) {
-        GamesShortProvider().insertGamesShort(currentPage, games)
+    override fun insertGamesShortData(currentPage: Int, games: GamesShortDataList, genres: Long) {
+        GamesShortProvider().insertGamesShort(currentPage, games, genres)
     }
 
-    override fun getGamesShortData(page: Int): GamesShortDataList? {
-        val data = GamesShortProvider().getGamesShort(page)
+    override fun getGamesShortData(page: Int, genres: Long): GamesShortDataList? {
+        val data = GamesShortProvider().getGamesShort(page, genres)
         return if (data.isNotEmpty()) {
             GamesShortDataList(
                 data.stream()

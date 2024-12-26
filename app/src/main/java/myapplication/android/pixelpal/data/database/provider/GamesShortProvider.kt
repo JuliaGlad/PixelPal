@@ -5,11 +5,11 @@ import myapplication.android.pixelpal.data.database.entities.GamesShortEntity
 import myapplication.android.pixelpal.data.models.gamesMain.GamesShortDataList
 
 class GamesShortProvider {
-    fun getGamesShort(page: Int): List<GamesShortEntity> {
+    fun getGamesShort(page: Int, genre: Long): List<GamesShortEntity> {
         val data = app.database.gamesShortDao().getAll()
         val result = mutableListOf<GamesShortEntity>()
         for (i in data){
-            if (i.page == page){
+            if (i.page == page && i.genre == genre){
                 result.add(i)
             }
         }
@@ -20,7 +20,7 @@ class GamesShortProvider {
         app.database.gamesShortDao().deleteAll()
     }
 
-    fun insertGamesShort(currentPage: Int, games: GamesShortDataList) {
+    fun insertGamesShort(currentPage: Int, games: GamesShortDataList, genre: Long) {
         val entities = mutableListOf<GamesShortEntity>()
         for (i in games.items) {
             with(i) {
@@ -28,6 +28,7 @@ class GamesShortProvider {
                     GamesShortEntity(
                         id,
                         currentPage,
+                        genre,
                         name,
                         playtime,
                         releaseDate,

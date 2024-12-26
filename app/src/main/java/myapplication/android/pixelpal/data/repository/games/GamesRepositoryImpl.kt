@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.data.repository.games
 
+import android.util.Log
 import myapplication.android.pixelpal.data.source.games.GamesLocalSource
 import myapplication.android.pixelpal.data.source.games.GamesRemoteSource
 import myapplication.android.pixelpal.data.source.games.GamesShortDataLocalSource
@@ -15,14 +16,21 @@ class GamesRepositoryImpl @Inject constructor(
 ) : GamesRepository {
 
     override suspend fun getGamesShortData(page: Int, genres: Long): GamesShortDomainList {
-        val local = localSourceShortGames.getGamesShortData(page)
+        Log.i("Id + page", "page: $page genres: $genres")
+        val local = localSourceShortGames.getGamesShortData(page, genres)
         val result =
             if (local != null) local
             else {
                 val remote = remoteSourceGames.getGamesShortData(page, genres)
-                localSourceShortGames.insertGamesShortData(page, remote)
+                localSourceShortGames.insertGamesShortData(page, remote, genres)
                 remote
             }.toDomain()
+//        Log.i("Result", result.games.size.toString())
+//        for (i in result.games){
+//            with(i){
+//                Log.i("Result", "g")
+//            }
+//        }
         return result
     }
 

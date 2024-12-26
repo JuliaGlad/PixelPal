@@ -80,7 +80,6 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
         if (savedInstanceState == null) {
             store.sendIntent(GamesIntent.Init)
         }
-        //Log.i("Id games getting data", id.toString())
         store.sendIntent(GamesIntent.GetGames(id))
     }
 
@@ -192,8 +191,7 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
             }
         }
     }
-
-    private fun initRecycler(games: List<GamesShortDataUi>): List<GamesShortModel> {
+    private fun initRecycler(games: List<GamesShortDataUi>){
         for (i in games) {
             with(i) {
                 shortModels.add(
@@ -201,7 +199,6 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
                 )
             }
         }
-        return shortModels
     }
 
     override fun onDestroy() {
