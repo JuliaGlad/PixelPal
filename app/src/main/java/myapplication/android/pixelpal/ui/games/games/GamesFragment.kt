@@ -10,12 +10,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App
-import myapplication.android.pixelpal.app.App.Companion.app
 import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmentGamesBinding
-import myapplication.android.pixelpal.di.components.fragment.GamesComponent
 import myapplication.android.pixelpal.ui.games.games.model.GamesShortDataUi
 import myapplication.android.pixelpal.ui.games.games.mvi.GamesEffects
 import myapplication.android.pixelpal.ui.games.games.mvi.GamesIntent
@@ -29,6 +28,8 @@ import myapplication.android.pixelpal.ui.games.games.recycler_view.LayoutType
 import myapplication.android.pixelpal.ui.games.games.recycler_view.gridItem.GamesShortGridAdapter
 import myapplication.android.pixelpal.ui.games.games.recycler_view.linear.GamesShortLinearAdapter
 import myapplication.android.pixelpal.ui.games.games.recycler_view.one_item.GamesOneItemAdapter
+import myapplication.android.pixelpal.ui.listener.GridPaginationScrollListener
+import myapplication.android.pixelpal.ui.listener.LinearPaginationScrollListener
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import javax.inject.Inject
@@ -42,7 +43,10 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
         appComponent.gamesComponent().create()
     }
     private var id: Long = 0
-    private val games = mutableListOf<GamesShortDataUi>()
+    private var loading = false
+    private var lastPage = false
+    private val shortModels = mutableListOf<GamesShortModel>()
+    private lateinit var adapter : ListAdapter<GamesShortModel, RecyclerView.ViewHolder>
     private var layoutType: LayoutType = LayoutType.Grid
     private var _binding: FragmentGamesBinding? = null
     private val binding get() = _binding!!
@@ -76,6 +80,7 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
         if (savedInstanceState == null) {
             store.sendIntent(GamesIntent.Init)
         }
+        //Log.i("Id games getting data", id.toString())
         store.sendIntent(GamesIntent.GetGames(id))
     }
 
@@ -95,8 +100,12 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
         when (state.ui) {
             is LceState.Content -> {
                 binding.loading.root.visibility = GONE
-                games.addAll(state.ui.data.items)
-                setLayoutManager()
+                if (!lastPage) {
+                    initRecycler(state.ui.data.items)
+                    setLayoutManager()
+                } else {
+                    updateRecycler(state.ui.data.items)
+                }
             }
 
             is LceState.Error -> {
@@ -108,34 +117,83 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
         }
     }
 
+    private fun updateRecycler(items: List<GamesShortDataUi>) {
+        val newItems = mutableListOf<GamesShortModel>()
+        for (i in items) {
+            with(i) {
+                newItems.add(
+                    GamesShortModel(id, name, rating, releaseDate, playtime, image)
+                )
+            }
+        }
+        val startPosition = shortModels.size
+        shortModels.addAll(newItems)
+        binding.recyclerView.post {
+            adapter.notifyItemRangeInserted(startPosition, newItems.size)
+        }
+        lastPage = false
+        loading = false
+    }
+
     private fun setLayoutManager() {
         with(binding) {
-            val adapter = when (layoutType) {
+            adapter = when (layoutType) {
                 LayoutType.Grid -> {
-                    Log.i("Set to grid", "to grid")
                     recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
                     GamesShortGridAdapter()
                 }
 
                 LayoutType.Linear -> {
-                    Log.i("Set to linear", "to linear")
                     recyclerView.layoutManager = LinearLayoutManager(requireContext())
                     GamesShortLinearAdapter()
                 }
 
                 LayoutType.OneItem -> {
-                    Log.i("Set to one item", "to one item")
                     recyclerView.layoutManager = LinearLayoutManager(requireContext())
                     GamesOneItemAdapter()
                 }
             }
             recyclerView.adapter = adapter
-            adapter.submitList(initRecycler())
+            adapter.submitList(shortModels)
+            addScrollRecyclerListener()
         }
     }
 
-    private fun initRecycler(): List<GamesShortModel> {
-        val shortModels = mutableListOf<GamesShortModel>()
+    private fun addScrollRecyclerListener() {
+        val chosenId = id
+        with(binding.recyclerView) {
+            if (layoutManager is LinearLayoutManager) {
+                addOnScrollListener(object :
+                    LinearPaginationScrollListener(layoutManager as LinearLayoutManager) {
+                    override fun isLastPage(): Boolean = lastPage
+
+                    override fun isLoading(): Boolean = loading
+
+                    override fun loadMoreItems() {
+                        lastPage = true
+                        loading = true
+                        store.sendIntent(GamesIntent.GetGames(chosenId))
+                    }
+
+                })
+            } else if (layoutManager is GridLayoutManager) {
+                addOnScrollListener(object :
+                    GridPaginationScrollListener(layoutManager as GridLayoutManager) {
+                    override fun isLastPage(): Boolean = lastPage
+
+                    override fun isLoading(): Boolean = loading
+
+                    override fun loadMoreItems() {
+                        lastPage = true
+                        loading = true
+                        store.sendIntent(GamesIntent.GetGames(chosenId))
+                    }
+                })
+            }
+        }
+    }
+
+    private fun initRecycler(games: List<GamesShortDataUi>): List<GamesShortModel> {
         for (i in games) {
             with(i) {
                 shortModels.add(

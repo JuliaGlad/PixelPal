@@ -12,12 +12,12 @@ class GamesShortDataLocalSourceImpl @Inject constructor(): GamesShortDataLocalSo
     private fun GamesShortEntity.toGameShortData() =
         GameShortData(releaseDate, image, ageRating, rating, playTime, gameId, title)
 
-    override fun insertGamesShortData(games: GamesShortDataList) {
-        GamesShortProvider().insertGamesShort(games)
+    override fun insertGamesShortData(currentPage: Int, games: GamesShortDataList) {
+        GamesShortProvider().insertGamesShort(currentPage, games)
     }
 
-    override fun getGamesShortData(): GamesShortDataList? {
-        val data = GamesShortProvider().getGamesShort()
+    override fun getGamesShortData(page: Int): GamesShortDataList? {
+        val data = GamesShortProvider().getGamesShort(page)
         return if (data.isNotEmpty()) {
             GamesShortDataList(
                 data.stream()

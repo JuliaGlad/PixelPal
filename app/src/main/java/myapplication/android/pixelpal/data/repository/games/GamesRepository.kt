@@ -5,7 +5,7 @@ import myapplication.android.pixelpal.domain.model.games.GamesShortDomainList
 
 interface GamesRepository {
 
-    suspend fun getGamesShortData(genres: Long) : GamesShortDomainList
+    suspend fun getGamesShortData(page: Int, genres: Long) : GamesShortDomainList
 
     suspend fun getTopGames(page: Int): GamesNewsListDomain
 

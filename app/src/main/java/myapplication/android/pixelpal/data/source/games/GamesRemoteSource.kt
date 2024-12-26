@@ -5,7 +5,7 @@ import myapplication.android.pixelpal.data.models.gamesNews.GamesNewsList
 
 interface GamesRemoteSource {
 
-    suspend fun getGamesShortData(id: Long): GamesShortDataList
+    suspend fun getGamesShortData(page: Int, id: Long): GamesShortDataList
 
     suspend fun getTopGames(page: Int): GamesNewsList
 

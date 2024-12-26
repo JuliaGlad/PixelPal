@@ -23,16 +23,16 @@ class GamesActor(
     )
             : Flow<GamesPartialState> =
         when (intent) {
-            is GamesIntent.GetGames -> loadGames(intent.id)
+            is GamesIntent.GetGames -> loadGames(intent.id, state.page + 1)
             GamesIntent.Init -> init()
         }
 
     private fun init() = flow { emit(GamesPartialState.Loading) }
 
-    private fun loadGames(id: Long) =
+    private fun loadGames(id: Long, page: Int) =
         flow {
             kotlin.runCatching {
-                getGamesShortData(id)
+                getGamesShortData(id, page)
             }.fold(
                 onSuccess = {
                     emit(GamesPartialState.DataLoaded(ui = it))
@@ -41,10 +41,10 @@ class GamesActor(
             )
         }
 
-    private suspend fun getGamesShortData(id: Long) =
+    private suspend fun getGamesShortData(id: Long, page: Int) =
         runCatchingNonCancellation {
             asyncAwait(
-                { getGamesShortDataUseCase.invoke(id) }
+                { getGamesShortDataUseCase.invoke(page, id) }
             ) { games ->
                 games.toUi()
             }

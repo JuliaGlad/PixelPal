@@ -1,6 +1,7 @@
 package myapplication.android.pixelpal.ui.games.games.recycler_view.gridItem
 
 import android.annotation.SuppressLint
+import android.app.ActionBar.LayoutParams
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.ViewGroup
@@ -44,7 +45,7 @@ class GamesShortGridAdapter :
 
                 Glide.with(itemView.context)
                     .load(model.image.toUri())
-                    .override(Target.SIZE_ORIGINAL)
+                    .override(LayoutParams.MATCH_PARENT)
                     .into(image)
             }
         }

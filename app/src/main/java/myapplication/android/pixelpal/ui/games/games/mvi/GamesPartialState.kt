@@ -5,6 +5,8 @@ import myapplication.android.pixelpal.ui.mvi.MviPartialState
 
 sealed interface GamesPartialState: MviPartialState {
 
+    data object Init: GamesPartialState
+
     data object Loading: GamesPartialState
 
     data class DataLoaded(val ui: GamesShortDataUiList): GamesPartialState

@@ -34,8 +34,8 @@ class GenresRepositoryImpl @Inject constructor(
             }
             if (chosenGenre?.description != null) description = GenreDescription(chosenGenre.description!!)
         }
-        if (description == null) remoteSource.getGenresDescription(id)
-        return description!!.toDomain()
+        if (description == null) description = remoteSource.getGenresDescription(id)
+        return description.toDomain()
     }
 
 }

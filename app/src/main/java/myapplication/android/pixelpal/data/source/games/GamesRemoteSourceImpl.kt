@@ -8,8 +8,8 @@ import javax.inject.Inject
 class GamesRemoteSourceImpl @Inject constructor(
     private val api: GamesApi,
 ): GamesRemoteSource {
-    override suspend fun getGamesShortData(id: Long): GamesShortDataList =
-        api.getGamesShortDataByGenre(id)
+    override suspend fun getGamesShortData(page: Int, id: Long): GamesShortDataList =
+        api.getGamesShortDataByGenre(page, id)
 
     override suspend fun getTopGames(page: Int): GamesNewsList =
         api.getTopGames(page)

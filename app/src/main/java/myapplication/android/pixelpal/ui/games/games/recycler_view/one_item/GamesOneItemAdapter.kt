@@ -44,7 +44,7 @@ class GamesOneItemAdapter: ListAdapter<GamesShortModel, RecyclerView.ViewHolder>
 
                 Glide.with(itemView.context)
                     .load(model.image.toUri())
-                    .override(Target.SIZE_ORIGINAL)
+                    .override(250, 250)
                     .into(image)
             }
         }

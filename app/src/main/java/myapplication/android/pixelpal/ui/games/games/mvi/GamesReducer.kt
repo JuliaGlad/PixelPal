@@ -12,10 +12,13 @@ class GamesReducer: MviReducer<
             is GamesPartialState.DataLoaded -> updateDataLoaded(prevState, partialState.ui)
             is GamesPartialState.Error -> updateError(prevState, partialState.throwable)
             GamesPartialState.Loading -> updateLoading(prevState)
+            GamesPartialState.Init -> updateInit()
         }
 
+    private fun updateInit() = GamesState(LceState.Loading, page = 0)
+
     private fun updateDataLoaded(prevState: GamesState, ui: GamesShortDataUiList) =
-        prevState.copy(ui = LceState.Content(ui))
+        prevState.copy(ui = LceState.Content(ui), page = prevState.page + 1)
 
     private fun updateError(prevState: GamesState, throwable: Throwable) = prevState.copy(ui = LceState.Error(throwable))
 

@@ -4,9 +4,9 @@ import myapplication.android.pixelpal.data.models.gamesMain.GamesShortDataList
 
 interface GamesShortDataLocalSource {
 
-    fun insertGamesShortData(games: GamesShortDataList)
+    fun insertGamesShortData(currentPage: Int, games: GamesShortDataList)
 
-    fun getGamesShortData(): GamesShortDataList?
+    fun getGamesShortData(page: Int): GamesShortDataList?
 
     fun deleteGamesShortData()
 }

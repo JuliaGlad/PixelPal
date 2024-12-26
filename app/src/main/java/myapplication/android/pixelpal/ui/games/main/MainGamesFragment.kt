@@ -147,7 +147,6 @@ class MainGamesFragment : MviBaseFragment<
             if (chosenId != ALL_ID && chosenId == i.id) chosenIndex = currentIndex + 1
             pagerAdapter.notifyItemChanged(currentIndex)
         }
-
         instances[chosenIndex].updateLayoutRecycler()
     }
 
@@ -168,7 +167,9 @@ class MainGamesFragment : MviBaseFragment<
                         binding.infoBox.root.visibility = VISIBLE
                         binding.infoBox.loading.visibility = VISIBLE
                         viewModel.getGenreDescription(it)
-                    } else binding.infoBox.root.visibility = GONE
+                    } else {
+                        binding.infoBox.root.visibility = GONE
+                    }
                     chosenId = it
                 }
             }
@@ -198,7 +199,6 @@ class MainGamesFragment : MviBaseFragment<
             }
         }
         pagerAdapter.update(instances)
-        //   pagerAdapter.notifyItemChanged(chosenFragmentPosition)
     }
 
     private fun collectDescription() {
