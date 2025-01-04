@@ -12,6 +12,11 @@ class CreatorsRepositoryImpl @Inject constructor(
     private val localSource: CreatorsLocalSource,
     private val remoteSource: CreatorsRemoteSource
 ) : CreatorsRepository {
+    override suspend fun getGameCreators(
+        gameId: String,
+        page: Int
+    ): CreatorDomainList =
+        remoteSource.getGameCreators(gameId, page).toDomain()
 
     override suspend fun getCreatorsRoles(): List<RoleDomain> =
         getAndCheckData(

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">PixelPal</string>
+    <string name="dlcs_ultimate_edition_goty">DLCS, Ultimate editions, GOTY и тд.</string>
     <string name="profile">Профиль</string>
     <string name="creators">Создатели</string>
     <string name="games">Игры</string>
@@ -10,11 +11,15 @@
     <string name="all">Все</string>
     <string name="genre">Жанр:</string>
     <string name="release_date">Дата выхода:</string>
+    <string name="description">Описание:</string>
     <string name="released">Вышла:</string>
     <string name="search">Поиск</string>
     <string name="roles">Роли:</string>
+    <string name="screenshot">Скриншоты</string>
     <string name="rating">Рейтинг:</string>
+    <string name="other_games_in_this_series">Другие игры из этой серии:</string>
     <string name="where_to_buy">Где купить?</string>
+    <string name="same_series">Из этой серии</string>
     <string name="creation_date">Создан:</string>
     <string name="famous_projects">Проекты:</string>
     <string name="playtime">Время игры:</string>

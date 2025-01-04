@@ -35,6 +35,22 @@ suspend fun <T1, T2, T3, R> asyncAwait(
     }
 }
 
+suspend fun <T1, T2, R> asyncAwait(
+    s1: suspend CoroutineScope.() -> T1,
+    s2: suspend CoroutineScope.() -> T2,
+    transform: suspend (T1, T2) -> R
+): R {
+    return coroutineScope {
+        val result1 = async(block = s1)
+        val result2 = async(block = s2)
+
+        transform(
+            result1.await(),
+            result2.await()
+        )
+    }
+}
+
 suspend fun <T, R> asyncAwait(
     s1: suspend CoroutineScope.() -> T,
     transform: suspend (T) -> R

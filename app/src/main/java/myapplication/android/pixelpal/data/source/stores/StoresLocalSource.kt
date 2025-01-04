@@ -1,6 +1,6 @@
 package myapplication.android.pixelpal.data.source.stores
 
-import myapplication.android.pixelpal.data.models.stores.StoresList
+import myapplication.android.pixelpal.data.models.stores.store.StoresList
 
 interface StoresLocalSource {
 

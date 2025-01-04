@@ -35,6 +35,7 @@ class ReleasesAdapter :
                 if (model.uri.isNotEmpty()) {
                     image.setImageUri(model.uri.toUri())
                 }
+                item.setOnClickListener { model.listener.onClick() }
             }
         }
     }

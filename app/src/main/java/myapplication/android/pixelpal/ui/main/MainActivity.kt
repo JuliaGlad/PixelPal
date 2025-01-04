@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.github.terrakok.cicerone.Cicerone
@@ -10,7 +11,10 @@ import com.github.terrakok.cicerone.androidx.AppNavigator
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.app.App
 import myapplication.android.pixelpal.app.App.Companion.app
+import myapplication.android.pixelpal.app.App.Companion.appComponent
+import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.ActivityMainBinding
+import myapplication.android.pixelpal.ui.game_details.GameDetailsActivity
 import myapplication.android.pixelpal.ui.main.BottomScreen.creators
 import myapplication.android.pixelpal.ui.main.BottomScreen.games
 import myapplication.android.pixelpal.ui.main.BottomScreen.home
@@ -31,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     private val navigationHolder: NavigatorHolder by lazy { app.navigatorHolder }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-      //  (application as App).appComponent.inject(this)
+        appComponent.mainActivityComponent().create().inject(this)
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -65,6 +69,17 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         navigationHolder.removeNavigator()
         super.onPause()
+    }
+
+    fun openGameDetailsActivity(gameId: Long, name: String, genres: String, released: String, image: String){
+        val intent = Intent(this, GameDetailsActivity::class.java).apply {
+            putExtra(Constants.GAME_ID_ARG, gameId)
+            putExtra(Constants.GAME_NAME_ARG, name)
+            putExtra(Constants.GAME_GENRES_ARG, genres)
+            putExtra(Constants.GAME_RELEASE_ARG, released)
+            putExtra(Constants.GAME_IMAGE_ARG, image)
+        }
+        startActivity(intent)
     }
 
     override fun onDestroy() {

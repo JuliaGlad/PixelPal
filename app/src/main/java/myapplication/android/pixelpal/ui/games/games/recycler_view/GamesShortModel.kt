@@ -4,7 +4,7 @@ data class GamesShortModel(
     val id: Long,
     val name: String,
     val rating: Int?,
-    val releaseDate: String,
+    val releaseDate: String?,
     val playtime: Int,
     val image: String
 )

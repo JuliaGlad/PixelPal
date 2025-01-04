@@ -12,6 +12,7 @@ import java.util.stream.Collectors
 import javax.inject.Inject
 
 class CreatorsLocalSourceImpl @Inject constructor() : CreatorsLocalSource {
+
     override fun getCreators(page: Int, roleId: Int): CreatorsList? {
         val data = CreatorProvider().getCreators(page)
         return if (data.isNotEmpty()) {

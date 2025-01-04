@@ -38,6 +38,7 @@ import myapplication.android.pixelpal.ui.home.mvi.HomeStoreFactory
 import myapplication.android.pixelpal.ui.home.recycler_view.releases.ReleasesModel
 import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.listener.RecyclerEndListener
+import myapplication.android.pixelpal.ui.main.MainActivity
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import java.util.Date
 import javax.inject.Inject
@@ -269,18 +270,26 @@ class HomeFragment :
         val items = mutableListOf<ReleasesModel>()
         for (i in list.games) {
             items.add(
-                ReleasesModel(
-                    list.games.indexOf(i),
-                    i.name,
-                    i.releaseDate.toString(),
-                    i.genre,
-                    i.uri.toString(),
-                    object : ClickListener {
-                        override fun onClick() {
-                            TODO("Open game details screen")
+                with(i) {
+                    ReleasesModel(
+                        list.games.indexOf(i),
+                        name,
+                        releaseDate.toString(),
+                        genre,
+                        uri.toString(),
+                        object : ClickListener {
+                            override fun onClick() {
+                                (activity as MainActivity).openGameDetailsActivity(
+                                    gameId,
+                                    name,
+                                    genre,
+                                    releaseDate.toString(),
+                                    uri.toString()
+                                )
+                            }
                         }
-                    }
-                )
+                    )
+                }
             )
         }
         return items

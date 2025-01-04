@@ -1,7 +1,6 @@
 package myapplication.android.pixelpal.data.database.provider
 
 import android.icu.util.Calendar
-import android.util.Log
 import kotlinx.serialization.json.jsonObject
 import myapplication.android.pixelpal.app.App.Companion.app
 import myapplication.android.pixelpal.data.database.entities.GameReleaseEntity
@@ -45,9 +44,10 @@ class GameReleasesProvider {
         val entities = mutableListOf<GameReleaseEntity>()
         for (i in games.items) {
             with(i) {
+                var genre = "???"
+                if (!genres.isNullOrEmpty()) genre = genres[0].jsonObject["name"].toString()
                 val date = releaseDate?.subSequence(releaseDate.length - 2, releaseDate.length)
-                genres?.get(0)?.jsonObject?.get("name")?.let {
-                    GameReleaseEntity(
+                    val entity = GameReleaseEntity(
                         id,
                         page,
                         name,
@@ -57,13 +57,9 @@ class GameReleasesProvider {
                         image,
                         rating,
                         ageRating,
-                        it.toString()
+                        genre
                     )
-                }?.let {
-                    entities.add(
-                        it
-                    )
-                }
+                entities.add(entity)
             }
         }
         app.database.gameReleasesDao().insertAll(entities)

@@ -6,6 +6,29 @@ import myapplication.android.pixelpal.domain.model.creator.CreatorDomain
 import myapplication.android.pixelpal.domain.model.creator.CreatorDomainList
 import java.util.stream.Collectors
 
+
+fun CreatorsList.toDomain() =
+    CreatorDomainList(
+        items!!.stream()
+            .map {
+                with(it) {
+                    val rolesDomain = role
+                        .stream()
+                        .map { role -> role.toDomain() }
+                        .collect(Collectors.toList())
+
+                    CreatorDomain(
+                        id = id,
+                        name = name,
+                        role = rolesDomain,
+                        gamesCount = gamesCount,
+                        image = image
+                    )
+                }
+            }.collect(Collectors.toList())
+    )
+
+
 fun CreatorsList.toDomain(requiredId: Int) =
     CreatorDomainList(
         items!!.stream()

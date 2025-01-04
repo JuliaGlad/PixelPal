@@ -2,8 +2,8 @@ package myapplication.android.pixelpal.data.source.stores
 
 import myapplication.android.pixelpal.data.database.entities.StoreEntity
 import myapplication.android.pixelpal.data.database.provider.StoreProvider
-import myapplication.android.pixelpal.data.models.stores.Store
-import myapplication.android.pixelpal.data.models.stores.StoresList
+import myapplication.android.pixelpal.data.models.stores.store.Store
+import myapplication.android.pixelpal.data.models.stores.store.StoresList
 import java.util.stream.Collectors
 import javax.inject.Inject
 

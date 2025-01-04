@@ -6,7 +6,7 @@ import myapplication.android.pixelpal.data.models.GameRating
 
 @Serializable
 class GameShortData(
-    @SerialName("released") val releaseDate: String,
+    @SerialName("released") val releaseDate: String?,
     @SerialName("background_image") val image: String,
     @SerialName("esrb_rating") val ageRating: GameRating?,
     @SerialName("metacritic") val rating: Int?,

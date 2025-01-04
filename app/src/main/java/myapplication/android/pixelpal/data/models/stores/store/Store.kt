@@ -1,4 +1,4 @@
-package myapplication.android.pixelpal.data.models.stores
+package myapplication.android.pixelpal.data.models.stores.store
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

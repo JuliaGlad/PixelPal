@@ -11,7 +11,7 @@ class GamesShortEntity(
     val genre: Long,
     val title: String,
     val playTime: Int,
-    val releaseDate: String,
+    val releaseDate: String?,
     val image: String,
     val ageRating: GameRating?,
     val rating: Int?,

@@ -31,7 +31,8 @@ class GamesTopProvider {
         val entities = mutableListOf<GameTopEntity>()
         for (i in games.items) {
             with(i) {
-                if (!genres.isNullOrEmpty()) {
+                var genre = "???"
+                if (!genres.isNullOrEmpty()) genre =  genres[0].jsonObject["name"].toString()
                     entities.add(
                         GameTopEntity(
                             id,
@@ -41,10 +42,9 @@ class GamesTopProvider {
                             image,
                             rating,
                             ageRating,
-                            genres[0].jsonObject["name"].toString()
+                            genre
                         )
                     )
-                }
             }
         }
         app.database.gameTopDao().insertAll(entities)

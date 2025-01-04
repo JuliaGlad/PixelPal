@@ -5,7 +5,6 @@ import myapplication.android.pixelpal.data.database.entities.CreatorEntity
 import myapplication.android.pixelpal.data.models.creators.CreatorsList
 
 class CreatorProvider {
-
     fun getCreators(page: Int): List<CreatorEntity> {
         val data = app.database.creatorsDao().getAll()
         val result = mutableListOf<CreatorEntity>()

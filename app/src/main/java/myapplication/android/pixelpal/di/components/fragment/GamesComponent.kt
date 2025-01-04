@@ -22,7 +22,7 @@ interface GamesComponent {
 }
 
 @Module
-class GamesModule(){
+class GamesModule{
     @GamesScope
     @Provides
     fun provideGamesLocalDI(
