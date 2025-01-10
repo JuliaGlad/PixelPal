@@ -2,6 +2,13 @@ package myapplication.android.pixelpal.app
 
 class Constants {
     companion object{
+        const val RELEASES_ID = 0
+        const val RELEASES_NEXT_ID = 1
+        const val TOP_ID = 2
+        const val CURRENT_DATE = "CurrentDate"
+        const val END_DATE = "EndDate"
+        const val START_DATE = "StartDate"
+        const val ALL_INTENT_ID = "AllIntentId"
         const val GAME_ID_ARG = "gameIdArg"
         const val GAME_NAME_ARG = "gameNameArg"
         const val GAME_RELEASE_ARG = "gameReleaseArg"

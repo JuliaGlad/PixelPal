@@ -7,6 +7,7 @@ data class GamesNewsListDomain(
 class GamesNewsDomain(
     val gameId: Long,
     val name: String,
+    val playTime: Int,
     val releaseDate: String?,
     val rating: Float?,
     val genre: String,

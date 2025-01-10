@@ -15,6 +15,7 @@ class GameTopEntity(
     val rating: Float?,
     val ageRating: GameRating?,
     val genres: String,
+    val playTime: Int,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0
 )

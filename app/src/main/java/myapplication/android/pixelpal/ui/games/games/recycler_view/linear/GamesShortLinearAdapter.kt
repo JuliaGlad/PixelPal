@@ -38,7 +38,6 @@ class GamesShortLinearAdapter : ListAdapter<GamesShortModel, RecyclerView.ViewHo
                 if (model.rating != null) rating.text = "${model.rating}"
                 else rating.text = "???"
 
-
                 playtime.text = "${model.playtime}"
                 releaseDate.text = model.releaseDate
                 title.text = model.name

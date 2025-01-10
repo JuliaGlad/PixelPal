@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.app.App.Companion.appComponent
+import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.FragmentHomeBinding
 import myapplication.android.pixelpal.ui.delegates.delegates.info_box.InfoBoxDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.info_box.InfoBoxDelegateItem
@@ -54,7 +55,7 @@ class HomeFragment :
     private val homeComponent by lazy {
         appComponent.homeComponent().create()
     }
-    private val adapter : MainAdapter by lazy(LazyThreadSafetyMode.NONE) { initAdapter() }
+    private val adapter: MainAdapter by lazy(LazyThreadSafetyMode.NONE) { initAdapter() }
     private var recyclerItems: MutableList<DelegateItem> = mutableListOf()
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -91,7 +92,42 @@ class HomeFragment :
     }
 
     override fun resolveEffect(effect: HomeEffect) {
+        when (effect) {
+            is HomeEffect.ShowDatesDialog -> TODO()
+            is HomeEffect.OpenGameDetailsScreen -> {
+                with(effect) {
+                    (activity as MainActivity).openGameDetailsActivity(
+                        gameId,
+                        name,
+                        genres,
+                        released.toString(),
+                        image.toString()
+                    )
+                }
+            }
 
+            is HomeEffect.OpenAllTopGamesScreen -> {
+                (activity as MainActivity).openAllTopGamesActivity(Constants.TOP_ID)
+            }
+
+            is HomeEffect.OpenAllCurrentReleasesScreen -> {
+                val (currentDate, _, monthStartDate) = getVariables()
+                (activity as MainActivity).openAllTopGamesActivity(
+                    Constants.RELEASES_ID,
+                    currentDate = currentDate,
+                    startDate = monthStartDate
+                )
+            }
+
+            is HomeEffect.OpenAllNextReleasesScreen -> {
+                val (currentDate, monthEndDate, _) = getVariables()
+                (activity as MainActivity).openAllTopGamesActivity(
+                    Constants.RELEASES_ID,
+                    currentDate = currentDate,
+                    endDate = monthEndDate
+                )
+            }
+        }
     }
 
     override fun render(state: HomeState) {
@@ -201,7 +237,7 @@ class HomeFragment :
                 released,
                 object : ClickListener {
                     override fun onClick() {
-                        TODO("open all new releases")
+                        store.sendEffect(HomeEffect.OpenAllCurrentReleasesScreen)
                     }
                 },
                 object : RecyclerEndListener {
@@ -221,7 +257,7 @@ class HomeFragment :
                 releaseThisMonth,
                 object : ClickListener {
                     override fun onClick() {
-                        TODO("Open all games releases in this month")
+                        store.sendEffect(HomeEffect.OpenAllNextReleasesScreen)
                     }
                 },
                 object : RecyclerEndListener {
@@ -252,7 +288,7 @@ class HomeFragment :
                 topGames,
                 object : ClickListener {
                     override fun onClick() {
-                        TODO("open all top games")
+                        store.sendEffect(HomeEffect.OpenAllTopGamesScreen)
                     }
                 },
                 object : RecyclerEndListener {
@@ -279,12 +315,14 @@ class HomeFragment :
                         uri.toString(),
                         object : ClickListener {
                             override fun onClick() {
-                                (activity as MainActivity).openGameDetailsActivity(
-                                    gameId,
-                                    name,
-                                    genre,
-                                    releaseDate.toString(),
-                                    uri.toString()
+                                store.sendEffect(
+                                    HomeEffect.OpenGameDetailsScreen(
+                                        gameId,
+                                        name,
+                                        genre,
+                                        releaseDate,
+                                        uri
+                                    )
                                 )
                             }
                         }

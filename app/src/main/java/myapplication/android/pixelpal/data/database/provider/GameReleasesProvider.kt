@@ -57,7 +57,8 @@ class GameReleasesProvider {
                         image,
                         rating,
                         ageRating,
-                        genre
+                        genre,
+                        playTime
                     )
                 entities.add(entity)
             }

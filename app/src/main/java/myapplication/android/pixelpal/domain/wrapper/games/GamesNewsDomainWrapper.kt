@@ -23,6 +23,7 @@ fun GamesNewsList.toDomain(): GamesNewsListDomain =
                 GamesNewsDomain(
                     gameId = id,
                     name = name,
+                    playTime = playTime,
                     releaseDate = releaseDate,
                     rating = rating,
                     genre = genre!!,

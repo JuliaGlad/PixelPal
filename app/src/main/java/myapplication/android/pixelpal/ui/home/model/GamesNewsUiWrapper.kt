@@ -10,6 +10,7 @@ fun GamesNewsListDomain.toUi() =
                 GamesUi(
                     gameId = gameId,
                     name = name,
+                    playTime = playTime,
                     releaseDate = releaseDate,
                     rating = rating,
                     genre = genre,
