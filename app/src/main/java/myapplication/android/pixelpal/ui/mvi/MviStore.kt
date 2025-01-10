@@ -49,6 +49,10 @@ abstract class MviStore<
         actor.effects.onEach { _effect.emit(it) }.launchIn(viewModelScope)
     }
 
+    fun sendEffect(effect: Effect){
+        viewModelScope.launch { _effect.emit(effect) }
+    }
+
     fun sendIntent(intent: Intent) {
         viewModelScope.launch { _intents.emit(intent) }
     }

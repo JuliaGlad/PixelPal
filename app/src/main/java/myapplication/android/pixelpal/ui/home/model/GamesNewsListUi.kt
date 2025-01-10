@@ -1,12 +1,15 @@
 package myapplication.android.pixelpal.ui.home.model
 
+import myapplication.android.pixelpal.ui.all_games.mvi.AllGameResult
+
 class GamesNewsListUi(
    val games: List<GamesUi>
-)
+): AllGameResult
 
 class GamesUi(
     val gameId: Long,
     val name: String,
+    val playTime: Int,
     val releaseDate: String?,
     val rating: Float?,
     val genre: String,

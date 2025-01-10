@@ -14,6 +14,7 @@ import myapplication.android.pixelpal.app.App.Companion.app
 import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.ActivityMainBinding
+import myapplication.android.pixelpal.ui.all_games.AllGamesActivity
 import myapplication.android.pixelpal.ui.game_details.GameDetailsActivity
 import myapplication.android.pixelpal.ui.main.BottomScreen.creators
 import myapplication.android.pixelpal.ui.main.BottomScreen.games
@@ -69,6 +70,21 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         navigationHolder.removeNavigator()
         super.onPause()
+    }
+
+    fun openAllTopGamesActivity(
+        intentId: Int,
+        currentDate: String? = null,
+        startDate: String? = null,
+        endDate: String? = null
+    ) {
+        val intent = Intent(this, AllGamesActivity::class.java).apply {
+            putExtra(Constants.ALL_INTENT_ID, intentId)
+            currentDate?.let { putExtra(Constants.CURRENT_DATE, it) }
+            startDate?.let { putExtra(Constants.START_DATE, it) }
+            endDate?.let { putExtra(Constants.END_DATE, it) }
+        }
+        startActivity(intent)
     }
 
     fun openGameDetailsActivity(gameId: Long, name: String, genres: String, released: String, image: String){

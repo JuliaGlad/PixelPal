@@ -56,8 +56,8 @@ class GamesLocalSourceImpl @Inject constructor() : GamesLocalSource {
         )
 
     private fun GameReleaseEntity.toGameNews() =
-        GamesNews(releaseFullDate, image, rating, ageRating, gameId, title, null, genres)
+        GamesNews(releaseFullDate, image, rating, ageRating,playTime, gameId,  title, null, genres)
 
     private fun GameTopEntity.toGameNews() =
-        GamesNews(releaseDate, image, rating, ageRating, gameId, title, null, genres)
+        GamesNews(releaseDate, image, rating, ageRating, playTime, gameId,  title, null, genres)
 }

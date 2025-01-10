@@ -42,7 +42,8 @@ class GamesTopProvider {
                             image,
                             rating,
                             ageRating,
-                            genre
+                            genre,
+                            playTime
                         )
                     )
             }
