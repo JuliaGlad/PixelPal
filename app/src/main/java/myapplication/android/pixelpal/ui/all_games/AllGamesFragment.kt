@@ -160,7 +160,7 @@ class AllGamesFragment : MviBaseFragment<
 
     private fun updateRecycler(items: GamesNewsListUi) {
         val models = addDataShortModelFromNewsUi(items)
-        val startPosition = gamesShortModels.size
+        val startPosition = gamesShortModels.size - 1
         gamesShortModels.addAll(models)
         adapter.notifyItemRangeInserted(startPosition, models.size)
     }
