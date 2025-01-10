@@ -80,6 +80,7 @@ class AllGamesFragment : MviBaseFragment<
 
     private fun getOtherArguments(dataId: Int) {
         when (dataId) {
+
             RELEASES_ID -> {
                 arguments = AllArgument.CurrentReleasesAllArgument(
                     activity?.intent?.getStringExtra(START_DATE)!!,
@@ -99,7 +100,7 @@ class AllGamesFragment : MviBaseFragment<
                     activity?.intent?.getStringExtra(CURRENT_DATE)!!
                 )
                 with(arguments as AllArgument.NextReleasesAllArgument) {
-                    intent = AllGamesIntent.GetAllCurrentReleases(
+                    intent = AllGamesIntent.GetAllNextReleases(
                         endDate,
                         currentDate
                     )
@@ -180,7 +181,6 @@ class AllGamesFragment : MviBaseFragment<
     }
 
     private fun initGameNewsRecycler(data: GamesNewsListUi) {
-
         gamesShortModels.addAll(addDataShortModelFromNewsUi(data))
         binding.recyclerView.adapter = adapter
         adapter.submitList(gamesShortModels)

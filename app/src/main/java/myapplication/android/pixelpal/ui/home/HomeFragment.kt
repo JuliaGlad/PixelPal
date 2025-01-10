@@ -122,7 +122,7 @@ class HomeFragment :
             is HomeEffect.OpenAllNextReleasesScreen -> {
                 val (currentDate, monthEndDate, _) = getVariables()
                 (activity as MainActivity).openAllTopGamesActivity(
-                    Constants.RELEASES_ID,
+                    Constants.RELEASES_NEXT_ID,
                     currentDate = currentDate,
                     endDate = monthEndDate
                 )
@@ -168,7 +168,6 @@ class HomeFragment :
 
     private fun getGames() {
         val (currentDate, monthEndDate, monthStartDate) = getVariables()
-
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 store.sendIntent(
