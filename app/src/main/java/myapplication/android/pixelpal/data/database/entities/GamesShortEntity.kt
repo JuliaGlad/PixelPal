@@ -12,7 +12,7 @@ class GamesShortEntity(
     val title: String,
     val playTime: Int,
     val releaseDate: String?,
-    val image: String,
+    val image: String?,
     val ageRating: GameRating?,
     val rating: Int?,
     @PrimaryKey(autoGenerate = true)

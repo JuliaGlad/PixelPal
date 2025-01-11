@@ -7,7 +7,6 @@ import androidx.core.net.toUri
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.Target
 import myapplication.android.pixelpal.databinding.RecyclerViewGamesOneItemBinding
 import myapplication.android.pixelpal.ui.games.games.recycler_view.GamesShortItemCallBack
 import myapplication.android.pixelpal.ui.games.games.recycler_view.GamesShortModel
@@ -42,10 +41,12 @@ class GamesOneItemAdapter: ListAdapter<GamesShortModel, RecyclerView.ViewHolder>
                 creationDate.text = model.releaseDate
                 title.text = model.name
 
-                Glide.with(itemView.context)
-                    .load(model.image.toUri())
-                    .override(250, 250)
-                    .into(image)
+                if (model.image != null) {
+                    Glide.with(itemView.context)
+                        .load(model.image.toUri())
+                        .override(250, 250)
+                        .into(image)
+                }
             }
         }
     }

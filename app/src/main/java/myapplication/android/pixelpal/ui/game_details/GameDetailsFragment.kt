@@ -131,11 +131,20 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
         if (savedInstanceState == null) {
             store.sendIntent(GameDetailsIntent.Init)
         }
+        initBackButton()
         store.sendIntent(GameDetailsIntent.GetGameMainData(gameId.toString()))
     }
 
+    private fun initBackButton() {
+        binding.iconBack.setOnClickListener {
+            store.sendEffect(GameDetailsEffect.NavigateBack)
+        }
+    }
+
     override fun resolveEffect(effect: GameDetailsEffect) {
-        TODO("Not yet implemented")
+        when(effect){
+            GameDetailsEffect.NavigateBack -> activity?.finish()
+        }
     }
 
     override fun render(state: GameDetailsState) {

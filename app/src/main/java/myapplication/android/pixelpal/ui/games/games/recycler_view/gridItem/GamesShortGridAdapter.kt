@@ -40,10 +40,12 @@ class GamesShortGridAdapter :
                 creationDate.text = model.releaseDate
                 title.text = model.name
 
-                Glide.with(itemView.context)
-                    .load(model.image.toUri())
-                    .override(200, 200)
-                    .into(image)
+                if (model.image != null) {
+                    Glide.with(itemView.context)
+                        .load(model.image.toUri())
+                        .override(200, 200)
+                        .into(image)
+                }
             }
         }
     }

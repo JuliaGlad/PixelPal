@@ -10,5 +10,5 @@ class GameShortDomain(
     val rating: Int?,
     val releaseDate: String?,
     val playtime: Int,
-    val image: String
+    val image: String?
 )

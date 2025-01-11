@@ -125,6 +125,7 @@ class GameDetailsActor(
                 stores.toUi()
             }
         }.getOrThrow()
+
     private suspend fun getParentAndAdditions(gameId: String, page: Int) =
         runCatchingNonCancellation {
             asyncAwait(
