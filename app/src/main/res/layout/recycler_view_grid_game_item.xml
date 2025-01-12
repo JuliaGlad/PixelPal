@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="14dp"
@@ -35,9 +36,9 @@
             android:id="@+id/image_filter"
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:scaleType="centerCrop"
-            android:background="#4D010005"
             android:layout_marginTop="5dp"
+            android:background="#4D010005"
+            android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -51,9 +52,9 @@
             android:fontFamily="@font/tektur_bold"
             android:textColor="@color/main_blue"
             android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@id/image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/image"
             tools:text="Название" />
 
         <TextView

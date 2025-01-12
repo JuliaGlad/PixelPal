@@ -46,6 +46,7 @@ class GamesShortGridAdapter :
                         .override(200, 200)
                         .into(image)
                 }
+                item.setOnClickListener { model.listener.onClick() }
             }
         }
     }

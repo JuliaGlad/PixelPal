@@ -1,8 +1,7 @@
-package myapplication.android.pixelpal.di.components.main
+package myapplication.android.pixelpal.di.components.activity
 
 import dagger.Subcomponent
 import myapplication.android.pixelpal.ui.game_details.GameDetailsActivity
-import myapplication.android.pixelpal.ui.game_details.mvi.GameDetailsActor
 import javax.inject.Scope
 
 @GameDetailsActivityScope

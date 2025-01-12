@@ -52,6 +52,7 @@ class CreatorsDelegate : AdapterDelegate{
                         .override(100, 100)
                         .into(image)
                 }
+                binding.item.setOnClickListener { model.clickListener.onClick() }
             }
         }
     }

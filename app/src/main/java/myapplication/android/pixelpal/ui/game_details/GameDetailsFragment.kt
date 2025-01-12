@@ -9,9 +9,11 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.net.toUri
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.app.App.Companion.appComponent
+import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.app.Constants.Companion.GAME_GENRES_ARG
 import myapplication.android.pixelpal.app.Constants.Companion.GAME_ID_ARG
 import myapplication.android.pixelpal.app.Constants.Companion.GAME_IMAGE_ARG
@@ -97,7 +99,18 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         gameDetailsComponent.inject(this)
-        getActivityArguments()
+        if (activity?.intent != null) getActivityArguments()
+        else getFragmentArguments()
+    }
+
+    private fun getFragmentArguments() {
+        with(arguments) {
+            gameId = this?.getLong(GAME_ID_ARG, 0L)
+            releaseDate = this?.getString(GAME_RELEASE_ARG)
+            genres = this?.getString(GAME_GENRES_ARG)
+            gameName = this?.getString(GAME_NAME_ARG)
+            gameImage = this?.getString(GAME_IMAGE_ARG)
+        }
     }
 
     private fun getActivityArguments() {
@@ -142,8 +155,11 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
     }
 
     override fun resolveEffect(effect: GameDetailsEffect) {
-        when(effect){
+        when (effect) {
             GameDetailsEffect.NavigateBack -> activity?.finish()
+            is GameDetailsEffect.OpenGameDetails -> {
+                TODO("Open another details screen")
+            }
         }
     }
 
@@ -208,7 +224,20 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
                                         rating,
                                         releaseDate,
                                         playtime,
-                                        image
+                                        image,
+                                        object : ClickListener {
+                                            override fun onClick() {
+                                                store.sendEffect(
+                                                    GameDetailsEffect.OpenGameDetails(
+                                                        gameId!!,
+                                                        genres!!,
+                                                        name,
+                                                        releaseDate!!,
+                                                        image!!
+                                                    )
+                                                )
+                                            }
+                                        }
                                     )
                                 )
                             }
@@ -228,7 +257,7 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
                 if (SAME_SERIES == it.model.id) {
                     with((it.content() as CreatorGameDetailsModel)) {
                         isUpdated = true
-                        val models = getGamesShortDataModel(items)
+                        val models = getGameShortModels(items)
                         adapter.notifyItemChanged(recyclerItems.indexOf(it), models)
                     }
                 }
@@ -260,7 +289,7 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
     }
 
     private fun addSameSeries(sameSeries: GamesShortDataUiList) {
-        val newItems = getGamesShortDataModel(sameSeries)
+        val newItems = getGameShortModels(sameSeries)
         recyclerItems.add(GameDetailsShortDataDelegateItem(
             GameDetailsShortDataModel(
                 SAME_SERIES,
@@ -281,16 +310,6 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
                 }
             )
         ))
-    }
-
-    private fun getGamesShortDataModel(games: GamesShortDataUiList): MutableList<GamesShortModel> {
-        val newItems = mutableListOf<GamesShortModel>()
-        games.items.forEach { gamesShortDataUi ->
-            with(gamesShortDataUi) {
-                newItems.add(GamesShortModel(id, name, rating, releaseDate, playtime, image))
-            }
-        }
-        return newItems
     }
 
     private fun addParentAndAddition(
@@ -325,14 +344,38 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
         additions: GamesShortDataUiList
     ): MutableList<GamesShortModel> {
         val newItems = mutableListOf<GamesShortModel>()
-        parentGames.items.forEach { gamesShortDataUi ->
+        newItems.addAll(getGameShortModels(additions))
+        newItems.addAll(getGameShortModels(parentGames))
+        return newItems
+    }
+
+    private fun getGameShortModels(items: GamesShortDataUiList): MutableList<GamesShortModel> {
+        val newItems = mutableListOf<GamesShortModel>()
+        items.items.forEach { gamesShortDataUi ->
             with(gamesShortDataUi) {
-                newItems.add(GamesShortModel(id, name, rating, releaseDate, playtime, image))
-            }
-        }
-        additions.items.forEach { gamesShortDataUi ->
-            with(gamesShortDataUi) {
-                newItems.add(GamesShortModel(id, name, rating, releaseDate, playtime, image))
+                newItems.add(
+                    GamesShortModel(
+                        id,
+                        name,
+                        rating,
+                        releaseDate,
+                        playtime,
+                        image,
+                        object : ClickListener {
+                            override fun onClick() {
+                                store.sendEffect(
+                                    GameDetailsEffect.OpenGameDetails(
+                                        gameId!!,
+                                        genres!!,
+                                        name,
+                                        releaseDate!!,
+                                        image!!
+                                    )
+                                )
+                            }
+                        }
+                    )
+                )
             }
         }
         return newItems

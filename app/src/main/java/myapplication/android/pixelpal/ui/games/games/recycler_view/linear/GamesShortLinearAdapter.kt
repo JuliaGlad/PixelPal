@@ -46,6 +46,7 @@ class GamesShortLinearAdapter : ListAdapter<GamesShortModel, RecyclerView.ViewHo
                         .override(100, 100)
                         .into(image)
                 }
+                item.setOnClickListener { model.listener.onClick() }
             }
         }
     }

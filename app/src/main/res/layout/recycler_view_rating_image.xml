@@ -14,6 +14,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp"/>
 
+    <include android:id="@+id/layout_rating"
+        layout="@layout/rating_badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="14dp"
+        android:layout_marginTop="14dp"
+        app:layout_constraintEnd_toEndOf="@id/image"
+        app:layout_constraintTop_toTopOf="@id/image"/>
 
     <include layout="@layout/item_frame"
         android:layout_width="0dp"

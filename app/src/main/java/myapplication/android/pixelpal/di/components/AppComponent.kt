@@ -8,7 +8,9 @@ import myapplication.android.pixelpal.di.LocalSourceModule
 import myapplication.android.pixelpal.di.RemoteSourceModule
 import myapplication.android.pixelpal.di.RepositoryModule
 import myapplication.android.pixelpal.di.RetrofitModule
+import myapplication.android.pixelpal.di.components.activity.CreatorDetailsActivityComponent
 import myapplication.android.pixelpal.di.components.fragment.AllGamesComponent
+import myapplication.android.pixelpal.di.components.fragment.CreatorDetailsComponent
 import myapplication.android.pixelpal.di.components.fragment.CreatorsComponent
 import myapplication.android.pixelpal.di.components.fragment.GameDetailsComponent
 import myapplication.android.pixelpal.di.components.fragment.GamesComponent
@@ -16,8 +18,8 @@ import myapplication.android.pixelpal.di.components.fragment.HomeComponent
 import myapplication.android.pixelpal.di.components.fragment.MainGamesComponent
 import myapplication.android.pixelpal.di.components.fragment.PlatformComponent
 import myapplication.android.pixelpal.di.components.fragment.StoresComponent
-import myapplication.android.pixelpal.di.components.main.GameDetailsActivityComponent
-import myapplication.android.pixelpal.di.components.main.MainActivityComponent
+import myapplication.android.pixelpal.di.components.activity.GameDetailsActivityComponent
+import myapplication.android.pixelpal.di.components.activity.MainActivityComponent
 import javax.inject.Singleton
 
 @Singleton
@@ -52,6 +54,10 @@ interface AppComponent {
 
     fun allGamesComponent(): AllGamesComponent.Factory
 
+    fun creatorDetailsComponent(): CreatorDetailsComponent.Factory
+
+    fun creatorDetailsActivityComponent(): CreatorDetailsActivityComponent.Factory
+
     @Component.Factory
     interface Factory {
         fun create(@BindsInstance context: Context): AppComponent
@@ -60,6 +66,8 @@ interface AppComponent {
 
 @Module(
     subcomponents = [
+        CreatorDetailsActivityComponent::class,
+        CreatorDetailsComponent::class,
         AllGamesComponent::class,
         GameDetailsActivityComponent::class,
         MainActivityComponent::class,

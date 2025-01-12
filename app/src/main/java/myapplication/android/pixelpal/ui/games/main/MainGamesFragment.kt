@@ -194,7 +194,7 @@ class MainGamesFragment : MviBaseFragment<
         for (i in genres.items) {
             with(i) {
                 instances.add(
-                    GamesFragment.getInstance(id, layoutType)
+                    GamesFragment.getInstance(id, layoutType, title)
                 )
             }
         }

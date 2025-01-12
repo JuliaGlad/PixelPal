@@ -28,8 +28,10 @@ import myapplication.android.pixelpal.ui.games.games.recycler_view.LayoutType
 import myapplication.android.pixelpal.ui.games.games.recycler_view.gridItem.GamesShortGridAdapter
 import myapplication.android.pixelpal.ui.games.games.recycler_view.linear.GamesShortLinearAdapter
 import myapplication.android.pixelpal.ui.games.games.recycler_view.one_item.GamesOneItemAdapter
+import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.listener.GridPaginationScrollListener
 import myapplication.android.pixelpal.ui.listener.LinearPaginationScrollListener
+import myapplication.android.pixelpal.ui.main.MainActivity
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import javax.inject.Inject
@@ -43,6 +45,7 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
         appComponent.gamesComponent().create()
     }
     private var id: Long = 0
+    private var genre: String = ""
     private var loading = false
     private var lastPage = false
     private val shortModels = mutableListOf<GamesShortModel>()
@@ -92,7 +95,16 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
     }
 
     override fun resolveEffect(effect: GamesEffects) {
-        TODO("handle effects")
+        when(effect){
+            GamesEffects.OpenFilters -> TODO()
+            is GamesEffects.OpenGameDetails -> {
+                with(effect) {
+                    (activity as MainActivity).openGameDetailsActivity(
+                        id, name, genre, releaseDate, image
+                    )
+                }
+            }
+        }
     }
 
     override fun render(state: GamesState) {
@@ -100,7 +112,7 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
             is LceState.Content -> {
                 binding.loading.root.visibility = GONE
                 if (!lastPage) {
-                    initRecycler(state.ui.data.items)
+                    shortModels.addAll(getGameShortModels(state.ui.data.items))
                     setLayoutManager()
                 } else {
                     updateRecycler(state.ui.data.items)
@@ -117,14 +129,7 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
     }
 
     private fun updateRecycler(items: List<GamesShortDataUi>) {
-        val newItems = mutableListOf<GamesShortModel>()
-        for (i in items) {
-            with(i) {
-                newItems.add(
-                    GamesShortModel(id, name, rating, releaseDate, playtime, image)
-                )
-            }
-        }
+        val newItems = getGameShortModels(items)
         val startPosition = shortModels.size
         shortModels.addAll(newItems)
         binding.recyclerView.post {
@@ -191,14 +196,27 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
             }
         }
     }
-    private fun initRecycler(games: List<GamesShortDataUi>){
+
+    private fun getGameShortModels(games: List<GamesShortDataUi>): List<GamesShortModel>{
+        val newModels = mutableListOf<GamesShortModel>()
         for (i in games) {
             with(i) {
-                shortModels.add(
-                    GamesShortModel(id, name, rating, releaseDate, playtime, image)
+                newModels.add(
+                    GamesShortModel(id, name, rating, releaseDate, playtime, image,
+                        object : ClickListener{
+                            override fun onClick() {
+                                store.sendEffect(GamesEffects.OpenGameDetails(
+                                    id,
+                                    name,
+                                    releaseDate!!,
+                                    image!!
+                                ))
+                            }
+                        })
                 )
             }
         }
+        return newModels
     }
 
     override fun onDestroy() {
@@ -207,10 +225,11 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
     }
 
     companion object {
-        fun getInstance(id: Long, layoutType: LayoutType) =
+        fun getInstance(id: Long, layoutType: LayoutType, genre: String) =
             GamesFragment().apply {
                 this.id = id
                 this.layoutType = layoutType
+                this.genre = genre
             }
     }
 }

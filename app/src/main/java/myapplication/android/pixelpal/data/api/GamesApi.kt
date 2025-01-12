@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.data.api
 
+import myapplication.android.pixelpal.data.models.creators.CreatorDetails
 import myapplication.android.pixelpal.data.models.creators.CreatorsList
 import myapplication.android.pixelpal.data.models.creators_roles.RolesList
 import myapplication.android.pixelpal.data.models.game_description.GameDescription
@@ -17,6 +18,9 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface GamesApi {
+
+    @GET("creators/{id}")
+    suspend fun getCreatorDetails(@Path("id")id: Long): CreatorDetails
 
     @GET("games/{id}")
     suspend fun getGameDescription(@Path("id")id: Long): GameDescription

@@ -47,6 +47,7 @@ class GamesOneItemAdapter: ListAdapter<GamesShortModel, RecyclerView.ViewHolder>
                         .override(250, 250)
                         .into(image)
                 }
+                item.setOnClickListener { model.listener.onClick() }
             }
         }
     }

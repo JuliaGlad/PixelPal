@@ -2,9 +2,14 @@ package myapplication.android.pixelpal.ui.games.games.mvi
 
 import myapplication.android.pixelpal.ui.mvi.MviEffect
 
-class GamesEffects: MviEffect {
+sealed interface GamesEffects : MviEffect {
 
-    data class OpenGameDetails(val gameId: Long): MviEffect
+    data class OpenGameDetails(
+        val gameId: Long,
+        val name: String,
+        val releaseDate: String,
+        val image: String
+    ) : GamesEffects
 
-    data object OpenFilters: MviEffect
+    data object OpenFilters : GamesEffects
 }

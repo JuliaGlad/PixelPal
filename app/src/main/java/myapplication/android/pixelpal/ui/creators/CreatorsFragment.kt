@@ -43,6 +43,7 @@ import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
 import myapplication.android.pixelpal.ui.listener.ClickIntegerListener
 import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.listener.GridPaginationScrollListener
+import myapplication.android.pixelpal.ui.main.MainActivity
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.mvi.MviStore
@@ -110,7 +111,16 @@ class CreatorsFragment :
     }
 
     override fun resolveEffect(effect: CreatorsEffect) {
-        TODO("Handle effects")
+        when (effect) {
+            is CreatorsEffect.OpenAllCreatorsScreen -> TODO("Open all creators screen")
+            is CreatorsEffect.OpenCreatorDetailsScreen -> {
+                with(effect) {
+                    (activity as MainActivity).openCreatorDetailsActivity(
+                        creatorId, name, role, famousProjects, image
+                    )
+                }
+            }
+        }
     }
 
     override fun render(state: CreatorsState) {
@@ -135,11 +145,11 @@ class CreatorsFragment :
         }
     }
 
-    private fun updateRecycler(creatorsUiList: CreatorsUiList){
+    private fun updateRecycler(creatorsUiList: CreatorsUiList) {
         val startPosition = items.size
-        if (creatorsUiList.creators != null){
-           updateCreatorsRecycler(startPosition, creatorsUiList.creators)
-        } else if (creatorsUiList.publishers != null){
+        if (creatorsUiList.creators != null) {
+            updateCreatorsRecycler(startPosition, creatorsUiList.creators)
+        } else if (creatorsUiList.publishers != null) {
             updatePublisherRecycler(startPosition, creatorsUiList.publishers)
         }
         needUpdate = false
@@ -296,7 +306,17 @@ class CreatorsFragment :
             image,
             object : ClickListener {
                 override fun onClick() {
-                    //TODO("Open details screen")
+                    val rolesArray = arrayOfNulls<String>(roles.size)
+                    for ((roleIndex, i) in roles.withIndex()){
+                        rolesArray[roleIndex] = i
+                    }
+                    store.sendEffect(CreatorsEffect.OpenCreatorDetailsScreen(
+                        creatorId,
+                        name,
+                        rolesArray,
+                        famousProjects,
+                        image
+                    ))
                 }
             }
         )))

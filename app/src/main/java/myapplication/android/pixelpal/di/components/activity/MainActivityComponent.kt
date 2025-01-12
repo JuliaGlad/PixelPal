@@ -1,4 +1,4 @@
-package myapplication.android.pixelpal.di.components.main
+package myapplication.android.pixelpal.di.components.activity
 
 import dagger.Subcomponent
 import myapplication.android.pixelpal.ui.main.MainActivity

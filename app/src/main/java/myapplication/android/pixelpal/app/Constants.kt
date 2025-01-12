@@ -2,6 +2,11 @@ package myapplication.android.pixelpal.app
 
 class Constants {
     companion object{
+        const val CREATOR_ID = "CreatorId"
+        const val CREATOR_NAME = "CreatorName"
+        const val CREATOR_ROLE = "CreatorRoles"
+        const val CREATOR_FAMOUS_PROJECTS = "CreatorFamousProjects"
+        const val CREATOR_IMAGE = "CreatorImage"
         const val RELEASES_ID = 0
         const val RELEASES_NEXT_ID = 1
         const val TOP_ID = 2

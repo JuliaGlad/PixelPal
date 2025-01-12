@@ -15,6 +15,7 @@ import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.ActivityMainBinding
 import myapplication.android.pixelpal.ui.all_games.AllGamesActivity
+import myapplication.android.pixelpal.ui.creator_details.CreatorDetailsActivity
 import myapplication.android.pixelpal.ui.game_details.GameDetailsActivity
 import myapplication.android.pixelpal.ui.main.BottomScreen.creators
 import myapplication.android.pixelpal.ui.main.BottomScreen.games
@@ -83,6 +84,23 @@ class MainActivity : AppCompatActivity() {
             currentDate?.let { putExtra(Constants.CURRENT_DATE, it) }
             startDate?.let { putExtra(Constants.START_DATE, it) }
             endDate?.let { putExtra(Constants.END_DATE, it) }
+        }
+        startActivity(intent)
+    }
+
+    fun openCreatorDetailsActivity(
+        creatorId: Long,
+        name: String,
+        role: Array<String?>,
+        famousProjects: Int,
+        image: String?
+    ) {
+        val intent = Intent(this, CreatorDetailsActivity::class.java).apply {
+            putExtra(Constants.CREATOR_ID, creatorId)
+            putExtra(Constants.CREATOR_NAME, name)
+            putExtra(Constants.CREATOR_ROLE, role)
+            putExtra(Constants.CREATOR_FAMOUS_PROJECTS, famousProjects)
+            putExtra(Constants.CREATOR_IMAGE, image)
         }
         startActivity(intent)
     }

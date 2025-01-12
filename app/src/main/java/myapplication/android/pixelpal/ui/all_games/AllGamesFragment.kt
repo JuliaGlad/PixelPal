@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.app.App.Companion.appComponent
+import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.app.Constants.Companion.ALL_INTENT_ID
 import myapplication.android.pixelpal.app.Constants.Companion.CURRENT_DATE
 import myapplication.android.pixelpal.app.Constants.Companion.END_DATE
@@ -29,6 +30,7 @@ import myapplication.android.pixelpal.ui.all_games.mvi.AllGamesStoreFactory
 import myapplication.android.pixelpal.ui.games.games.recycler_view.GamesShortModel
 import myapplication.android.pixelpal.ui.games.games.recycler_view.linear.GamesShortLinearAdapter
 import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
+import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.listener.LinearPaginationScrollListener
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
@@ -80,7 +82,6 @@ class AllGamesFragment : MviBaseFragment<
 
     private fun getOtherArguments(dataId: Int) {
         when (dataId) {
-
             RELEASES_ID -> {
                 arguments = AllArgument.CurrentReleasesAllArgument(
                     activity?.intent?.getStringExtra(START_DATE)!!,
@@ -106,6 +107,7 @@ class AllGamesFragment : MviBaseFragment<
                     )
                 }
             }
+
             TOP_ID -> intent = AllGamesIntent.GetGames
         }
     }
@@ -129,12 +131,23 @@ class AllGamesFragment : MviBaseFragment<
     }
 
     private fun initButtonBack() {
-        binding.buttonBack.setOnClickListener{store.sendEffect(AllGamesEffect.NavigateBack)}
+        binding.buttonBack.setOnClickListener { store.sendEffect(AllGamesEffect.NavigateBack) }
     }
 
     override fun resolveEffect(effect: AllGamesEffect) {
         when (effect) {
             AllGamesEffect.NavigateBack -> activity?.finish()
+            is AllGamesEffect.OpenGameDetails -> {
+                with(effect) {
+                    (activity as AllGamesActivity).openGameDetailsActivity(
+                        gameId,
+                        name,
+                        genres,
+                        releaseDate,
+                        image
+                    )
+                }
+            }
         }
     }
 
@@ -155,6 +168,7 @@ class AllGamesFragment : MviBaseFragment<
                 binding.loading.root.visibility = GONE
                 Log.e("Error", state.ui.throwable.message.toString())
             }
+
             LceState.Loading -> binding.loading.root.visibility = VISIBLE
         }
     }
@@ -172,7 +186,18 @@ class AllGamesFragment : MviBaseFragment<
             with(i) {
                 models.add(
                     GamesShortModel(
-                        gameId, name, rating?.toInt(), releaseDate, playTime, uri.toString()
+                        gameId, name, rating?.toInt(), releaseDate, playTime, uri.toString(),
+                        object : ClickListener {
+                            override fun onClick() {
+                                store.sendEffect(AllGamesEffect.OpenGameDetails(
+                                    gameId,
+                                    genre,
+                                    name,
+                                    releaseDate!!,
+                                    uri.toString()
+                                ))
+                            }
+                        }
                     )
                 )
             }
