@@ -8,9 +8,11 @@ import myapplication.android.pixelpal.data.models.gamesMain.GamesShortDataList
 import myapplication.android.pixelpal.data.models.gamesNews.GamesNewsList
 import myapplication.android.pixelpal.data.models.genres.GenreDescription
 import myapplication.android.pixelpal.data.models.genres.GenresList
+import myapplication.android.pixelpal.data.models.platforms.PlatformDetails
 import myapplication.android.pixelpal.data.models.platforms.PlatformsList
 import myapplication.android.pixelpal.data.models.publishers.PublishersList
 import myapplication.android.pixelpal.data.models.screenshots.ScreenshotsList
+import myapplication.android.pixelpal.data.models.stores.StoreDetails
 import myapplication.android.pixelpal.data.models.stores.store.StoresList
 import myapplication.android.pixelpal.data.models.stores.store_link.StoreLinksList
 import retrofit2.http.GET
@@ -18,6 +20,12 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface GamesApi {
+
+    @GET("stores/{id}")
+    suspend fun getStoreDetails(@Path("id")id: Int): StoreDetails
+
+    @GET("platforms/{id}")
+    suspend fun getPlatformDetails(@Path("id")id: Int): PlatformDetails
 
     @GET("creators/{id}")
     suspend fun getCreatorDetails(@Path("id")id: Long): CreatorDetails

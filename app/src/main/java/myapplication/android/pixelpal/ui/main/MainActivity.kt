@@ -3,13 +3,10 @@ package myapplication.android.pixelpal.ui.main
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.NavigatorHolder
-import com.github.terrakok.cicerone.Router
 import com.github.terrakok.cicerone.Screen
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App
 import myapplication.android.pixelpal.app.App.Companion.app
 import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants
@@ -22,6 +19,8 @@ import myapplication.android.pixelpal.ui.main.BottomScreen.games
 import myapplication.android.pixelpal.ui.main.BottomScreen.home
 import myapplication.android.pixelpal.ui.main.BottomScreen.platforms
 import myapplication.android.pixelpal.ui.main.BottomScreen.profile
+import myapplication.android.pixelpal.ui.platforms.fragments.platform.platform_details.PlatformDetailsActivity
+import myapplication.android.pixelpal.ui.platforms.fragments.store.store_details.StoreDetailsActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -113,6 +112,42 @@ class MainActivity : AppCompatActivity() {
             putExtra(Constants.GAME_RELEASE_ARG, released)
             putExtra(Constants.GAME_IMAGE_ARG, image)
         }
+        startActivity(intent)
+    }
+
+    fun openPlatformDetailsActivity(
+        id: Int,
+        name: String,
+        gamesCount: Int,
+        startYear: Int?,
+        background: String
+    ){
+        val intent = Intent(this, PlatformDetailsActivity::class.java)
+            .apply {
+                putExtra(Constants.PLATFORM_ID, id)
+                putExtra(Constants.PLATFORM_NAME, name)
+                putExtra(Constants.PLATFORM_PROJECTS, gamesCount)
+                putExtra(Constants.PLATFORM_YEAR_START, startYear)
+                putExtra(Constants.PLATFORM_BACKGROUND, background)
+            }
+        startActivity(intent)
+    }
+
+    fun openStoreDetailsActivity(
+        id: Int,
+        name: String,
+        image: String,
+        domain: String?,
+        projects: Int?
+    ){
+        val intent = Intent(this, StoreDetailsActivity::class.java)
+            .apply {
+                putExtra(Constants.STORE_ID, id)
+                putExtra(Constants.STORE_NAME, name)
+                putExtra(Constants.STORE_PROJECTS, projects)
+                putExtra(Constants.STORE_DOMAIN, domain)
+                putExtra(Constants.STORE_IMAGE, image)
+            }
         startActivity(intent)
     }
 

@@ -20,6 +20,11 @@ import myapplication.android.pixelpal.di.components.fragment.PlatformComponent
 import myapplication.android.pixelpal.di.components.fragment.StoresComponent
 import myapplication.android.pixelpal.di.components.activity.GameDetailsActivityComponent
 import myapplication.android.pixelpal.di.components.activity.MainActivityComponent
+import myapplication.android.pixelpal.di.components.activity.PlatformDetailsActivity
+import myapplication.android.pixelpal.di.components.activity.PlatformDetailsActivityComponent
+import myapplication.android.pixelpal.di.components.activity.StoreDetailsActivityComponent
+import myapplication.android.pixelpal.di.components.fragment.PlatformDetailsComponent
+import myapplication.android.pixelpal.di.components.fragment.StoreDetailsComponent
 import javax.inject.Singleton
 
 @Singleton
@@ -33,6 +38,8 @@ import javax.inject.Singleton
     ]
 )
 interface AppComponent {
+
+    fun storeDetailsActivityComponent(): StoreDetailsActivityComponent.Factory
 
     fun gameDetailsActivityComponent(): GameDetailsActivityComponent.Factory
 
@@ -58,6 +65,12 @@ interface AppComponent {
 
     fun creatorDetailsActivityComponent(): CreatorDetailsActivityComponent.Factory
 
+    fun storeDetailsComponent(): StoreDetailsComponent.Factory
+
+    fun platformDetailsComponent(): PlatformDetailsComponent.Factory
+
+    fun platformDetailsActivityComponent(): PlatformDetailsActivityComponent.Factory
+
     @Component.Factory
     interface Factory {
         fun create(@BindsInstance context: Context): AppComponent
@@ -66,6 +79,10 @@ interface AppComponent {
 
 @Module(
     subcomponents = [
+        PlatformDetailsActivityComponent::class,
+        PlatformDetailsComponent::class,
+        StoreDetailsComponent::class,
+        StoreDetailsActivityComponent::class,
         CreatorDetailsActivityComponent::class,
         CreatorDetailsComponent::class,
         AllGamesComponent::class,

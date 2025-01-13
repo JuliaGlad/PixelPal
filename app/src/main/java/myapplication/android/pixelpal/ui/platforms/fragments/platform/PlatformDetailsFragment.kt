@@ -15,6 +15,7 @@ import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmentPlatformDetailsBinding
 import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.listener.GridPaginationScrollListener
+import myapplication.android.pixelpal.ui.main.MainActivity
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.model.PlatformUiList
@@ -76,7 +77,20 @@ class PlatformDetailsFragment : MviBaseFragment<
     }
 
     override fun resolveEffect(effect: PlatformEffect) {
-        TODO("handle effects")
+        when (effect) {
+            is PlatformEffect.OpenPlatformDetails -> {
+                with(effect) {
+                    Log.i("NamePlatform", name)
+                    (activity as MainActivity).openPlatformDetailsActivity(
+                        id,
+                        name,
+                        gamesCount,
+                        startYear,
+                        background
+                    )
+                }
+            }
+        }
     }
 
     override fun render(state: PlatformState) {
@@ -145,7 +159,7 @@ class PlatformDetailsFragment : MviBaseFragment<
         startYear: Int?,
         gamesCount: Int,
         background: String,
-    ){
+    ) {
         add(
             PlatformModel(
                 id,
@@ -156,7 +170,15 @@ class PlatformDetailsFragment : MviBaseFragment<
                 background,
                 object : ClickListener {
                     override fun onClick() {
-                        TODO("open platform details fragment")
+                        store.sendEffect(
+                            PlatformEffect.OpenPlatformDetails(
+                                id,
+                                name,
+                                gamesCount,
+                                startYear,
+                                background
+                            )
+                        )
                     }
                 }
             ))

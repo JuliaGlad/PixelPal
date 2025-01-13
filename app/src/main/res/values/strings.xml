@@ -16,6 +16,9 @@
     <string name="famous_projects">Projects:</string>
     <string name="search">Search</string>
     <string name="screenshot">Screenshots</string>
+    <string name="domain" translatable="false">Domain</string>
+    <string name="start_year">Start year</string>
+    <string name="end_year">End year</string>
     <string name="other_games_in_this_series">Other games in this series:</string>
     <string name="description">Description:</string>
     <string name="where_to_buy">Stores</string>

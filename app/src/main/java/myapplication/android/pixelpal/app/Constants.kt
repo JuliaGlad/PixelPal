@@ -2,6 +2,16 @@ package myapplication.android.pixelpal.app
 
 class Constants {
     companion object{
+        const val PLATFORM_ID = "PlatformId"
+        const val PLATFORM_NAME = "PlatformName"
+        const val PLATFORM_BACKGROUND = "PlatformBackground"
+        const val PLATFORM_YEAR_START = "PlatformYearStart"
+        const val PLATFORM_PROJECTS = "PlatformProjects"
+        const val STORE_ID = "StoreId"
+        const val STORE_NAME = "StoreName"
+        const val STORE_DOMAIN = "StoreDomain"
+        const val STORE_IMAGE = "StoreImage"
+        const val STORE_PROJECTS = "StoreProjects"
         const val CREATOR_ID = "CreatorId"
         const val CREATOR_NAME = "CreatorName"
         const val CREATOR_ROLE = "CreatorRoles"

@@ -15,6 +15,7 @@ import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmnetStoreBinding
 import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.listener.GridPaginationScrollListener
+import myapplication.android.pixelpal.ui.main.MainActivity
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.platforms.fragments.store.model.StoreUi
@@ -73,7 +74,15 @@ class StoresFragment :
     }
 
     override fun resolveEffect(effect: StoresEffect) {
-        TODO("handle effects")
+        when (effect) {
+            is StoresEffect.OpenStoresDetailsScreen -> {
+                with(effect) {
+                    (activity as MainActivity).openStoreDetailsActivity(
+                        id, name, image, domain, projects
+                    )
+                }
+            }
+        }
     }
 
     override fun render(state: StoresState) {
@@ -99,7 +108,7 @@ class StoresFragment :
     private fun updateRecycler(stores: List<StoreUi>) {
         val newItems = mutableListOf<StoreModel>()
         for (i in stores) {
-            with(i){
+            with(i) {
                 newItems.add(
                     stores.indexOf(i), id, name, domain, projects, image
                 )
@@ -121,11 +130,11 @@ class StoresFragment :
         addScrollRecyclerListener()
     }
 
-    private fun addScrollRecyclerListener(){
-        with(binding.recyclerView){
+    private fun addScrollRecyclerListener() {
+        with(binding.recyclerView) {
             addOnScrollListener(object : GridPaginationScrollListener(
                 layoutManager as GridLayoutManager
-            ){
+            ) {
                 override fun isLastPage(): Boolean = lastPage
 
                 override fun isLoading(): Boolean = loading
@@ -147,7 +156,11 @@ class StoresFragment :
     ) {
         add(StoreModel(id, storeId, name, domain, projects, image, object : ClickListener {
             override fun onClick() {
-                TODO("open stores details fragment")
+                store.sendEffect(
+                    StoresEffect.OpenStoresDetailsScreen(
+                        id, name, image, domain, projects
+                    )
+                )
             }
         }))
     }

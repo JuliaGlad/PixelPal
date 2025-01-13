@@ -2,6 +2,7 @@ package myapplication.android.pixelpal.data.repository.stores
 
 import myapplication.android.pixelpal.data.source.stores.StoresLocalSource
 import myapplication.android.pixelpal.data.source.stores.StoresRemoteSource
+import myapplication.android.pixelpal.domain.model.stores.StoreDetailsDomain
 import myapplication.android.pixelpal.domain.model.stores.StoreDomainList
 import myapplication.android.pixelpal.domain.model.stores.StoreSellingGameLinksDomainList
 import myapplication.android.pixelpal.domain.wrapper.store.toDomain
@@ -11,6 +12,9 @@ class StoresRepositoryImpl @Inject constructor(
     private val localSource: StoresLocalSource,
     private val remoteSource: StoresRemoteSource
 ) : StoresRepository {
+    override suspend fun getStoreDetails(id: Int): StoreDetailsDomain =
+        remoteSource.getStoresDetails(id).toDomain()
+
     override suspend fun getStoresSellingGameLinks(
         gameId: String,
         page: Int
