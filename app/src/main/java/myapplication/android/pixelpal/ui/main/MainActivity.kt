@@ -21,6 +21,7 @@ import myapplication.android.pixelpal.ui.main.BottomScreen.platforms
 import myapplication.android.pixelpal.ui.main.BottomScreen.profile
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.platform_details.PlatformDetailsActivity
 import myapplication.android.pixelpal.ui.platforms.fragments.store.store_details.StoreDetailsActivity
+import myapplication.android.pixelpal.ui.publisher_details.PublisherDetailsActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -129,6 +130,22 @@ class MainActivity : AppCompatActivity() {
                 putExtra(Constants.PLATFORM_PROJECTS, gamesCount)
                 putExtra(Constants.PLATFORM_YEAR_START, startYear)
                 putExtra(Constants.PLATFORM_BACKGROUND, background)
+            }
+        startActivity(intent)
+    }
+
+    fun openPublisherDetailsActivity(
+        id: Long,
+        name: String,
+        gameCount: Int,
+        background: String?
+    ){
+        val intent = Intent(this, PublisherDetailsActivity::class.java)
+            .apply {
+                putExtra(Constants.PUBLISHER_ID, id)
+                putExtra(Constants.PUBLISHER_NAME, name)
+                putExtra(Constants.PUBLISHER_GAME_COUNT, gameCount)
+                putExtra(Constants.PUBLISHER_BACKGROUND, background)
             }
         startActivity(intent)
     }

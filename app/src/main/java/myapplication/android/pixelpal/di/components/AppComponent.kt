@@ -9,6 +9,11 @@ import myapplication.android.pixelpal.di.RemoteSourceModule
 import myapplication.android.pixelpal.di.RepositoryModule
 import myapplication.android.pixelpal.di.RetrofitModule
 import myapplication.android.pixelpal.di.components.activity.CreatorDetailsActivityComponent
+import myapplication.android.pixelpal.di.components.activity.GameDetailsActivityComponent
+import myapplication.android.pixelpal.di.components.activity.MainActivityComponent
+import myapplication.android.pixelpal.di.components.activity.PlatformDetailsActivityComponent
+import myapplication.android.pixelpal.di.components.activity.PublisherDetailsActivityComponent
+import myapplication.android.pixelpal.di.components.activity.StoreDetailsActivityComponent
 import myapplication.android.pixelpal.di.components.fragment.AllGamesComponent
 import myapplication.android.pixelpal.di.components.fragment.CreatorDetailsComponent
 import myapplication.android.pixelpal.di.components.fragment.CreatorsComponent
@@ -17,14 +22,10 @@ import myapplication.android.pixelpal.di.components.fragment.GamesComponent
 import myapplication.android.pixelpal.di.components.fragment.HomeComponent
 import myapplication.android.pixelpal.di.components.fragment.MainGamesComponent
 import myapplication.android.pixelpal.di.components.fragment.PlatformComponent
-import myapplication.android.pixelpal.di.components.fragment.StoresComponent
-import myapplication.android.pixelpal.di.components.activity.GameDetailsActivityComponent
-import myapplication.android.pixelpal.di.components.activity.MainActivityComponent
-import myapplication.android.pixelpal.di.components.activity.PlatformDetailsActivity
-import myapplication.android.pixelpal.di.components.activity.PlatformDetailsActivityComponent
-import myapplication.android.pixelpal.di.components.activity.StoreDetailsActivityComponent
 import myapplication.android.pixelpal.di.components.fragment.PlatformDetailsComponent
+import myapplication.android.pixelpal.di.components.fragment.PublisherDetailsComponent
 import myapplication.android.pixelpal.di.components.fragment.StoreDetailsComponent
+import myapplication.android.pixelpal.di.components.fragment.StoresComponent
 import javax.inject.Singleton
 
 @Singleton
@@ -38,6 +39,8 @@ import javax.inject.Singleton
     ]
 )
 interface AppComponent {
+
+    fun publisherDetailsActivityComponent(): PublisherDetailsActivityComponent.Factory
 
     fun storeDetailsActivityComponent(): StoreDetailsActivityComponent.Factory
 
@@ -69,6 +72,8 @@ interface AppComponent {
 
     fun platformDetailsComponent(): PlatformDetailsComponent.Factory
 
+    fun publisherDetailsComponent(): PublisherDetailsComponent.Factory
+
     fun platformDetailsActivityComponent(): PlatformDetailsActivityComponent.Factory
 
     @Component.Factory
@@ -79,6 +84,8 @@ interface AppComponent {
 
 @Module(
     subcomponents = [
+        PublisherDetailsActivityComponent::class,
+        PublisherDetailsComponent::class,
         PlatformDetailsActivityComponent::class,
         PlatformDetailsComponent::class,
         StoreDetailsComponent::class,

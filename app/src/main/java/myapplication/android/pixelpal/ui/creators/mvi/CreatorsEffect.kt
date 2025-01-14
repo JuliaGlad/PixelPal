@@ -13,5 +13,12 @@ sealed interface CreatorsEffect: MviEffect {
         val image: String?
     ): CreatorsEffect
 
+    data class OpenPublisherDetailsScreen(
+        val id: Long,
+        val name: String,
+        val gameCount: Int,
+        val background: String?
+    ): CreatorsEffect
+
     data class OpenAllCreatorsScreen(val creators: List<CreatorsUiList>): CreatorsEffect
 }

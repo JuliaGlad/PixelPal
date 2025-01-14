@@ -120,6 +120,13 @@ class CreatorsFragment :
                     )
                 }
             }
+            is CreatorsEffect.OpenPublisherDetailsScreen -> {
+                with(effect){
+                    (activity as MainActivity).openPublisherDetailsActivity(
+                        id, name, gameCount, background
+                    )
+                }
+            }
         }
     }
 
@@ -337,7 +344,12 @@ class CreatorsFragment :
             image,
             object : ClickListener {
                 override fun onClick() {
-                    //TODO("Open details screen")
+                    store.sendEffect(CreatorsEffect.OpenPublisherDetailsScreen(
+                        creatorId,
+                        name,
+                        famousProjects,
+                        image
+                    ))
                 }
             }
         )))
