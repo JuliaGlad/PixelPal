@@ -19,14 +19,6 @@ class GamesRepositoryImpl @Inject constructor(
     private val remoteSourceGames: GamesRemoteSource,
     private val localSourceShortGames: GamesShortDataLocalSource,
 ) : GamesRepository {
-    override suspend fun getGameByPublisher(publisherId: Long, page: Int): GamesNewsListDomain =
-        remoteSourceGames.getGameByPublisher(publisherId, page).toDomain()
-
-    override suspend fun getGameByCreator(creatorId: Long, page: Int): GamesNewsListDomain =
-        remoteSourceGames.getGameByCreator(creatorId, page).toDomain()
-
-    override suspend fun getGameDescription(gameId: Long): GameDescriptionDomain =
-        remoteSourceGames.getGameDescription(gameId).toDomain()
 
     override suspend fun getGameScreenshots(
         gameId: String
@@ -90,5 +82,20 @@ class GamesRepositoryImpl @Inject constructor(
             remote
         }.toDomain()
     }
+
+    override suspend fun getGameByPlatform(platformId: Int, page: Int): GamesNewsListDomain =
+        remoteSourceGames.getGameByPlatform(platformId, page).toDomain()
+
+    override suspend fun getGameByStore(storeId: Int, page: Int): GamesNewsListDomain =
+        remoteSourceGames.getGameByStore(storeId, page).toDomain()
+
+    override suspend fun getGameByPublisher(publisherId: Long, page: Int): GamesNewsListDomain =
+        remoteSourceGames.getGameByPublisher(publisherId, page).toDomain()
+
+    override suspend fun getGameByCreator(creatorId: Long, page: Int): GamesNewsListDomain =
+        remoteSourceGames.getGameByCreator(creatorId, page).toDomain()
+
+    override suspend fun getGameDescription(gameId: Long): GameDescriptionDomain =
+        remoteSourceGames.getGameDescription(gameId).toDomain()
 
 }

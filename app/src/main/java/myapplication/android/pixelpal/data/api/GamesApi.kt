@@ -23,6 +23,12 @@ import retrofit2.http.Query
 interface GamesApi {
 
     @GET("games")
+    suspend fun getGamesByPlatform(@Query("platforms")platformId: Int, @Query("page")page: Int): GamesNewsList
+
+    @GET("games")
+    suspend fun getGamesByStore(@Query("stores")storeId: Int, @Query("page")page: Int): GamesNewsList
+
+    @GET("games")
     suspend fun getGamesByPublisher(@Query("publishers")publisherId: Long, @Query("page")page: Int): GamesNewsList
 
     @GET("games")

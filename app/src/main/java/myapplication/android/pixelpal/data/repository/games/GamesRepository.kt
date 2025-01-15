@@ -9,6 +9,9 @@ import myapplication.android.pixelpal.domain.model.games.GamesShortDomainList
 import myapplication.android.pixelpal.domain.model.screenshot.ScreenShotDomainList
 
 interface GamesRepository {
+    suspend fun getGameByPlatform(platformId: Int, page: Int): GamesNewsListDomain
+
+    suspend fun getGameByStore(storeId: Int, page: Int): GamesNewsListDomain
 
     suspend fun getGameByPublisher(publisherId: Long, page: Int): GamesNewsListDomain
 

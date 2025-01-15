@@ -132,12 +132,10 @@ class CreatorDetailsFragment : MviBaseFragment<
     override fun render(state: CreatorDetailsState) {
         when (state.ui) {
             is LceState.Content -> {
-                Log.i("Content lce", "content")
                 binding.loading.root.visibility = GONE
                 if (!isUpdated) {
                     initRecycler(state.ui.data)
                 } else {
-                    Log.i("New items", state.ui.data.newItems?.games?.size.toString())
                     updateRecycler(state.ui.data.newItems!!)
                 }
             }

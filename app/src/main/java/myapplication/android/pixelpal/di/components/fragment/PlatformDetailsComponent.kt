@@ -3,6 +3,7 @@ package myapplication.android.pixelpal.di.components.fragment
 import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
+import myapplication.android.pixelpal.data.repository.games.GamesRepository
 import myapplication.android.pixelpal.data.repository.platforms.PlatformsRepository
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.platform_details.PlatformFullDetailsFragment
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.platform_details.mvi.PlatformDetailsLocalDI
@@ -27,8 +28,9 @@ class PlatformDetailsModule{
     @PlatformDetailsScope
     @Provides
     fun providePlatformDetailsLocalDI(
-        platformsRepository: PlatformsRepository
-    ): PlatformDetailsLocalDI = PlatformDetailsLocalDI(platformsRepository)
+        platformsRepository: PlatformsRepository,
+        gamesRepository: GamesRepository
+    ): PlatformDetailsLocalDI = PlatformDetailsLocalDI(platformsRepository, gamesRepository)
 
 }
 

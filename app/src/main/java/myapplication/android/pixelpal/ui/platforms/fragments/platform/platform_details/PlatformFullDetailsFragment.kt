@@ -15,6 +15,9 @@ import myapplication.android.pixelpal.databinding.FragmentPlatformFullDetailsBin
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewModel
+import myapplication.android.pixelpal.ui.delegates.delegates.game_details_short_data.GameDetailsShortDataDelegate
+import myapplication.android.pixelpal.ui.delegates.delegates.game_details_short_data.GameDetailsShortDataDelegateItem
+import myapplication.android.pixelpal.ui.delegates.delegates.game_details_short_data.GameDetailsShortDataModel
 import myapplication.android.pixelpal.ui.delegates.delegates.image_view.ImageViewDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.image_view.ImageViewDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.image_view.ImageViewModel
@@ -27,12 +30,17 @@ import myapplication.android.pixelpal.ui.delegates.delegates.title_details_text_
 import myapplication.android.pixelpal.ui.delegates.delegates.title_textview.TitleTextViewDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.title_textview.TitleTextViewDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.title_textview.TitleTextViewModel
+import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
 import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
+import myapplication.android.pixelpal.ui.games.games.recycler_view.GamesShortModel
+import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
+import myapplication.android.pixelpal.ui.listener.ClickListener
+import myapplication.android.pixelpal.ui.listener.RecyclerEndListener
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.mvi.MviStore
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.platform_details.model.PlatformDetailsArgumentsModel
-import myapplication.android.pixelpal.ui.platforms.fragments.platform.platform_details.model.PlatformDetailsUi
+import myapplication.android.pixelpal.ui.platforms.fragments.platform.platform_details.model.PlatformDetailsResult
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.platform_details.mvi.PlatformDetailsEffect
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.platform_details.mvi.PlatformDetailsIntent
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.platform_details.mvi.PlatformDetailsLocalDI
@@ -49,13 +57,15 @@ class PlatformFullDetailsFragment : MviBaseFragment<
 
     private var _binding: FragmentPlatformFullDetailsBinding? = null
     private val binding get() = _binding!!
-
+    private val adapter by lazy { initAdapter() }
+    private val recyclerItems = mutableListOf<DelegateItem>()
+    private var isUpdated = false
     private val args: PlatformDetailsArgumentsModel by lazy { getPlatformArguments()!! }
 
     private fun getPlatformArguments(): PlatformDetailsArgumentsModel? {
         var argsModel: PlatformDetailsArgumentsModel? = null
         activity?.let {
-            with(it.intent){
+            with(it.intent) {
                 argsModel = PlatformDetailsArgumentsModel(
                     getIntExtra(Constants.PLATFORM_ID, 0),
                     getStringExtra(Constants.PLATFORM_NAME)!!,
@@ -104,6 +114,13 @@ class PlatformFullDetailsFragment : MviBaseFragment<
     override fun resolveEffect(effect: PlatformDetailsEffect) {
         when (effect) {
             PlatformDetailsEffect.NavigateBack -> activity?.finish()
+            is PlatformDetailsEffect.OpenGameDetails -> {
+                with(effect) {
+                    (activity as PlatformDetailsActivity).openGameDetailsActivity(
+                        gameId, name, genres, releaseDate, image
+                    )
+                }
+            }
         }
     }
 
@@ -111,7 +128,11 @@ class PlatformFullDetailsFragment : MviBaseFragment<
         when (state.ui) {
             is LceState.Content -> {
                 binding.loading.root.visibility = GONE
-                initRecycler(state.ui.data)
+                if (!isUpdated) {
+                    initRecycler(state.ui.data)
+                } else {
+                    updateRecycler(state.ui.data.newItems)
+                }
             }
 
             is LceState.Error -> {
@@ -123,45 +144,92 @@ class PlatformFullDetailsFragment : MviBaseFragment<
         }
     }
 
-    private fun initRecycler(data: PlatformDetailsUi) {
-        val adapter = initAdapter()
-        val items = mutableListOf(
-            ImageViewDelegateItem(
-                ImageViewModel(
-                    1,
-                    args.background
-                )
-            ),
-            TitleTextViewDelegateItem(TitleTextViewModel(2, args.name)),
+    private fun updateRecycler(newItems: GamesNewsListUi?) {
+        isUpdated = false
+        val new = getPlatformGames(newItems!!)
+        for (i in recyclerItems){
+            if (i is GameDetailsShortDataDelegateItem){
+                adapter.notifyItemChanged(recyclerItems.indexOf(i), new)
+            }
+        }
+    }
 
+    private fun initRecycler(data: PlatformDetailsResult) {
+        val games = getPlatformGames(data.games)
+        recyclerItems.addAll(
+            listOf(
+                ImageViewDelegateItem(
+                    ImageViewModel(
+                        1,
+                        args.background
+                    )
+                ),
+                TitleTextViewDelegateItem(TitleTextViewModel(2, args.name)),
+
+                )
         )
-        items.addAll(getYearsTitleDetails(args.startYear!!, data.endYear))
-        items.add(
+        recyclerItems.addAll(getYearsTitleDetails(args.startYear!!, data.platformDetailsUi.endYear))
+        recyclerItems.add(
             TitleDetailsTextViewDelegateItem(
                 TitleDetailsTextViewModel(
                     4, getString(R.string.famous_projects), args.gamesCount.toString()
                 )
             )
         )
-        items.add(SubtitleTextViewDelegateItem(
-            SubtitleTextViewModel(
-                5,
-                getString(R.string.description)
+        recyclerItems.add(
+            SubtitleTextViewDelegateItem(
+                SubtitleTextViewModel(
+                    5,
+                    getString(R.string.description)
+                )
+            )
+        )
+        recyclerItems.add(
+            DescriptionTextViewDelegateItem(
+                DescriptionTextViewModel(
+                    6,
+                    data.platformDetailsUi.description
+                )
+            )
+        )
+        recyclerItems.add(GameDetailsShortDataDelegateItem(
+            GameDetailsShortDataModel(
+                7,
+                getString(R.string.famous_projects),
+                getString(R.string.unknown),
+                games,
+                object : ClickListener {
+                    override fun onClick() {
+                        TODO("Open all screen")
+                    }
+                },
+                object : RecyclerEndListener {
+                    override fun onEndReached() {
+                        isUpdated = true
+                        store.sendIntent(
+                            PlatformDetailsIntent.GetGames(
+                                args.id
+                            )
+                        )
+                    }
+                }
             )
         ))
-        items.add(DescriptionTextViewDelegateItem(DescriptionTextViewModel(6, data.description)))
         binding.recyclerView.adapter = adapter
-        adapter.submitList(items)
+        adapter.submitList(recyclerItems)
     }
 
-    private fun getYearsTitleDetails(startYear: Int, endYear: Int?): List<TitleDetailsTextViewDelegateItem> {
+    private fun getYearsTitleDetails(
+        startYear: Int,
+        endYear: Int?
+    ): List<TitleDetailsTextViewDelegateItem> {
         val yearDelegates = mutableListOf<TitleDetailsTextViewDelegateItem>()
         yearDelegates.add(
             TitleDetailsTextViewDelegateItem(
                 TitleDetailsTextViewModel(1, getString(R.string.start_year), startYear.toString())
             )
         )
-        if (endYear != null){
+        if (endYear != null) {
             yearDelegates.add(
                 TitleDetailsTextViewDelegateItem(
                     TitleDetailsTextViewModel(2, getString(R.string.end_year), endYear.toString())
@@ -171,6 +239,38 @@ class PlatformFullDetailsFragment : MviBaseFragment<
         return yearDelegates
     }
 
+    private fun getPlatformGames(items: GamesNewsListUi): MutableList<GamesShortModel> {
+        val list = mutableListOf<GamesShortModel>()
+        for (i in items.games) {
+            with(i) {
+                list.add(
+                    GamesShortModel(
+                        gameId,
+                        name,
+                        rating?.toInt(),
+                        releaseDate,
+                        playTime,
+                        uri,
+                        object : ClickListener {
+                            override fun onClick() {
+                                store.sendEffect(
+                                    PlatformDetailsEffect.OpenGameDetails(
+                                        gameId,
+                                        genre,
+                                        name,
+                                        releaseDate!!,
+                                        uri!!
+                                    )
+                                )
+                            }
+                        }
+                    )
+                )
+            }
+        }
+        return list
+    }
+
     private fun initAdapter(): MainAdapter {
         return MainAdapter().apply {
             addDelegate(ImageViewDelegate())
@@ -178,6 +278,7 @@ class PlatformFullDetailsFragment : MviBaseFragment<
             addDelegate(TitleDetailsTextViewDelegate())
             addDelegate(SubtitleTextViewDelegate())
             addDelegate(DescriptionTextViewDelegate())
+            addDelegate(GameDetailsShortDataDelegate())
         }
     }
 

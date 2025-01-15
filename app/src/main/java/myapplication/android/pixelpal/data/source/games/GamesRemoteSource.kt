@@ -4,8 +4,12 @@ import myapplication.android.pixelpal.data.models.game_description.GameDescripti
 import myapplication.android.pixelpal.data.models.gamesMain.GamesShortDataList
 import myapplication.android.pixelpal.data.models.gamesNews.GamesNewsList
 import myapplication.android.pixelpal.data.models.screenshots.ScreenshotsList
+import myapplication.android.pixelpal.domain.model.games.GamesNewsListDomain
 
 interface GamesRemoteSource {
+    suspend fun getGameByPlatform(platformId: Int, page: Int): GamesNewsList
+
+    suspend fun getGameByStore(storeId: Int, page: Int): GamesNewsList
 
     suspend fun getGameByPublisher(publisherId: Long, page: Int): GamesNewsList
 

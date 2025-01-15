@@ -15,6 +15,9 @@ import myapplication.android.pixelpal.databinding.FragmentStoreDetailsBinding
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewModel
+import myapplication.android.pixelpal.ui.delegates.delegates.game_details_short_data.GameDetailsShortDataDelegate
+import myapplication.android.pixelpal.ui.delegates.delegates.game_details_short_data.GameDetailsShortDataDelegateItem
+import myapplication.android.pixelpal.ui.delegates.delegates.game_details_short_data.GameDetailsShortDataModel
 import myapplication.android.pixelpal.ui.delegates.delegates.image_view.ImageViewDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.image_view.ImageViewDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.image_view.ImageViewModel
@@ -27,12 +30,17 @@ import myapplication.android.pixelpal.ui.delegates.delegates.title_details_text_
 import myapplication.android.pixelpal.ui.delegates.delegates.title_textview.TitleTextViewDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.title_textview.TitleTextViewDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.title_textview.TitleTextViewModel
+import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
 import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
+import myapplication.android.pixelpal.ui.games.games.recycler_view.GamesShortModel
+import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
+import myapplication.android.pixelpal.ui.listener.ClickListener
+import myapplication.android.pixelpal.ui.listener.RecyclerEndListener
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.mvi.MviStore
 import myapplication.android.pixelpal.ui.platforms.fragments.store.store_details.model.StoreArgumentModel
-import myapplication.android.pixelpal.ui.platforms.fragments.store.store_details.model.StoreDetailsUi
+import myapplication.android.pixelpal.ui.platforms.fragments.store.store_details.model.StoreDetailsResult
 import myapplication.android.pixelpal.ui.platforms.fragments.store.store_details.mvi.StoreDetailsEffect
 import myapplication.android.pixelpal.ui.platforms.fragments.store.store_details.mvi.StoreDetailsIntent
 import myapplication.android.pixelpal.ui.platforms.fragments.store.store_details.mvi.StoreDetailsLocalDI
@@ -49,6 +57,9 @@ class StoreDetailsFragment : MviBaseFragment<
 
     private var _binding: FragmentStoreDetailsBinding? = null
     private val binding get() = _binding!!
+    private val recyclerItems = mutableListOf<DelegateItem>()
+    private var isUpdated = false
+    val adapter by lazy { initAdapter() }
 
     @Inject
     lateinit var localDI: StoreDetailsLocalDI
@@ -102,28 +113,51 @@ class StoreDetailsFragment : MviBaseFragment<
     }
 
     override fun resolveEffect(effect: StoreDetailsEffect) {
-        when(effect){
+        when (effect) {
             StoreDetailsEffect.NavigateBack -> activity?.finish()
+            is StoreDetailsEffect.OpenGameDetails -> {
+                with(effect) {
+                    (activity as StoreDetailsActivity).openGameDetailsActivity(
+                        gameId, name, genres, releaseDate, image
+                    )
+                }
+            }
         }
     }
 
     override fun render(state: StoreDetailsState) {
-        when(state.ui){
+        when (state.ui) {
             is LceState.Content -> {
                 binding.loading.root.visibility = GONE
-                initRecycler(state.ui.data)
+                if (!isUpdated) {
+                    initRecycler(state.ui.data)
+                } else {
+                    updateRecycler(state.ui.data.newItems)
+                }
             }
+
             is LceState.Error -> {
                 binding.loading.root.visibility = GONE
                 Log.e("Error store details", state.ui.throwable.message.toString())
             }
+
             LceState.Loading -> binding.loading.root.visibility = VISIBLE
         }
     }
 
-    private fun initRecycler(data: StoreDetailsUi) {
-        val adapter = initAdapter()
-        val items = mutableListOf(
+    private fun updateRecycler(newItems: GamesNewsListUi?) {
+        isUpdated = false
+        val new = getGames(newItems!!)
+        for (i in recyclerItems){
+            if (i is GameDetailsShortDataDelegateItem){
+                adapter.notifyItemChanged(recyclerItems.indexOf(i), new)
+            }
+        }
+    }
+
+    private fun initRecycler(data: StoreDetailsResult) {
+        val games = getGames(data.games)
+        recyclerItems.addAll(listOf(
             ImageViewDelegateItem(
                 ImageViewModel(
                     1,
@@ -147,10 +181,70 @@ class StoreDetailsFragment : MviBaseFragment<
                     getString(R.string.description)
                 )
             ),
-            DescriptionTextViewDelegateItem(DescriptionTextViewModel(6, data.description))
-        )
+            DescriptionTextViewDelegateItem(
+                DescriptionTextViewModel(
+                    6,
+                    data.storeDetailsUi.description
+                )
+            ),
+            GameDetailsShortDataDelegateItem(
+                GameDetailsShortDataModel(
+                    7,
+                    getString(R.string.famous_projects),
+                    getString(R.string.unknown),
+                    games,
+                    object : ClickListener {
+                        override fun onClick() {
+                            TODO("Open all screen")
+                        }
+                    },
+                    object : RecyclerEndListener {
+                        override fun onEndReached() {
+                            isUpdated = true
+                            store.sendIntent(
+                                StoreDetailsIntent.GetGames(
+                                    args.id
+                                )
+                            )
+                        }
+                    }
+                )
+            )
+        ))
         binding.recyclerView.adapter = adapter
-        adapter.submitList(items)
+        adapter.submitList(recyclerItems)
+    }
+
+    private fun getGames(items: GamesNewsListUi): MutableList<GamesShortModel> {
+        val list = mutableListOf<GamesShortModel>()
+        for (i in items.games) {
+            with(i) {
+                list.add(
+                    GamesShortModel(
+                        gameId,
+                        name,
+                        rating?.toInt(),
+                        releaseDate,
+                        playTime,
+                        uri,
+                        object : ClickListener {
+                            override fun onClick() {
+                                store.sendEffect(
+                                    StoreDetailsEffect.OpenGameDetails(
+                                        gameId,
+                                        genre,
+                                        name,
+                                        releaseDate!!,
+                                        uri!!
+                                    )
+                                )
+                            }
+                        }
+                    )
+                )
+            }
+        }
+        return list
     }
 
     private fun initAdapter(): MainAdapter {
@@ -160,6 +254,7 @@ class StoreDetailsFragment : MviBaseFragment<
             addDelegate(TitleDetailsTextViewDelegate())
             addDelegate(SubtitleTextViewDelegate())
             addDelegate(DescriptionTextViewDelegate())
+            addDelegate(GameDetailsShortDataDelegate())
         }
     }
 

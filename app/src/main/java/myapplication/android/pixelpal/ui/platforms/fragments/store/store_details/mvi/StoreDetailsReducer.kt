@@ -2,6 +2,7 @@ package myapplication.android.pixelpal.ui.platforms.fragments.store.store_detail
 
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviReducer
+import myapplication.android.pixelpal.ui.platforms.fragments.store.store_details.model.StoreDetailsResult
 import myapplication.android.pixelpal.ui.platforms.fragments.store.store_details.model.StoreDetailsUi
 
 class StoreDetailsReducer: MviReducer<
@@ -17,8 +18,8 @@ class StoreDetailsReducer: MviReducer<
             StoreDetailsPartialState.Loading -> updateLoading(prevState)
         }
 
-    private fun updateDataLoaded(prevState: StoreDetailsState, ui: StoreDetailsUi) =
-        prevState.copy(ui = LceState.Content(ui))
+    private fun updateDataLoaded(prevState: StoreDetailsState, ui: StoreDetailsResult) =
+        prevState.copy(ui = LceState.Content(ui), page = prevState.page + 1)
 
     private fun updateLoading(prevState: StoreDetailsState) =
         prevState.copy(ui = LceState.Loading)

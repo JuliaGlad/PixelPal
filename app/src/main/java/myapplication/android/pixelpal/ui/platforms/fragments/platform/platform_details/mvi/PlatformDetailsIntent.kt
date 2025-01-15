@@ -8,4 +8,5 @@ sealed interface PlatformDetailsIntent: MviIntent {
 
     data class GetPlatformDetails(val id: Int): PlatformDetailsIntent
 
+    data class GetGames(val id: Int): PlatformDetailsIntent
 }

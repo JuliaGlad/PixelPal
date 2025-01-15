@@ -3,6 +3,7 @@ package myapplication.android.pixelpal.di.components.fragment
 import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
+import myapplication.android.pixelpal.data.repository.games.GamesRepository
 import myapplication.android.pixelpal.data.repository.stores.StoresRepository
 import myapplication.android.pixelpal.ui.platforms.fragments.store.store_details.StoreDetailsFragment
 import myapplication.android.pixelpal.ui.platforms.fragments.store.store_details.mvi.StoreDetailsLocalDI
@@ -27,8 +28,9 @@ class StoreDetailsModule{
     @StoreDetailsScope
     @Provides
     fun provideStoreDetailsLocalDI(
-        storesRepository: StoresRepository
-    ): StoreDetailsLocalDI = StoreDetailsLocalDI(storesRepository)
+        storesRepository: StoresRepository,
+        gameRepository: GamesRepository
+    ): StoreDetailsLocalDI = StoreDetailsLocalDI(storesRepository, gameRepository)
 
 }
 
