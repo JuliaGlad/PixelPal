@@ -5,5 +5,6 @@ import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
 
 class CreatorDetailsResultUi(
     val creatorDetails: CreatorDetailsUi,
-    var games: GamesNewsListUi
+    val games: GamesNewsListUi,
+    var newItems: GamesNewsListUi? = null
 )

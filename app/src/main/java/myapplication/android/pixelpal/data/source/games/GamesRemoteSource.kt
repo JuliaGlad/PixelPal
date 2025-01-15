@@ -7,7 +7,9 @@ import myapplication.android.pixelpal.data.models.screenshots.ScreenshotsList
 
 interface GamesRemoteSource {
 
-    suspend fun getGameByCreator(creatorId: Long): GamesNewsList
+    suspend fun getGameByPublisher(publisherId: Long, page: Int): GamesNewsList
+
+    suspend fun getGameByCreator(creatorId: Long, page: Int): GamesNewsList
 
     suspend fun getGameDescription(gameId: Long): GameDescription
 

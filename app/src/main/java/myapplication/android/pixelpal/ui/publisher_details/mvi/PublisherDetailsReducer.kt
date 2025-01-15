@@ -2,7 +2,7 @@ package myapplication.android.pixelpal.ui.publisher_details.mvi
 
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviReducer
-import myapplication.android.pixelpal.ui.publisher_details.model.PublisherDetailsModelUi
+import myapplication.android.pixelpal.ui.publisher_details.model.PublisherDetailsResult
 
 class PublisherDetailsReducer : MviReducer<
         PublisherDetailsPartialState,
@@ -17,8 +17,8 @@ class PublisherDetailsReducer : MviReducer<
             PublisherDetailsPartialState.Loading -> updateLoading(prevState)
         }
 
-    private fun updateLoaded(prevState: PublisherDetailsState, ui: PublisherDetailsModelUi) =
-        prevState.copy(ui = LceState.Content(ui))
+    private fun updateLoaded(prevState: PublisherDetailsState, ui: PublisherDetailsResult) =
+        prevState.copy(ui = LceState.Content(ui), page = prevState.page + 1)
 
     private fun updateLoading(prevState: PublisherDetailsState) =
         prevState.copy(ui = LceState.Loading)

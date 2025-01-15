@@ -38,6 +38,7 @@ import myapplication.android.pixelpal.ui.delegates.delegates.title_details_text_
 import myapplication.android.pixelpal.ui.delegates.delegates.title_textview.TitleTextViewDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.title_textview.TitleTextViewDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.title_textview.TitleTextViewModel
+import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
 import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
 import myapplication.android.pixelpal.ui.games.games.recycler_view.GamesShortModel
 import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
@@ -56,7 +57,9 @@ class CreatorDetailsFragment : MviBaseFragment<
 
     private var _binding: FragmentCreatorDetailsBinding? = null
     private val binding get() = _binding!!
-
+    private val itemsRecycler = mutableListOf<DelegateItem>()
+    private val adapter by lazy { initAdapter()}
+    private var isUpdated = false
     private val creatorArgumentsModel: CreatorArgumentsModel by lazy { getActivityArguments()!! }
 
     private fun getActivityArguments(): CreatorArgumentsModel? {
@@ -88,10 +91,10 @@ class CreatorDetailsFragment : MviBaseFragment<
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.creatorDetailsComponent().create().inject(this)
         super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) {
-            store.sendIntent(CreatorDetailsIntent.Init)
-        }
-        store.sendIntent(CreatorDetailsIntent.GetCreatorDetails(creatorArgumentsModel.creatorId))
+    }
+
+    private fun initButtonBack() {
+        binding.iconBack.setOnClickListener { store.sendEffect(CreatorDetailsEffect.NavigateBack) }
     }
 
     override fun onCreateView(
@@ -101,6 +104,16 @@ class CreatorDetailsFragment : MviBaseFragment<
     ): View {
         _binding = FragmentCreatorDetailsBinding.inflate(layoutInflater)
         return binding.root
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initButtonBack()
+        if (savedInstanceState == null) {
+            store.sendIntent(CreatorDetailsIntent.Init)
+        }
+        store.sendIntent(CreatorDetailsIntent.GetCreatorDetails(creatorArgumentsModel.creatorId))
     }
 
     override fun resolveEffect(effect: CreatorDetailsEffect) {
@@ -119,8 +132,14 @@ class CreatorDetailsFragment : MviBaseFragment<
     override fun render(state: CreatorDetailsState) {
         when (state.ui) {
             is LceState.Content -> {
+                Log.i("Content lce", "content")
                 binding.loading.root.visibility = GONE
-                initRecycler(state.ui.data)
+                if (!isUpdated) {
+                    initRecycler(state.ui.data)
+                } else {
+                    Log.i("New items", state.ui.data.newItems?.games?.size.toString())
+                    updateRecycler(state.ui.data.newItems!!)
+                }
             }
 
             is LceState.Error -> {
@@ -132,62 +151,73 @@ class CreatorDetailsFragment : MviBaseFragment<
         }
     }
 
-    private fun initRecycler(data: CreatorDetailsResultUi) {
-        val adapter = initAdapter()
+    private fun updateRecycler(data: GamesNewsListUi) {
+        isUpdated = false
+        val newItems = getCreatorGames(data)
+        for (i in itemsRecycler){
+            if (i is GameDetailsShortDataDelegateItem){
+                    adapter.notifyItemChanged(itemsRecycler.indexOf(i), newItems)
+            }
+        }
+    }
 
+    private fun initRecycler(data: CreatorDetailsResultUi) {
         val roles = getRoles()
         val games: MutableList<GamesShortModel> = getCreatorGames(data.games)
-        val items = mutableListOf(
-            RatingImageDelegateItem(
-                RatingImageModel(
-                    1,
-                    creatorArgumentsModel.image!!,
-                    data.creatorDetails.rating
-                )
-            ),
-            TitleTextViewDelegateItem(TitleTextViewModel(2, creatorArgumentsModel.name)),
-            TitleDetailsTextViewDelegateItem(
-                TitleDetailsTextViewModel(
-                    3, getString(R.string.roles), roles
-                )
-            ),
-            SubtitleTextViewDelegateItem(
-                SubtitleTextViewModel(
-                    5,
-                    getString(R.string.description)
-                )
-            ),
-            DescriptionTextViewDelegateItem(
-                DescriptionTextViewModel(
-                    6,
-                    data.creatorDetails.description
-                )
-            ),
-            GameDetailsShortDataDelegateItem(
-                GameDetailsShortDataModel(
-                    7,
-                    getString(R.string.famous_projects),
-                    getString(R.string.unknown),
-                    games,
-                    object : ClickListener {
-                        override fun onClick() {
-                            TODO("Open all screen")
-                        }
-                    },
-                    object : RecyclerEndListener {
-                        override fun onEndReached() {
-                            store.sendIntent(
-                                CreatorDetailsIntent.GetGamesByCreators(
-                                    creatorArgumentsModel.creatorId
+        itemsRecycler.addAll(
+            listOf(
+                RatingImageDelegateItem(
+                    RatingImageModel(
+                        1,
+                        creatorArgumentsModel.image!!,
+                        data.creatorDetails.rating
+                    )
+                ),
+                TitleTextViewDelegateItem(TitleTextViewModel(2, creatorArgumentsModel.name)),
+                TitleDetailsTextViewDelegateItem(
+                    TitleDetailsTextViewModel(
+                        3, getString(R.string.roles), roles
+                    )
+                ),
+                SubtitleTextViewDelegateItem(
+                    SubtitleTextViewModel(
+                        5,
+                        getString(R.string.description)
+                    )
+                ),
+                DescriptionTextViewDelegateItem(
+                    DescriptionTextViewModel(
+                        6,
+                        data.creatorDetails.description
+                    )
+                ),
+                GameDetailsShortDataDelegateItem(
+                    GameDetailsShortDataModel(
+                        7,
+                        getString(R.string.famous_projects),
+                        getString(R.string.unknown),
+                        games,
+                        object : ClickListener {
+                            override fun onClick() {
+                                TODO("Open all screen")
+                            }
+                        },
+                        object : RecyclerEndListener {
+                            override fun onEndReached() {
+                                isUpdated = true
+                                store.sendIntent(
+                                    CreatorDetailsIntent.GetGamesByCreators(
+                                        creatorArgumentsModel.creatorId
+                                    )
                                 )
-                            )
+                            }
                         }
-                    }
+                    )
                 )
             )
         )
         binding.recyclerView.adapter = adapter
-        adapter.submitList(items)
+        adapter.submitList(itemsRecycler)
     }
 
     private fun getCreatorGames(items: GamesNewsListUi): MutableList<GamesShortModel> {

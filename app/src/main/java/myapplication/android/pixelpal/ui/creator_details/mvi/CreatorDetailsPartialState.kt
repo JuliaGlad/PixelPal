@@ -11,7 +11,5 @@ sealed interface CreatorDetailsPartialState: MviPartialState {
 
     data class DataLoaded(val ui: CreatorDetailsResultUi): CreatorDetailsPartialState
 
-    data object GamesLoaded: CreatorDetailsPartialState
-
     data class Error(val throwable: Throwable): CreatorDetailsPartialState
 }

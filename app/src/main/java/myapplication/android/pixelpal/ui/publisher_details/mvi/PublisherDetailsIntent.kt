@@ -6,6 +6,10 @@ sealed interface PublisherDetailsIntent: MviIntent {
 
     data object Init: PublisherDetailsIntent
 
+    data class GetGames(
+        val id: Long
+    ): PublisherDetailsIntent
+
     data class GetPublisher(
         val id: Long
     ): PublisherDetailsIntent

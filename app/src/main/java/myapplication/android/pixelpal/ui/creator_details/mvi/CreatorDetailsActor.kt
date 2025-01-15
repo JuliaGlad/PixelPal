@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.ui.creator_details.mvi
 
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import myapplication.android.pixelpal.domain.usecase.creators.GetCreatorDetailsUseCase
@@ -25,21 +26,32 @@ class CreatorDetailsActor(
         state: CreatorDetailsState
     ): Flow<CreatorDetailsPartialState> =
         when (intent) {
-            is CreatorDetailsIntent.GetCreatorDetails -> loadDetails(intent.id)
+            is CreatorDetailsIntent.GetCreatorDetails -> loadDetails(intent.id, state.page + 1)
             CreatorDetailsIntent.Init -> init()
             is CreatorDetailsIntent.GetGamesByCreators -> loadGamesByCreator(
                 (state.ui as LceState.Content).data,
-                intent.id)
+                intent.id,
+                state.page + 1
+            )
         }
 
-    private fun loadGamesByCreator(creatorDetailsResultUi: CreatorDetailsResultUi, id: Long) =
-        flow{
+    private fun loadGamesByCreator(
+        creatorDetailsResultUi: CreatorDetailsResultUi,
+        id: Long,
+        page: Int
+    ) =
+        flow {
             kotlin.runCatching {
-                getGames(id)
+                getGames(id, page)
             }.fold(
                 onSuccess = { data ->
-                    creatorDetailsResultUi.games = data
-                    emit(CreatorDetailsPartialState.GamesLoaded)
+                    val newItems = creatorDetailsResultUi.newItems
+                    if (newItems != null) {
+                        creatorDetailsResultUi.newItems!!.games.clear()
+                        creatorDetailsResultUi.newItems = null
+                    }
+                    creatorDetailsResultUi.newItems = data
+                    emit(CreatorDetailsPartialState.DataLoaded(creatorDetailsResultUi))
                 },
                 onFailure = { throwable ->
                     emit(CreatorDetailsPartialState.Error(throwable))
@@ -47,12 +59,12 @@ class CreatorDetailsActor(
             )
         }
 
-    private fun loadDetails(id: Long) =
+    private fun loadDetails(id: Long, page: Int) =
         flow {
             runCatchingNonCancellation {
                 CreatorDetailsResultUi(
                     getDetails(id),
-                    getGames(id)
+                    getGames(id, page)
                 )
             }.fold(
                 onSuccess = { data ->
@@ -64,10 +76,10 @@ class CreatorDetailsActor(
             )
         }
 
-    private suspend fun getGames(id: Long) =
+    private suspend fun getGames(id: Long, page: Int) =
         runCatchingNonCancellation {
             asyncAwait(
-                { getGameByCreatorUseCase.invoke(id) }
+                { getGameByCreatorUseCase.invoke(id, page) }
             ) { data ->
                 data.toUi()
             }
