@@ -7,4 +7,6 @@ sealed interface CreatorDetailsIntent: MviIntent {
     data object Init: CreatorDetailsIntent
 
     data class GetCreatorDetails(val id: Long): CreatorDetailsIntent
+
+    data class GetGamesByCreators(val id: Long): CreatorDetailsIntent
 }

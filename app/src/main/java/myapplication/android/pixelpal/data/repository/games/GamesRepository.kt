@@ -10,6 +10,8 @@ import myapplication.android.pixelpal.domain.model.screenshot.ScreenShotDomainLi
 
 interface GamesRepository {
 
+    suspend fun getGameByCreator(creatorId: Long): GamesNewsListDomain
+
     suspend fun getGameDescription(gameId: Long): GameDescriptionDomain
 
     suspend fun getGameScreenshots(gameId: String): ScreenShotDomainList

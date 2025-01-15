@@ -13,7 +13,7 @@ import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.FragmentCreatorDetailsBinding
 import myapplication.android.pixelpal.ui.creator_details.model.CreatorArgumentsModel
-import myapplication.android.pixelpal.ui.creator_details.model.CreatorDetailsUi
+import myapplication.android.pixelpal.ui.creator_details.model.CreatorDetailsResultUi
 import myapplication.android.pixelpal.ui.creator_details.mvi.CreatorDetailsEffect
 import myapplication.android.pixelpal.ui.creator_details.mvi.CreatorDetailsIntent
 import myapplication.android.pixelpal.ui.creator_details.mvi.CreatorDetailsLocalDI
@@ -23,6 +23,9 @@ import myapplication.android.pixelpal.ui.creator_details.mvi.CreatorDetailsStore
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewModel
+import myapplication.android.pixelpal.ui.delegates.delegates.game_details_short_data.GameDetailsShortDataDelegate
+import myapplication.android.pixelpal.ui.delegates.delegates.game_details_short_data.GameDetailsShortDataDelegateItem
+import myapplication.android.pixelpal.ui.delegates.delegates.game_details_short_data.GameDetailsShortDataModel
 import myapplication.android.pixelpal.ui.delegates.delegates.rating_image.RatingImageDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.rating_image.RatingImageDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.rating_image.RatingImageModel
@@ -36,6 +39,10 @@ import myapplication.android.pixelpal.ui.delegates.delegates.title_textview.Titl
 import myapplication.android.pixelpal.ui.delegates.delegates.title_textview.TitleTextViewDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.title_textview.TitleTextViewModel
 import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
+import myapplication.android.pixelpal.ui.games.games.recycler_view.GamesShortModel
+import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
+import myapplication.android.pixelpal.ui.listener.ClickListener
+import myapplication.android.pixelpal.ui.listener.RecyclerEndListener
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.mvi.MviStore
@@ -81,7 +88,7 @@ class CreatorDetailsFragment : MviBaseFragment<
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.creatorDetailsComponent().create().inject(this)
         super.onCreate(savedInstanceState)
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             store.sendIntent(CreatorDetailsIntent.Init)
         }
         store.sendIntent(CreatorDetailsIntent.GetCreatorDetails(creatorArgumentsModel.creatorId))
@@ -99,6 +106,13 @@ class CreatorDetailsFragment : MviBaseFragment<
     override fun resolveEffect(effect: CreatorDetailsEffect) {
         when (effect) {
             CreatorDetailsEffect.NavigateBack -> activity?.finish()
+            is CreatorDetailsEffect.OpenGameDetails -> {
+                with(effect) {
+                    (activity as CreatorDetailsActivity).openGameDetailsActivity(
+                        gameId, name, genres, releaseDate, image
+                    )
+                }
+            }
         }
     }
 
@@ -118,19 +132,17 @@ class CreatorDetailsFragment : MviBaseFragment<
         }
     }
 
-    private fun initRecycler(data: CreatorDetailsUi) {
+    private fun initRecycler(data: CreatorDetailsResultUi) {
         val adapter = initAdapter()
 
-        var roles = ""
-        for (i in creatorArgumentsModel.role) {
-            roles = "$i, $roles "
-        }
+        val roles = getRoles()
+        val games: MutableList<GamesShortModel> = getCreatorGames(data.games)
         val items = mutableListOf(
             RatingImageDelegateItem(
                 RatingImageModel(
                     1,
                     creatorArgumentsModel.image!!,
-                    data.rating
+                    data.creatorDetails.rating
                 )
             ),
             TitleTextViewDelegateItem(TitleTextViewModel(2, creatorArgumentsModel.name)),
@@ -139,21 +151,83 @@ class CreatorDetailsFragment : MviBaseFragment<
                     3, getString(R.string.roles), roles
                 )
             ),
-            TitleDetailsTextViewDelegateItem(
-                TitleDetailsTextViewModel(
-                    4, getString(R.string.famous_projects), creatorArgumentsModel.famousProjects.toString()
-                )
-            ),
             SubtitleTextViewDelegateItem(
                 SubtitleTextViewModel(
                     5,
                     getString(R.string.description)
                 )
             ),
-            DescriptionTextViewDelegateItem(DescriptionTextViewModel(6, data.description))
+            DescriptionTextViewDelegateItem(
+                DescriptionTextViewModel(
+                    6,
+                    data.creatorDetails.description
+                )
+            ),
+            GameDetailsShortDataDelegateItem(
+                GameDetailsShortDataModel(
+                    7,
+                    getString(R.string.famous_projects),
+                    getString(R.string.unknown),
+                    games,
+                    object : ClickListener {
+                        override fun onClick() {
+                            TODO("Open all screen")
+                        }
+                    },
+                    object : RecyclerEndListener {
+                        override fun onEndReached() {
+                            store.sendIntent(
+                                CreatorDetailsIntent.GetGamesByCreators(
+                                    creatorArgumentsModel.creatorId
+                                )
+                            )
+                        }
+                    }
+                )
+            )
         )
         binding.recyclerView.adapter = adapter
         adapter.submitList(items)
+    }
+
+    private fun getCreatorGames(items: GamesNewsListUi): MutableList<GamesShortModel> {
+        val list = mutableListOf<GamesShortModel>()
+        for (i in items.games) {
+            with(i) {
+                list.add(
+                    GamesShortModel(
+                        gameId,
+                        name,
+                        rating?.toInt(),
+                        releaseDate,
+                        playTime,
+                        uri,
+                        object : ClickListener {
+                            override fun onClick() {
+                                store.sendEffect(
+                                    CreatorDetailsEffect.OpenGameDetails(
+                                        gameId,
+                                        genre,
+                                        name,
+                                        releaseDate!!,
+                                        uri!!
+                                    )
+                                )
+                            }
+                        }
+                    )
+                )
+            }
+        }
+        return list
+    }
+
+    private fun getRoles(): String {
+        var roles = ""
+        for (i in creatorArgumentsModel.role) {
+            roles = "$i, $roles "
+        }
+        return roles
     }
 
     private fun initAdapter(): MainAdapter =
@@ -163,6 +237,7 @@ class CreatorDetailsFragment : MviBaseFragment<
             addDelegate(TitleDetailsTextViewDelegate())
             addDelegate(SubtitleTextViewDelegate())
             addDelegate(DescriptionTextViewDelegate())
+            addDelegate(GameDetailsShortDataDelegate())
         }
 
     override fun onDestroy() {

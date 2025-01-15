@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
 import myapplication.android.pixelpal.data.repository.creators.CreatorsRepository
+import myapplication.android.pixelpal.data.repository.games.GamesRepository
 import myapplication.android.pixelpal.ui.creator_details.CreatorDetailsFragment
 import myapplication.android.pixelpal.ui.creator_details.mvi.CreatorDetailsLocalDI
 
@@ -26,8 +27,11 @@ class CreatorDetailsModule{
 
     @AllGamesScope
     @Provides
-    fun provideCreatorDetailsLocalDi(creatorsRepository: CreatorsRepository): CreatorDetailsLocalDI =
-        CreatorDetailsLocalDI(creatorsRepository)
+    fun provideCreatorDetailsLocalDi(
+        creatorsRepository: CreatorsRepository,
+        gamesRepository: GamesRepository
+    ): CreatorDetailsLocalDI =
+        CreatorDetailsLocalDI(creatorsRepository, gamesRepository)
 
 }
 

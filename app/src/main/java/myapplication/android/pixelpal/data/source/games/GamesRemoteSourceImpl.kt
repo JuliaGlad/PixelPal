@@ -10,6 +10,9 @@ import javax.inject.Inject
 class GamesRemoteSourceImpl @Inject constructor(
     private val api: GamesApi,
 ): GamesRemoteSource {
+    override suspend fun getGameByCreator(creatorId: Long): GamesNewsList =
+        api.getGamesByCreator(creatorId)
+
     override suspend fun getGameDescription(gameId: Long): GameDescription =
         api.getGameDescription(gameId)
 

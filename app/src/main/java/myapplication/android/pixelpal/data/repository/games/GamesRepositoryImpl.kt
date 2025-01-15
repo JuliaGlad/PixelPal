@@ -19,6 +19,9 @@ class GamesRepositoryImpl @Inject constructor(
     private val remoteSourceGames: GamesRemoteSource,
     private val localSourceShortGames: GamesShortDataLocalSource,
 ) : GamesRepository {
+    override suspend fun getGameByCreator(creatorId: Long): GamesNewsListDomain =
+        remoteSourceGames.getGameByCreator(creatorId).toDomain()
+
     override suspend fun getGameDescription(gameId: Long): GameDescriptionDomain =
         remoteSourceGames.getGameDescription(gameId).toDomain()
 

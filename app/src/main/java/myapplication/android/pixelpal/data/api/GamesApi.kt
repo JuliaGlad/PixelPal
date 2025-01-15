@@ -22,8 +22,8 @@ import retrofit2.http.Query
 
 interface GamesApi {
 
-    @GET("")
-    suspend fun getGamesByCreator()
+    @GET("games")
+    suspend fun getGamesByCreator(@Query("creators")creatorId: Long): GamesNewsList
 
     @GET("publishers/{id}")
     suspend fun getPublisherDetails(@Path("id")id: Long): PublisherDetails
