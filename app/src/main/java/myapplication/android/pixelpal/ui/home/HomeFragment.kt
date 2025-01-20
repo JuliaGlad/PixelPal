@@ -57,6 +57,9 @@ class HomeFragment :
     }
     private val adapter: MainAdapter by lazy(LazyThreadSafetyMode.NONE) { initAdapter() }
     private var recyclerItems: MutableList<DelegateItem> = mutableListOf()
+    private var newReleasesSize = 0
+    private var topGamesSize = 0
+    private var nextReleasesSize = 0
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
@@ -144,26 +147,42 @@ class HomeFragment :
 
             HomeLceState.Loading -> binding.progressBar.root.visibility = VISIBLE
 
-            is HomeLceState.UpdateTopContent -> updateRecycler(state.ui.data, TOP_ID)
+            is HomeLceState.UpdateTopContent -> topGamesSize += updateRecycler(
+                state.ui.data,
+                TOP_ID,
+                topGamesSize
+            )
 
-            is HomeLceState.UpdateNextReleasesContent -> updateRecycler(state.ui.data, NEXT_ID)
+            is HomeLceState.UpdateNextReleasesContent -> nextReleasesSize += updateRecycler(
+                state.ui.data,
+                NEXT_ID,
+                newReleasesSize
+            )
 
-            is HomeLceState.UpdateReleasesContent -> updateRecycler(state.ui.data, NEW_RELEASES_ID)
+            is HomeLceState.UpdateReleasesContent -> newReleasesSize = updateRecycler(
+                state.ui.data,
+                NEW_RELEASES_ID,
+                newReleasesSize
+            )
         }
     }
 
-    private fun updateRecycler(items: GamesNewsListUi, requiredId: Int) {
+    private fun updateRecycler(items: GamesNewsListUi, requiredId: Int, itemsSize: Int): Int {
+        var newSize = 0
         recyclerItems.forEach {
             if (it is NewsDelegateItem) {
                 with((it.content() as NewsItemModel)) {
                     if (id == requiredId) {
                         isUpdated = true
-                        val models = addReleaseItems(items)
+                        val result = addReleaseItems(items, itemsSize)
+                        val models = result.first
+                        newSize = result.second
                         adapter.notifyItemChanged(recyclerItems.indexOf(it), models)
                     }
                 }
             }
         }
+        return newSize
     }
 
     private fun getGames() {
@@ -195,13 +214,16 @@ class HomeFragment :
     private fun initRecycler(gamesNews: HomeContentResult) {
         val (currentDate, monthEndDate, monthStartDate) = getVariables()
 
-        val released = addReleaseItems(gamesNews.gamesReleased)
-        val releaseThisMonth = addReleaseItems(gamesNews.gameMonthReleases)
-        val topGames = addReleaseItems(gamesNews.gamesTop)
+        val released = addReleaseItems(gamesNews.gamesReleased, newReleasesSize)
+        val releaseThisMonth = addReleaseItems(gamesNews.gameMonthReleases, nextReleasesSize)
+        val topGames = addReleaseItems(gamesNews.gamesTop, topGamesSize)
+        newReleasesSize += released.second
+        nextReleasesSize += releaseThisMonth.second
+        topGamesSize += topGames.second
         recyclerItems = getMainItems(
-            released,
-            releaseThisMonth,
-            topGames,
+            released.first,
+            releaseThisMonth.first,
+            topGames.first,
             currentDate,
             monthEndDate,
             monthStartDate
@@ -241,7 +263,7 @@ class HomeFragment :
                 },
                 object : RecyclerEndListener {
                     override fun onEndReached() {
-                        if (checkRecyclerForUpdate()) {
+                        if (checkRecyclerForUpdate(newReleasesSize)) {
                             store.sendIntent(HomeIntent.GetReleases(monthStartDate, currentDate))
                         }
                     }
@@ -261,7 +283,7 @@ class HomeFragment :
                 },
                 object : RecyclerEndListener {
                     override fun onEndReached() {
-                        if (checkRecyclerForUpdate()) {
+                        if (checkRecyclerForUpdate(nextReleasesSize)) {
                             store.sendIntent(HomeIntent.GetNextReleases(currentDate, monthEndDate))
                         }
                     }
@@ -292,7 +314,7 @@ class HomeFragment :
                 },
                 object : RecyclerEndListener {
                     override fun onEndReached() {
-                        if (checkRecyclerForUpdate()) {
+                        if (checkRecyclerForUpdate(topGamesSize)) {
                             store.sendIntent(HomeIntent.GetTop)
                         }
                     }
@@ -301,9 +323,11 @@ class HomeFragment :
         )
     )
 
-    private fun addReleaseItems(list: GamesNewsListUi): MutableList<ReleasesModel> {
+    private fun addReleaseItems(list: GamesNewsListUi, itemsSize: Int): Pair<MutableList<ReleasesModel>, Int> {
+        var checkingSize = itemsSize
         val items = mutableListOf<ReleasesModel>()
         for (i in list.games) {
+            if (checkingSize >= 30) break
             items.add(
                 with(i) {
                     ReleasesModel(
@@ -328,12 +352,13 @@ class HomeFragment :
                     )
                 }
             )
+            checkingSize++
         }
-        return items
+        return Pair(items, checkingSize)
     }
 
-    private fun checkRecyclerForUpdate(): Boolean =
-        !binding.recycler.isComputingLayout
+    private fun checkRecyclerForUpdate(items: Int): Boolean =
+        !binding.recycler.isComputingLayout && items < 30
 
     override fun onDestroy() {
         super.onDestroy()

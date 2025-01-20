@@ -100,7 +100,7 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
             is GamesEffects.OpenGameDetails -> {
                 with(effect) {
                     (activity as MainActivity).openGameDetailsActivity(
-                        id, name, genre, releaseDate, image
+                        gameId, name, genre, releaseDate, image
                     )
                 }
             }
@@ -202,11 +202,11 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
         for (i in games) {
             with(i) {
                 newModels.add(
-                    GamesShortModel(id, name, rating, releaseDate, playtime, image,
+                    GamesShortModel(gameId, name, rating, releaseDate, playtime, image,
                         object : ClickListener{
                             override fun onClick() {
                                 store.sendEffect(GamesEffects.OpenGameDetails(
-                                    id,
+                                    gameId,
                                     name,
                                     releaseDate!!,
                                     image!!

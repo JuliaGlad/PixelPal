@@ -9,7 +9,6 @@ data class StoreGameDetailsModel(
     val title: String,
     val emptyTitle: String,
     val items: MutableList<StoreLinkModels>,
-    val listener: ClickListener,
     val onGetNewItems: RecyclerEndListener,
     var isUpdated: Boolean = false
 )

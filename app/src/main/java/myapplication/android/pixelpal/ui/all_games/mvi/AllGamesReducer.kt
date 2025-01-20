@@ -26,7 +26,7 @@ class AllGamesReducer: MviReducer<
     private fun updateLoading(prevState: AllGamesState) =
         prevState.copy(ui = LceState.Loading)
 
-    private fun updateDataLoaded(prevState: AllGamesState, ui: GamesNewsListUi) =
+    private fun updateDataLoaded(prevState: AllGamesState, ui: AllGameResult) =
         prevState.copy(ui = LceState.Content(ui), page = prevState.page +  1)
 
 }

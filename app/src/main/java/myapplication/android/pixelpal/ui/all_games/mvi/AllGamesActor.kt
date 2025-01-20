@@ -2,9 +2,15 @@ package myapplication.android.pixelpal.ui.all_games.mvi
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import myapplication.android.pixelpal.domain.usecase.games.GetGameAdditionsUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetGameMonthReleasesUseCase
+import myapplication.android.pixelpal.domain.usecase.games.GetGamesFromSameSeriesUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetGamesNewReleasesUseCase
+import myapplication.android.pixelpal.domain.usecase.games.GetParenGamesUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetTopGamesUseCase
+import myapplication.android.pixelpal.ui.games.games.model.GamesShortDataUi
+import myapplication.android.pixelpal.ui.games.games.model.GamesShortDataUiList
+import myapplication.android.pixelpal.ui.games.games.model.toUi
 import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
 import myapplication.android.pixelpal.ui.home.model.toUi
 import myapplication.android.pixelpal.ui.ktx.asyncAwait
@@ -14,7 +20,10 @@ import myapplication.android.pixelpal.ui.mvi.MviActor
 class AllGamesActor(
     private val getTopGamesUseCase: GetTopGamesUseCase,
     private val getGamesNewReleasesUseCase: GetGamesNewReleasesUseCase,
-    private val getGameMonthReleasesUseCase: GetGameMonthReleasesUseCase
+    private val getGameMonthReleasesUseCase: GetGameMonthReleasesUseCase,
+    private val getParenGamesUseCase: GetParenGamesUseCase,
+    private val getGameAdditionsUseCase: GetGameAdditionsUseCase,
+    private val getGamesFromSameSeriesUseCase: GetGamesFromSameSeriesUseCase
 ) : MviActor<
         AllGamesPartialState,
         AllGamesIntent,
@@ -37,9 +46,45 @@ class AllGamesActor(
                     intent.currentDate,
                     state.page + 1
                 )
+
+            is AllGamesIntent.GetAllSameSeries -> loadGamesFromSameSeries(
+                intent.gameId,
+                state.page + 1
+            )
+
+            is AllGamesIntent.GetGameParentSeries ->
+                loadParenAndAdditions(intent.gameId, state.page + 1)
         }
 
     private fun init() = flow { emit(AllGamesPartialState.Init) }
+
+    private fun loadGamesFromSameSeries(gameId: Long, page: Int) =
+        flow {
+            kotlin.runCatching {
+                getGamesFromSameSeries(gameId, page)
+            }.fold(
+                onSuccess = { data ->
+                    emit(AllGamesPartialState.DataLoaded(data))
+                },
+                onFailure = { throwable ->
+                    emit(AllGamesPartialState.Error(throwable))
+                }
+            )
+        }
+
+    private fun loadParenAndAdditions(gameId: Long, page: Int) =
+        flow {
+            kotlin.runCatching {
+                getParentGameAndAdditions(gameId, page)
+            }.fold(
+                onSuccess = { data ->
+                    emit(AllGamesPartialState.DataLoaded(data))
+                },
+                onFailure = { throwable ->
+                    emit(AllGamesPartialState.Error(throwable))
+                }
+            )
+        }
 
     private fun loadData(page: Int) =
         flow {
@@ -92,6 +137,35 @@ class AllGamesActor(
                 }
             )
         }
+
+    private suspend fun getGamesFromSameSeries(
+        gameId: Long,
+        page: Int
+    ): GamesShortDataUiList =
+        runCatchingNonCancellation {
+            asyncAwait(
+                { getGamesFromSameSeriesUseCase.invoke(gameId.toString(), page) }
+            ) { data ->
+                data.toUi()
+            }
+        }.getOrThrow()
+
+
+    private suspend fun getParentGameAndAdditions(
+        gameId: Long,
+        page: Int
+    ): GamesShortDataUiList =
+        runCatchingNonCancellation {
+            asyncAwait(
+                { getGameAdditionsUseCase.invoke(gameId.toString(), page) },
+                { getParenGamesUseCase.invoke(gameId.toString(), page) }
+            ) { additions, parent ->
+                val items: MutableList<GamesShortDataUi> = mutableListOf()
+                items.addAll(additions.toUi().items)
+                items.addAll(parent.toUi().items)
+                GamesShortDataUiList(items)
+            }
+        }.getOrThrow()
 
     private suspend fun getReleasesGames(
         date: String,

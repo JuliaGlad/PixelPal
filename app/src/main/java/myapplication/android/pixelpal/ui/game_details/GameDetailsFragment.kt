@@ -9,7 +9,6 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.net.toUri
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.app.App.Companion.appComponent
@@ -160,6 +159,19 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
             is GameDetailsEffect.OpenGameDetails -> {
                 TODO("Open another details screen")
             }
+            is GameDetailsEffect.OpenAllSameSeries ->
+                with(effect) {
+                    (activity as GameDetailsActivity).openAllGamesActivity(
+                        Constants.SAME_SERIES_ID, gameId, genres!!
+                    )
+                }
+            is GameDetailsEffect.OpenAllAdditionsAndParentGames -> {
+                with(effect) {
+                    (activity as GameDetailsActivity).openAllGamesActivity(
+                        Constants.ADDITIONS_AND_PARENT_ID, gameId, genres!!
+                    )
+                }
+            }
         }
     }
 
@@ -219,7 +231,7 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
                             with(gamesShortDataUi) {
                                 newItems.add(
                                     GamesShortModel(
-                                        id,
+                                        gameId,
                                         name,
                                         rating,
                                         releaseDate,
@@ -229,7 +241,7 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
                                             override fun onClick() {
                                                 store.sendEffect(
                                                     GameDetailsEffect.OpenGameDetails(
-                                                        gameId!!,
+                                                        gameId,
                                                         genres!!,
                                                         name,
                                                         releaseDate!!,
@@ -298,7 +310,7 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
                 newItems,
                 object : ClickListener {
                     override fun onClick() {
-                        TODO("Open all")
+                        store.sendEffect(GameDetailsEffect.OpenAllSameSeries(gameId!!))
                     }
                 },
                 object : RecyclerEndListener {
@@ -325,7 +337,7 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
                 newItems,
                 object : ClickListener {
                     override fun onClick() {
-                        TODO("Open all")
+                        store.sendEffect(GameDetailsEffect.OpenAllAdditionsAndParentGames(gameId!!))
                     }
                 },
                 object : RecyclerEndListener {
@@ -355,7 +367,7 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
             with(gamesShortDataUi) {
                 newItems.add(
                     GamesShortModel(
-                        id,
+                        gameId,
                         name,
                         rating,
                         releaseDate,
@@ -365,7 +377,7 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
                             override fun onClick() {
                                 store.sendEffect(
                                     GameDetailsEffect.OpenGameDetails(
-                                        gameId!!,
+                                        gameId,
                                         genres!!,
                                         name,
                                         releaseDate!!,
@@ -389,11 +401,6 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
                 getString(R.string.where_to_buy),
                 getString(R.string.unknown),
                 stores,
-                object : ClickListener {
-                    override fun onClick() {
-                        TODO("open all games")
-                    }
-                },
                 object : RecyclerEndListener {
                     override fun onEndReached() {
                         if (!binding.recyclerView.isComputingLayout) {

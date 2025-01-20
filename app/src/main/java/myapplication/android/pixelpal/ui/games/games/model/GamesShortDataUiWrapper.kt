@@ -9,7 +9,7 @@ fun GamesShortDomainList.toUi() =
             .map {
                 with(it) {
                     GamesShortDataUi(
-                        id = id,
+                        gameId = id,
                         name = name,
                         rating = rating,
                         releaseDate = releaseDate,

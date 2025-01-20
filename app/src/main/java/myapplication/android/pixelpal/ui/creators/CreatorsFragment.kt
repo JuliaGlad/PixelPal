@@ -112,7 +112,6 @@ class CreatorsFragment :
 
     override fun resolveEffect(effect: CreatorsEffect) {
         when (effect) {
-            is CreatorsEffect.OpenAllCreatorsScreen -> TODO("Open all creators screen")
             is CreatorsEffect.OpenCreatorDetailsScreen -> {
                 with(effect) {
                     (activity as MainActivity).openCreatorDetailsActivity(

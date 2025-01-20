@@ -5,8 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import myapplication.android.pixelpal.databinding.RecyclerViewMainNewsItemBinding
-import myapplication.android.pixelpal.ui.delegates.delegates.creator_game_details.CreatorGameDetailsDelegateItem
+import myapplication.android.pixelpal.databinding.RecyclerViewStoresMainItemBinding
 import myapplication.android.pixelpal.ui.delegates.delegates.emptyItems.EmptyItemAdapter
 import myapplication.android.pixelpal.ui.delegates.delegates.emptyItems.EmptyItemsModel
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsItemModel
@@ -19,7 +18,7 @@ import myapplication.android.pixelpal.ui.listener.LinearPaginationScrollListener
 class StoreGameDetailsDelegate: AdapterDelegate {
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
         ViewHolder(
-            RecyclerViewMainNewsItemBinding.inflate(
+            RecyclerViewStoresMainItemBinding.inflate(
                 LayoutInflater.from(
                     parent.context
                 ), parent, false
@@ -49,7 +48,7 @@ class StoreGameDetailsDelegate: AdapterDelegate {
 
     override fun isOfViewType(item: DelegateItem): Boolean = item is StoreGameDetailsDelegateItem
 
-    class ViewHolder(private val binding: RecyclerViewMainNewsItemBinding) :
+    class ViewHolder(private val binding: RecyclerViewStoresMainItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val adapter = StoreLinkAdapter()
         var loading = false
@@ -58,7 +57,6 @@ class StoreGameDetailsDelegate: AdapterDelegate {
         fun bind(model: StoreGameDetailsModel) {
             with(binding) {
                 title.setShimmerText(model.title)
-                actionAll.setOnClickListener { model.listener.onClick() }
             }
             initRecycler(model.items, model.emptyTitle)
             checkRecyclerEnd(model)

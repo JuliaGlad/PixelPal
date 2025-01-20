@@ -51,20 +51,6 @@
         app:textShimmerColor="@color/main_blue"
         tools:text="Программисты" />
 
-    <myapplication.android.pixelpal.ui.custom_view.TextShimmerView
-        android:id="@+id/action_all"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:fontFamily="@font/tektur_medium"
-        android:text="@string/all"
-        android:textColor="@color/main_red"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@id/background"
-        app:layout_constraintEnd_toEndOf="@id/background"
-        app:layout_constraintTop_toTopOf="@id/background"
-        app:textShimmerColor="@color/main_red" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="0dp"

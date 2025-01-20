@@ -12,4 +12,8 @@ interface AllArgument {
         val currentDate: String
     ): AllArgument
 
+    data class GameDetailsArgument(
+        val genre: String,
+        val gameId: Long
+    ): AllArgument
 }

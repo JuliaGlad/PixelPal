@@ -9,7 +9,7 @@ sealed interface AllGamesPartialState : MviPartialState {
 
     data object Loading: AllGamesPartialState
 
-    data class DataLoaded(val ui: GamesNewsListUi): AllGamesPartialState
+    data class DataLoaded(val ui: AllGameResult): AllGamesPartialState
 
     data class Error(val throwable: Throwable): AllGamesPartialState
 }

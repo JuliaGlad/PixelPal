@@ -11,12 +11,15 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.app.App.Companion.appComponent
-import myapplication.android.pixelpal.app.Constants
+import myapplication.android.pixelpal.app.Constants.Companion.ADDITIONS_AND_PARENT_ID
 import myapplication.android.pixelpal.app.Constants.Companion.ALL_INTENT_ID
 import myapplication.android.pixelpal.app.Constants.Companion.CURRENT_DATE
 import myapplication.android.pixelpal.app.Constants.Companion.END_DATE
+import myapplication.android.pixelpal.app.Constants.Companion.GAME_GENRES_ARG
+import myapplication.android.pixelpal.app.Constants.Companion.GAME_ID_ARG
 import myapplication.android.pixelpal.app.Constants.Companion.RELEASES_ID
 import myapplication.android.pixelpal.app.Constants.Companion.RELEASES_NEXT_ID
+import myapplication.android.pixelpal.app.Constants.Companion.SAME_SERIES_ID
 import myapplication.android.pixelpal.app.Constants.Companion.START_DATE
 import myapplication.android.pixelpal.app.Constants.Companion.TOP_ID
 import myapplication.android.pixelpal.databinding.FragmentAllGamesBinding
@@ -27,9 +30,12 @@ import myapplication.android.pixelpal.ui.all_games.mvi.AllGamesLocalDI
 import myapplication.android.pixelpal.ui.all_games.mvi.AllGamesPartialState
 import myapplication.android.pixelpal.ui.all_games.mvi.AllGamesState
 import myapplication.android.pixelpal.ui.all_games.mvi.AllGamesStoreFactory
+import myapplication.android.pixelpal.ui.games.games.model.GamesShortDataUi
+import myapplication.android.pixelpal.ui.games.games.model.GamesShortDataUiList
 import myapplication.android.pixelpal.ui.games.games.recycler_view.GamesShortModel
 import myapplication.android.pixelpal.ui.games.games.recycler_view.linear.GamesShortLinearAdapter
 import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
+import myapplication.android.pixelpal.ui.home.model.GamesUi
 import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.listener.LinearPaginationScrollListener
 import myapplication.android.pixelpal.ui.mvi.LceState
@@ -109,6 +115,26 @@ class AllGamesFragment : MviBaseFragment<
             }
 
             TOP_ID -> intent = AllGamesIntent.GetGames
+
+            SAME_SERIES_ID -> {
+                arguments = AllArgument.GameDetailsArgument(
+                    activity?.intent?.getStringExtra(GAME_GENRES_ARG)!!,
+                    activity?.intent?.getLongExtra(GAME_ID_ARG, 0L)!!
+                )
+                intent = AllGamesIntent.GetAllSameSeries(
+                    (arguments as AllArgument.GameDetailsArgument).gameId
+                )
+            }
+
+            ADDITIONS_AND_PARENT_ID -> {
+                arguments = AllArgument.GameDetailsArgument(
+                    activity?.intent?.getStringExtra(GAME_GENRES_ARG)!!,
+                    activity?.intent?.getLongExtra(GAME_ID_ARG, 0L)!!
+                )
+                intent = AllGamesIntent.GetGameParentSeries(
+                    (arguments as AllArgument.GameDetailsArgument).gameId
+                )
+            }
         }
     }
 
@@ -156,11 +182,18 @@ class AllGamesFragment : MviBaseFragment<
             is LceState.Content -> {
                 binding.loading.root.visibility = GONE
                 if (state.ui.data is GamesNewsListUi) {
-                    if (!lastPage) {
-                        initGameNewsRecycler(state.ui.data)
-                    } else {
-                        updateRecycler(state.ui.data)
-                    }
+                    initOrUpdate(
+                        state.ui.data,
+                        ::initGameNewsRecycler,
+                        ::updateGamesNewsRecycler
+                    )
+                } else if (state.ui.data is GamesShortDataUiList) {
+                    Log.i("Init or update", state.ui.data.items.size.toString())
+                    initOrUpdate(
+                        state.ui.data,
+                        ::initGameNewsRecycler,
+                        ::updateGamesShortDataRecycler
+                    )
                 }
             }
 
@@ -173,7 +206,26 @@ class AllGamesFragment : MviBaseFragment<
         }
     }
 
-    private fun updateRecycler(items: GamesNewsListUi) {
+    private fun <T> initOrUpdate(
+        data: T,
+        init: (T) -> Unit,
+        update: (T) -> Unit
+    ) {
+        if (!lastPage) {
+            init.invoke(data)
+        } else {
+            update.invoke(data)
+        }
+    }
+
+    private fun updateGamesShortDataRecycler(items: GamesShortDataUiList) {
+        val models = addDataShortModelFromGamesShortData(items, (arguments as AllArgument.GameDetailsArgument).genre)
+        val startPosition = gamesShortModels.size - 1
+        gamesShortModels.addAll(models)
+        adapter.notifyItemRangeInserted(startPosition, models.size)
+    }
+
+    private fun updateGamesNewsRecycler(items: GamesNewsListUi) {
         val models = addDataShortModelFromNewsUi(items)
         val startPosition = gamesShortModels.size - 1
         gamesShortModels.addAll(models)
@@ -184,25 +236,28 @@ class AllGamesFragment : MviBaseFragment<
         val models = mutableListOf<GamesShortModel>()
         for (i in data.games) {
             with(i) {
-                models.add(
-                    GamesShortModel(
-                        gameId, name, rating?.toInt(), releaseDate, playTime, uri.toString(),
-                        object : ClickListener {
-                            override fun onClick() {
-                                store.sendEffect(AllGamesEffect.OpenGameDetails(
-                                    gameId,
-                                    genre,
-                                    name,
-                                    releaseDate!!,
-                                    uri.toString()
-                                ))
-                            }
-                        }
-                    )
-                )
+                addGamesToList(models)
             }
         }
         return models
+    }
+
+    private fun addDataShortModelFromGamesShortData(data: GamesShortDataUiList, genre: String): List<GamesShortModel> {
+        val models = mutableListOf<GamesShortModel>()
+        for (i in data.items) {
+            with(i) {
+                addGamesToList(models, genre)
+            }
+        }
+        return models
+    }
+
+    private fun initGameNewsRecycler(data: GamesShortDataUiList) {
+        val genre = (arguments as AllArgument.GameDetailsArgument).genre
+        gamesShortModels.addAll(addDataShortModelFromGamesShortData(data, genre))
+        binding.recyclerView.adapter = adapter
+        adapter.submitList(gamesShortModels)
+        addScrollRecyclerListener()
     }
 
     private fun initGameNewsRecycler(data: GamesNewsListUi) {
@@ -229,6 +284,50 @@ class AllGamesFragment : MviBaseFragment<
             })
         }
     }
+
+
+    private fun GamesUi.addGamesToList(models: MutableList<GamesShortModel>) =
+        models.add(
+            GamesShortModel(
+                gameId, name, rating?.toInt(), releaseDate, playTime, uri.toString(),
+                object : ClickListener {
+                    override fun onClick() {
+                        store.sendEffect(
+                            AllGamesEffect.OpenGameDetails(
+                                gameId,
+                                genre,
+                                name,
+                                releaseDate!!,
+                                uri.toString()
+                            )
+                        )
+                    }
+                }
+            )
+        )
+
+    private fun GamesShortDataUi.addGamesToList(
+        models: MutableList<GamesShortModel>,
+        genre: String
+    ) =
+        models.add(
+            GamesShortModel(
+                gameId, name, rating, releaseDate, playtime, image.toString(),
+                object : ClickListener {
+                    override fun onClick() {
+                        store.sendEffect(
+                            AllGamesEffect.OpenGameDetails(
+                                gameId,
+                                genre,
+                                name,
+                                releaseDate!!,
+                                image.toString()
+                            )
+                        )
+                    }
+                }
+            )
+        )
 
     override fun onDestroy() {
         super.onDestroy()
