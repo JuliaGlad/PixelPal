@@ -9,7 +9,7 @@ class CreatorsUiList(
 )
 
 class CreatorUi(
-    val id: Long,
+    val creatorId: Long,
     val name: String,
     val role: List<RolesUi>,
     val famousProjects: Int,

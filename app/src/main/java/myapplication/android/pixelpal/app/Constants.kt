@@ -26,6 +26,7 @@ class Constants {
         const val TOP_ID = 2
         const val SAME_SERIES_ID = 3
         const val ADDITIONS_AND_PARENT_ID = 4
+        const val CREATORS_ID = 5
         const val CURRENT_DATE = "CurrentDate"
         const val END_DATE = "EndDate"
         const val START_DATE = "StartDate"

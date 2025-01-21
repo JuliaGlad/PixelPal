@@ -187,7 +187,7 @@ class CreatorsFragment :
 
             items.addCreatorItem(
                 creators.indexOf(i),
-                i.id,
+                i.creatorId,
                 i.name,
                 rolesStr,
                 i.famousProjects,
@@ -283,7 +283,7 @@ class CreatorsFragment :
 
             items.addCreatorItem(
                 creators.indexOf(i),
-                i.id,
+                i.creatorId,
                 i.name,
                 rolesStr,
                 i.famousProjects,

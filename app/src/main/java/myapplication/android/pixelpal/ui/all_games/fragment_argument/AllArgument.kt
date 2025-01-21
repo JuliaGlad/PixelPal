@@ -16,4 +16,8 @@ interface AllArgument {
         val genre: String,
         val gameId: Long
     ): AllArgument
+
+    data class CreatorDetailsArgument(
+        val gameId: Long
+    ): AllArgument
 }

@@ -75,7 +75,7 @@
             tools:text="28.12. 2007" />
 
         <TextView
-            android:id="@+id/playtime_title"
+            android:id="@+id/famous_projects"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -98,7 +98,7 @@
             android:textColor="@color/light_red"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/playtime_title"
+            app:layout_constraintStart_toEndOf="@id/famous_projects"
             app:layout_constraintTop_toBottomOf="@id/creation_date"
             tools:text="100ч." />
 

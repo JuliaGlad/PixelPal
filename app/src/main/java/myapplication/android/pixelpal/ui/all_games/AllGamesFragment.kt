@@ -181,19 +181,21 @@ class AllGamesFragment : MviBaseFragment<
         when (state.ui) {
             is LceState.Content -> {
                 binding.loading.root.visibility = GONE
-                if (state.ui.data is GamesNewsListUi) {
-                    initOrUpdate(
-                        state.ui.data,
-                        ::initGameNewsRecycler,
-                        ::updateGamesNewsRecycler
-                    )
-                } else if (state.ui.data is GamesShortDataUiList) {
-                    Log.i("Init or update", state.ui.data.items.size.toString())
-                    initOrUpdate(
-                        state.ui.data,
-                        ::initGameNewsRecycler,
-                        ::updateGamesShortDataRecycler
-                    )
+                when(state.ui.data){
+                    is GamesNewsListUi ->{
+                        initOrUpdate(
+                            state.ui.data,
+                            ::initGameNewsRecycler,
+                            ::updateGamesNewsRecycler
+                        )
+                    }
+                    is GamesShortDataUiList -> {
+                        initOrUpdate(
+                            state.ui.data,
+                            ::initGameNewsRecycler,
+                            ::updateGamesShortDataRecycler
+                        )
+                    }
                 }
             }
 

@@ -23,7 +23,7 @@ class AllGamesActor(
     private val getGameMonthReleasesUseCase: GetGameMonthReleasesUseCase,
     private val getParenGamesUseCase: GetParenGamesUseCase,
     private val getGameAdditionsUseCase: GetGameAdditionsUseCase,
-    private val getGamesFromSameSeriesUseCase: GetGamesFromSameSeriesUseCase
+    private val getGamesFromSameSeriesUseCase: GetGamesFromSameSeriesUseCase,
 ) : MviActor<
         AllGamesPartialState,
         AllGamesIntent,

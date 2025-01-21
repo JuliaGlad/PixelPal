@@ -58,7 +58,7 @@
             tools:text="Название" />
 
         <TextView
-            android:id="@+id/rating_title"
+            android:id="@+id/roles_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
@@ -81,7 +81,7 @@
             android:textColor="@color/light_red"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/rating_title"
+            app:layout_constraintStart_toEndOf="@id/roles_title"
             app:layout_constraintTop_toBottomOf="@id/title"
             tools:text="12222" />
 
@@ -114,7 +114,7 @@
             tools:text="28.12. 2007" />
 
         <TextView
-            android:id="@+id/playtime_title"
+            android:id="@+id/famous_projects"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
@@ -137,7 +137,7 @@
             android:textColor="@color/light_red"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/playtime_title"
+            app:layout_constraintStart_toEndOf="@id/famous_projects"
             app:layout_constraintTop_toBottomOf="@id/creation_date"
             tools:text="100ч." />
 

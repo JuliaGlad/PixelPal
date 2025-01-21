@@ -16,6 +16,9 @@
         android:theme="@style/Theme.PixelPal"
         tools:targetApi="31">
         <activity
+            android:name=".ui.all_creators.AllCreatorsActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.publisher_details.PublisherDetailsActivity"
             android:exported="false" />
         <activity

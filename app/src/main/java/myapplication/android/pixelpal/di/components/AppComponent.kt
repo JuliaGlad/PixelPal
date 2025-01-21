@@ -8,12 +8,14 @@ import myapplication.android.pixelpal.di.LocalSourceModule
 import myapplication.android.pixelpal.di.RemoteSourceModule
 import myapplication.android.pixelpal.di.RepositoryModule
 import myapplication.android.pixelpal.di.RetrofitModule
+import myapplication.android.pixelpal.di.components.activity.AllCreatorsActivityComponent
 import myapplication.android.pixelpal.di.components.activity.CreatorDetailsActivityComponent
 import myapplication.android.pixelpal.di.components.activity.GameDetailsActivityComponent
 import myapplication.android.pixelpal.di.components.activity.MainActivityComponent
 import myapplication.android.pixelpal.di.components.activity.PlatformDetailsActivityComponent
 import myapplication.android.pixelpal.di.components.activity.PublisherDetailsActivityComponent
 import myapplication.android.pixelpal.di.components.activity.StoreDetailsActivityComponent
+import myapplication.android.pixelpal.di.components.fragment.AllCreatorsComponent
 import myapplication.android.pixelpal.di.components.fragment.AllGamesComponent
 import myapplication.android.pixelpal.di.components.fragment.CreatorDetailsComponent
 import myapplication.android.pixelpal.di.components.fragment.CreatorsComponent
@@ -39,6 +41,10 @@ import javax.inject.Singleton
     ]
 )
 interface AppComponent {
+
+    fun allCreatorsComponent(): AllCreatorsComponent.Factory
+
+    fun allCreatorsActivityComponent(): AllCreatorsActivityComponent.Factory
 
     fun publisherDetailsActivityComponent(): PublisherDetailsActivityComponent.Factory
 
@@ -84,6 +90,8 @@ interface AppComponent {
 
 @Module(
     subcomponents = [
+        AllCreatorsActivityComponent::class,
+        AllCreatorsComponent::class,
         PublisherDetailsActivityComponent::class,
         PublisherDetailsComponent::class,
         PlatformDetailsActivityComponent::class,

@@ -13,7 +13,7 @@ fun CreatorDomainList.toUi(): CreatorsUiList =
                 with(it) {
                     val rolesUi = getRole()
                     CreatorUi(
-                        id = id,
+                        creatorId = id,
                         name = name,
                         rolesUi,
                         famousProjects = gamesCount,

@@ -1,4 +1,4 @@
-package myapplication.android.pixelpal.ui.game_details
+package myapplication.android.pixelpal.ui.all_creators
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,22 +9,21 @@ import androidx.core.view.WindowInsetsCompat
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants
-import myapplication.android.pixelpal.ui.all_creators.AllCreatorsActivity
-import myapplication.android.pixelpal.ui.all_games.AllGamesActivity
 import myapplication.android.pixelpal.ui.creator_details.CreatorDetailsActivity
 
-class GameDetailsActivity : AppCompatActivity() {
-
-    private val gameDetailsActivityComponent by lazy {
-        appComponent.gameDetailsActivityComponent().create()
-    }
-
+class AllCreatorsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        appComponent.allCreatorsActivityComponent()
         super.onCreate(savedInstanceState)
-        gameDetailsActivityComponent.inject(this)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_game_details)
+        setContentView(R.layout.activity_all_creators)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
     }
+
     fun openCreatorDetailsActivity(
         creatorId: Long,
         name: String,
@@ -42,26 +41,4 @@ class GameDetailsActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun openAllCreatorsActivity(
-        gameId: Long
-    ) {
-        val intent = Intent(this, AllCreatorsActivity::class.java).apply {
-            putExtra(Constants.ALL_INTENT_ID, Constants.CREATORS_ID)
-            putExtra(Constants.GAME_ID_ARG, gameId)
-        }
-        startActivity(intent)
-    }
-
-    fun openAllGamesActivity(
-        intentId: Int,
-        gameId: Long,
-        genre: String
-    ) {
-        val intent = Intent(this, AllGamesActivity::class.java).apply {
-            putExtra(Constants.ALL_INTENT_ID, intentId)
-            putExtra(Constants.GAME_ID_ARG, gameId)
-            putExtra(Constants.GAME_GENRES_ARG, genre)
-        }
-        startActivity(intent)
-    }
 }

@@ -42,6 +42,7 @@ class CreatorsAdapter :
                         .override(100, 100)
                         .into(image)
                 }
+                item.setOnClickListener { model.clickListener.onClick() }
             }
         }
     }

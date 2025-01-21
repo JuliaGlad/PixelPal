@@ -19,9 +19,12 @@ import myapplication.android.pixelpal.app.Constants.Companion.GAME_IMAGE_ARG
 import myapplication.android.pixelpal.app.Constants.Companion.GAME_NAME_ARG
 import myapplication.android.pixelpal.app.Constants.Companion.GAME_RELEASE_ARG
 import myapplication.android.pixelpal.databinding.FragmentGameDetailsBinding
+import myapplication.android.pixelpal.ui.creators.model.roles.RolesUi
+import myapplication.android.pixelpal.ui.creators.mvi.CreatorsEffect
 import myapplication.android.pixelpal.ui.delegates.delegates.creator_game_details.CreatorGameDetailsDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.creator_game_details.CreatorGameDetailsDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.creator_game_details.CreatorGameDetailsModel
+import myapplication.android.pixelpal.ui.delegates.delegates.creators.CreatorsDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.creators.CreatorsModel
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewDelegateItem
@@ -159,17 +162,37 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
             is GameDetailsEffect.OpenGameDetails -> {
                 TODO("Open another details screen")
             }
+
             is GameDetailsEffect.OpenAllSameSeries ->
                 with(effect) {
                     (activity as GameDetailsActivity).openAllGamesActivity(
                         Constants.SAME_SERIES_ID, gameId, genres!!
                     )
                 }
+
             is GameDetailsEffect.OpenAllAdditionsAndParentGames -> {
                 with(effect) {
                     (activity as GameDetailsActivity).openAllGamesActivity(
                         Constants.ADDITIONS_AND_PARENT_ID, gameId, genres!!
                     )
+                }
+            }
+
+            is GameDetailsEffect.OpenCreatorDetails -> {
+                with(effect){
+                    (activity as GameDetailsActivity).openCreatorDetailsActivity(
+                        creatorId,
+                        name,
+                        role,
+                        famousProjects,
+                        image
+                    )
+                }
+            }
+
+            is GameDetailsEffect.OpenAllCreators -> {
+                with(effect){
+                    (activity as GameDetailsActivity).openAllCreatorsActivity(gameId)
                 }
             }
         }
@@ -435,15 +458,23 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
     }
 
     private fun getCreatorModels(creators: CreatorsGameUiList): MutableList<CreatorsModel> {
+
         val newItems = mutableListOf<CreatorsModel>()
         creators.items.forEachIndexed { index, creatorUi ->
             with(creatorUi) {
                 newItems.add(
-                    CreatorsModel(index, id, name, famousProjects,
+                    CreatorsModel(index, creatorId, name, famousProjects,
                         role.stream().map { it.title }.collect(Collectors.toList()), image,
                         object : ClickListener {
                             override fun onClick() {
-                                TODO("Open creator details")
+                                store.sendEffect(
+                                    GameDetailsEffect.OpenCreatorDetails(
+                                        creatorId,
+                                        name,
+                                        role.toStringArray(),
+                                        famousProjects, image
+                                    )
+                                )
                             }
                         }
                     )
@@ -451,6 +482,38 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
             }
         }
         return newItems
+//        add(CreatorsDelegateItem(CreatorsModel(
+//            index,
+//            creatorId,
+//            name,
+//            famousProjects,
+//            roles,
+//            image,
+//            object : ClickListener {
+//                override fun onClick() {
+//                    val rolesArray = arrayOfNulls<String>(roles.size)
+//                    for ((roleIndex, i) in roles.withIndex()){
+//                        rolesArray[roleIndex] = i
+//                    }
+//                    store.sendEffect(
+//                        CreatorsEffect.OpenCreatorDetailsScreen(
+//                        creatorId,
+//                        name,
+//                        rolesArray,
+//                        famousProjects,
+//                        image
+//                    ))
+//                }
+//            }
+//        )))
+    }
+
+    private fun List<RolesUi>.toStringArray(): Array<String?> {
+        val array = arrayOfNulls<String>(size)
+        for (i in array.indices) {
+            array[i] = get(i).title
+        }
+        return array
     }
 
     private fun addCreators(creators: CreatorsGameUiList) {
@@ -464,7 +527,7 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
                     newItems,
                     object : ClickListener {
                         override fun onClick() {
-                            TODO("Open all screen")
+                            store.sendEffect(GameDetailsEffect.OpenAllCreators(gameId!!))
                         }
 
                     },
