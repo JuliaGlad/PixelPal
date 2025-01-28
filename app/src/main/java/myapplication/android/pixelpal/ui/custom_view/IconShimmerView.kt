@@ -37,7 +37,7 @@ class IconShimmerView @JvmOverloads constructor(
 
     private var icon: Drawable? = null
 
-    val shimmerIcon get() = icon!!
+    private val shimmerIcon get() = icon
 
     private val blur = BlurTransformation(10, 1)
 
@@ -83,7 +83,7 @@ class IconShimmerView @JvmOverloads constructor(
 
     private fun initShimmerImage() {
         shimmerImage = findViewById(R.id.shimmer_icon)
-        shimmerIcon.setTint(shimmerColor)
+        shimmerIcon?.setTint(shimmerColor)
         shimmerImage.setImageDrawable(shimmerIcon)
 
         Glide.with(this)

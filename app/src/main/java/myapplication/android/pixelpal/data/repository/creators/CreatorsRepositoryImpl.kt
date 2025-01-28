@@ -1,5 +1,7 @@
 package myapplication.android.pixelpal.data.repository.creators
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import myapplication.android.pixelpal.data.models.creators.CreatorDetails
 import myapplication.android.pixelpal.data.repository.getAndCheckData
 import myapplication.android.pixelpal.data.source.creators.CreatorsLocalSource
@@ -15,13 +17,17 @@ class CreatorsRepositoryImpl @Inject constructor(
     private val remoteSource: CreatorsRemoteSource
 ) : CreatorsRepository {
     override suspend fun getCreatorDetails(id: Long): CreatorDetailsDomain =
-        remoteSource.getCreatorDetails(id).toDomain()
+        withContext(Dispatchers.IO){
+            remoteSource.getCreatorDetails(id).toDomain()
+        }
 
     override suspend fun getGameCreators(
         gameId: String,
         page: Int
     ): CreatorDomainList =
-        remoteSource.getGameCreators(gameId, page).toDomain()
+        withContext(Dispatchers.IO){
+            remoteSource.getGameCreators(gameId, page).toDomain()
+        }
 
     override suspend fun getCreatorsRoles(): List<RoleDomain> =
         getAndCheckData(
@@ -35,7 +41,9 @@ class CreatorsRepositoryImpl @Inject constructor(
         val result =
             if (local != null) local
             else {
-                val remote = remoteSource.getCreators(page)
+                val remote = withContext(Dispatchers.IO){
+                    remoteSource.getCreators(page)
+                }
                 localSource.insertCreators(page,remote)
                 remote
             }.toDomain(roleId)

@@ -20,11 +20,9 @@ import myapplication.android.pixelpal.app.Constants.Companion.GAME_NAME_ARG
 import myapplication.android.pixelpal.app.Constants.Companion.GAME_RELEASE_ARG
 import myapplication.android.pixelpal.databinding.FragmentGameDetailsBinding
 import myapplication.android.pixelpal.ui.creators.model.roles.RolesUi
-import myapplication.android.pixelpal.ui.creators.mvi.CreatorsEffect
 import myapplication.android.pixelpal.ui.delegates.delegates.creator_game_details.CreatorGameDetailsDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.creator_game_details.CreatorGameDetailsDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.creator_game_details.CreatorGameDetailsModel
-import myapplication.android.pixelpal.ui.delegates.delegates.creators.CreatorsDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.creators.CreatorsModel
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewDelegateItem
@@ -52,6 +50,8 @@ import myapplication.android.pixelpal.ui.delegates.delegates.title_textview.Titl
 import myapplication.android.pixelpal.ui.delegates.delegates.title_textview.TitleTextViewModel
 import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
 import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
+import myapplication.android.pixelpal.ui.game_details.activity.GameDetailsActivity
+import myapplication.android.pixelpal.ui.game_details.activity.GameDetailsScreen
 import myapplication.android.pixelpal.ui.game_details.model.CreatorsGameUiList
 import myapplication.android.pixelpal.ui.game_details.model.ScreenshotsUiList
 import myapplication.android.pixelpal.ui.game_details.model.StoresSellingGameUiList
@@ -90,7 +90,7 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
 
     private var _binding: FragmentGameDetailsBinding? = null
     val binding get() = _binding!!
-
+    private var isFragment = false
     private val adapter = MainAdapter()
     private var gameId: Long? = null
     private var releaseDate: String? = null
@@ -160,7 +160,7 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
         when (effect) {
             GameDetailsEffect.NavigateBack -> activity?.finish()
             is GameDetailsEffect.OpenGameDetails -> {
-                TODO("Open another details screen")
+                (activity as GameDetailsActivity).presenter.navigateTo(GameDetailsScreen.gameDetails())
             }
 
             is GameDetailsEffect.OpenAllSameSeries ->

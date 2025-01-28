@@ -1,5 +1,5 @@
 package myapplication.android.pixelpal.ui.listener
 
-interface ClickListener {
+fun interface ClickListener {
     fun onClick()
 }

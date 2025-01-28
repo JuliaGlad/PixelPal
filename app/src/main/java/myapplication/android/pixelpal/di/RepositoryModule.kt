@@ -14,10 +14,16 @@ import myapplication.android.pixelpal.data.repository.publishers.PublishersRepos
 import myapplication.android.pixelpal.data.repository.publishers.PublishersRepositoryImpl
 import myapplication.android.pixelpal.data.repository.stores.StoresRepository
 import myapplication.android.pixelpal.data.repository.stores.StoresRepositoryImpl
+import myapplication.android.pixelpal.data.repository.user.UserRepository
+import myapplication.android.pixelpal.data.repository.user.UserRepositoryImpl
 import javax.inject.Singleton
 
 @Module
 interface RepositoryModule {
+
+    @Singleton
+    @Binds
+    fun bindUsersRepository(userRepositoryImpl: UserRepositoryImpl): UserRepository
 
     @Singleton
     @Binds

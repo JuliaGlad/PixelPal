@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.di.components
 
+import myapplication.android.pixelpal.di.components.fragment.CreateAccountComponent
 import android.content.Context
 import dagger.BindsInstance
 import dagger.Component
@@ -9,6 +10,7 @@ import myapplication.android.pixelpal.di.RemoteSourceModule
 import myapplication.android.pixelpal.di.RepositoryModule
 import myapplication.android.pixelpal.di.RetrofitModule
 import myapplication.android.pixelpal.di.components.activity.AllCreatorsActivityComponent
+import myapplication.android.pixelpal.di.components.activity.CreateAccountActivityComponent
 import myapplication.android.pixelpal.di.components.activity.CreatorDetailsActivityComponent
 import myapplication.android.pixelpal.di.components.activity.GameDetailsActivityComponent
 import myapplication.android.pixelpal.di.components.activity.MainActivityComponent
@@ -22,9 +24,11 @@ import myapplication.android.pixelpal.di.components.fragment.CreatorsComponent
 import myapplication.android.pixelpal.di.components.fragment.GameDetailsComponent
 import myapplication.android.pixelpal.di.components.fragment.GamesComponent
 import myapplication.android.pixelpal.di.components.fragment.HomeComponent
+import myapplication.android.pixelpal.di.components.fragment.LoginComponent
 import myapplication.android.pixelpal.di.components.fragment.MainGamesComponent
 import myapplication.android.pixelpal.di.components.fragment.PlatformComponent
 import myapplication.android.pixelpal.di.components.fragment.PlatformDetailsComponent
+import myapplication.android.pixelpal.di.components.fragment.ProfileMainComponent
 import myapplication.android.pixelpal.di.components.fragment.PublisherDetailsComponent
 import myapplication.android.pixelpal.di.components.fragment.StoreDetailsComponent
 import myapplication.android.pixelpal.di.components.fragment.StoresComponent
@@ -41,6 +45,10 @@ import javax.inject.Singleton
     ]
 )
 interface AppComponent {
+
+    fun profileMainComponent(): ProfileMainComponent.Factory
+
+    fun loginComponent(): LoginComponent.Factory
 
     fun allCreatorsComponent(): AllCreatorsComponent.Factory
 
@@ -82,6 +90,10 @@ interface AppComponent {
 
     fun platformDetailsActivityComponent(): PlatformDetailsActivityComponent.Factory
 
+    fun createAccountActivityComponent(): CreateAccountActivityComponent.Factory
+
+    fun createAccountComponent(): CreateAccountComponent.Factory
+
     @Component.Factory
     interface Factory {
         fun create(@BindsInstance context: Context): AppComponent
@@ -90,6 +102,10 @@ interface AppComponent {
 
 @Module(
     subcomponents = [
+        ProfileMainComponent::class,
+        CreateAccountComponent::class,
+        CreateAccountActivityComponent::class,
+        LoginComponent::class,
         AllCreatorsActivityComponent::class,
         AllCreatorsComponent::class,
         PublisherDetailsActivityComponent::class,

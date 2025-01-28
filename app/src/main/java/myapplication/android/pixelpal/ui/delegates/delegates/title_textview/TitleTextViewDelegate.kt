@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.ui.delegates.delegates.title_textview
 
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -31,6 +32,7 @@ class TitleTextViewDelegate : AdapterDelegate {
         RecyclerView.ViewHolder(binding.root) {
         fun bind(model: TitleTextViewModel) {
             with(binding) {
+                if (model.gravity != Gravity.START) title.gravity = model.gravity
                 title.setShimmerText(model.text)
             }
         }

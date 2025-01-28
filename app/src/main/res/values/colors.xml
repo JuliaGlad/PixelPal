@@ -10,4 +10,8 @@
     <color name="light_red">#FF7485</color>
     <color name="dark_blue">#0A364F</color>
     <color name="dark_red">#700438</color>
+    <color name="dark_background_red">#510124</color>
+    <color name="text_input_background_color">#261D44</color>
+    <color name="text_input_red_background_color">#560027</color>
+    <color name="hint_color">#459BBE</color>
 </resources>

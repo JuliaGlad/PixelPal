@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.kapt)
+    id("com.google.gms.google-services")
     kotlin("plugin.serialization") version "2.0.20"
     id("com.google.devtools.ksp")
 }
@@ -48,7 +49,13 @@ android {
 
 dependencies {
     implementation(libs.glide)
+    implementation(libs.firebase.storage)
+    implementation(libs.firebase.firestore)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.analytics)
     implementation(libs.gson)
+    implementation(libs.imagepicker)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.kotlinx.serialization.json)

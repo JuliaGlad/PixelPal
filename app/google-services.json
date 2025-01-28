@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "182124386511",
+    "project_id": "pixelpal-40938",
+    "storage_bucket": "pixelpal-40938.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182124386511:android:a597a0ea5f16ed2d1d7fba",
+        "android_client_info": {
+          "package_name": "myapplication.android.pixelpal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAI7jn8SZtXkD73lM7Fuymv0O-pXY6zqkE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

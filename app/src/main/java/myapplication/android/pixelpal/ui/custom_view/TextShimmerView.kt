@@ -32,6 +32,14 @@ class TextShimmerView @JvmOverloads constructor(
             requestLayout()
         }
 
+    var alignment: Int = View.TEXT_ALIGNMENT_CENTER
+        set(value) {
+            if (value != field){
+                field = value
+                requestLayout()
+            }
+        }
+
     var font: Typeface? = null
         set(value) {
             field = value
@@ -90,6 +98,12 @@ class TextShimmerView @JvmOverloads constructor(
         )
     }
 
+    fun setShimmerTextAlignment(textAlignment: Int){
+        mainTextView.textAlignment = textAlignment
+        shimmerTextView.textAlignment = textAlignment
+        alignment = textAlignment
+    }
+
     override fun onLayout(p0: Boolean, p1: Int, p2: Int, p3: Int, p4: Int) {
         onTextLayout(mainTextView)
         onTextLayout(shimmerTextView)
@@ -117,6 +131,7 @@ class TextShimmerView @JvmOverloads constructor(
     private fun TypedArray.initVariables() {
         val fontId = getResourceId(R.styleable.TextShimmerView_android_fontFamily, 0)
         gravity = getInt(R.styleable.TextShimmerView_android_gravity, Gravity.START)
+        alignment = getInt(R.styleable.TextShimmerView_android_textAlignment, TEXT_ALIGNMENT_VIEW_START)
         maxLineCount = getInt(R.styleable.TextShimmerView_android_maxLines, 0)
         font = ResourcesCompat.getFont(context, fontId)
         shimmerColor = getResourceId(R.styleable.TextShimmerView_textShimmerColor, 0)
@@ -130,6 +145,7 @@ class TextShimmerView @JvmOverloads constructor(
 
         shimmerTextView.text = text
         shimmerTextView.gravity = gravity
+        shimmerTextView.textAlignment = alignment
         shimmerTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
 
         with(shimmerTextView) {
@@ -150,6 +166,7 @@ class TextShimmerView @JvmOverloads constructor(
         mainTextView = findViewById(R.id.main_text)
         mainTextView.gravity = gravity
         mainTextView.text = text
+        mainTextView.textAlignment = alignment
         mainTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
 
         with(mainTextView) {

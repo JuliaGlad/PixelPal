@@ -2,6 +2,12 @@ package myapplication.android.pixelpal.app
 
 class Constants {
     companion object{
+        const val PASSWORD_ARG = "PasswordArg"
+        const val NAME_ARG = "NameArg"
+        const val USER_COLLECTION = "UserCollection"
+        const val USER_NAME = "UserName"
+        const val USER_EMAIL = "UserEmail"
+        const val USER_IMAGE = "UserImage"
         const val PUBLISHER_ID = "PublisherId"
         const val PUBLISHER_NAME = "PublisherName"
         const val PUBLISHER_GAME_COUNT = "PublisherGameCount"

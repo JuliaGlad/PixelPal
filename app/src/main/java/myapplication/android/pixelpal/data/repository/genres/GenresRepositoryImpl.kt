@@ -1,5 +1,7 @@
 package myapplication.android.pixelpal.data.repository.genres
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import myapplication.android.pixelpal.data.database.entities.GenreEntity
 import myapplication.android.pixelpal.data.models.genres.GenreDescription
 import myapplication.android.pixelpal.data.repository.getAndCheckData
@@ -34,7 +36,9 @@ class GenresRepositoryImpl @Inject constructor(
             }
             if (chosenGenre?.description != null) description = GenreDescription(chosenGenre.description!!)
         }
-        if (description == null) description = remoteSource.getGenresDescription(id)
+        if (description == null) description = withContext(Dispatchers.IO){
+            remoteSource.getGenresDescription(id)
+        }
         return description.toDomain()
     }
 

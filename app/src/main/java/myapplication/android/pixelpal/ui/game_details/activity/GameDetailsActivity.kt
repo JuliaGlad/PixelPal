@@ -1,12 +1,13 @@
-package myapplication.android.pixelpal.ui.game_details
+package myapplication.android.pixelpal.ui.game_details.activity
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.github.terrakok.cicerone.NavigatorHolder
+import com.github.terrakok.cicerone.androidx.AppNavigator
 import myapplication.android.pixelpal.R
+import myapplication.android.pixelpal.app.App.Companion.app
 import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.ui.all_creators.AllCreatorsActivity
@@ -15,6 +16,9 @@ import myapplication.android.pixelpal.ui.creator_details.CreatorDetailsActivity
 
 class GameDetailsActivity : AppCompatActivity() {
 
+    private val navigator = AppNavigator(this, R.id.game_details_container)
+    val presenter by lazy { GameDetailsPresenter(app.router) }
+    private val navigationHolder: NavigatorHolder by lazy { app.navigatorHolder }
     private val gameDetailsActivityComponent by lazy {
         appComponent.gameDetailsActivityComponent().create()
     }
@@ -24,7 +28,16 @@ class GameDetailsActivity : AppCompatActivity() {
         gameDetailsActivityComponent.inject(this)
         enableEdgeToEdge()
         setContentView(R.layout.activity_game_details)
+        if (savedInstanceState == null){
+            presenter.setupRootFragment(GameDetailsScreen.gameDetails())
+        }
     }
+
+    override fun onResumeFragments() {
+        super.onResumeFragments()
+        navigationHolder.setNavigator(navigator)
+    }
+
     fun openCreatorDetailsActivity(
         creatorId: Long,
         name: String,

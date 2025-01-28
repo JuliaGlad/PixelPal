@@ -1,5 +1,7 @@
 package myapplication.android.pixelpal.data.repository.platforms
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import myapplication.android.pixelpal.data.source.platform.PlatformLocalSource
 import myapplication.android.pixelpal.data.source.platform.PlatformRemoteSource
 import myapplication.android.pixelpal.domain.model.platform.PlatformDomainDetails
@@ -13,14 +15,18 @@ class PlatformsRepositoryImpl @Inject constructor(
 ) : PlatformsRepository {
 
     override suspend fun getPlatformDetails(id: Int): PlatformDomainDetails =
-        remoteSource.getPlatformDetails(id).toDomain()
+       withContext(Dispatchers.IO){
+           remoteSource.getPlatformDetails(id).toDomain()
+       }
 
     override suspend fun getPlatforms(page: Int): PlatformDomainList {
         val local = localSource.getPlatforms(page)
         val result =
             if (local != null) local
             else {
-                val remote = remoteSource.getPlatforms(page)
+                val remote = withContext(Dispatchers.IO){
+                    remoteSource.getPlatforms(page)
+                }
                 localSource.insertPlatforms(page, remote)
                 remote
             }.toDomain()

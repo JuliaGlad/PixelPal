@@ -15,6 +15,9 @@
     <string name="released">Вышла:</string>
     <string name="search">Поиск</string>
     <string name="roles">Роли:</string>
+    <string name="are_you_sure_you_want_to_log_out">Вы уверены, что хотите выйти из аккаунта?</string>
+    <string name="cancel">Отменить</string>
+    <string name="are_you_sure">Вы уверены</string>
     <string name="screenshot">Скриншоты</string>
     <string name="start_year">Год запуска:</string>
     <string name="end_year">Год закрытия:</string>
@@ -32,5 +35,24 @@
     <string name="there_is_no_games_releases_this_month">В этом месяце не будет новых релизов!</string>
     <string name="there_is_no_new_games_released_this_month">В этом месяце пока что не было релизов!</string>
     <string name="unknown">Неизвестно</string>
-    <string name="publishers">Publishers</string>
+    <string name="email">Почта:</string>
+    <string name="account_creation">Создание аккаунта</string>
+    <string name="password">Пароль:</string>
+    <string name="email_hint">Почта</string>
+    <string name="password_hint">Пароль</string>
+    <string name="name">Имя:</string>
+    <string name="name_hint">Имя</string>
+    <string name="next">Далее</string>
+    <string name="change_name">Обновить имя</string>
+    <string name="save">Сохранить</string>
+    <string name="publishers">Издательства</string>
+    <string name="are_you_sure_you_want_to_delete_your_account">Вы уверены, что хотите удалить ваш аккаунт?</string>
+    <string name="delete">Удалить</string>
+    <string name="create_account">Создать аккаунт</string>
+    <string name="welcome_to_pixel_pal">Добро пожаловать PixelPal!</string>
+    <string name="edit_profile">Редактировать</string>
+    <string name="favorites">Избранное</string>
+    <string name="log_out">Выйти</string>
+    <string name="delete_account">Удалить аккаунт</string>
+    <string name="empty_fields_or_incorrect_data">Ошибка: пустое поле или некорректная инфомация</string>
 </resources>

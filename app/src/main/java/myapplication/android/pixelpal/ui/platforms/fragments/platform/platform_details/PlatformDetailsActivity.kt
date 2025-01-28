@@ -9,7 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants
-import myapplication.android.pixelpal.ui.game_details.GameDetailsActivity
+import myapplication.android.pixelpal.ui.game_details.activity.GameDetailsActivity
 
 class PlatformDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

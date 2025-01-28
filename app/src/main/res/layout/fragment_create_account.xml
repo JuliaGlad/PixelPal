@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <myapplication.android.pixelpal.ui.custom_view.IconShimmerView
+        android:id="@+id/icon_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:shimmerColor="@color/main_blue"
+        app:iconColor="@color/main_blue"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:drawable="@drawable/ic_arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/icon_back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_next"
+        style="@style/Widget.Material3.Button.PixelPal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="@string/next"
+        android:layout_marginHorizontal="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+    <View
+        android:id="@+id/line_top"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@drawable/blue_line_gradient_horizontal"
+        app:layout_constraintEnd_toEndOf="@id/button_next"
+        app:layout_constraintStart_toStartOf="@id/button_next"
+        app:layout_constraintTop_toTopOf="@id/button_next" />
+
+    <View
+        android:id="@+id/line_bottom"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/blue_line_gradient_horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/button_next"
+        app:layout_constraintEnd_toEndOf="@id/button_next"
+        app:layout_constraintStart_toStartOf="@id/button_next" />
+
+
+    <include layout="@layout/button_loading"
+        android:id="@+id/next_loading"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="20dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@id/button_next"
+        app:layout_constraintEnd_toEndOf="@id/button_next"
+        app:layout_constraintTop_toBottomOf="@id/line_top"
+        app:layout_constraintBottom_toTopOf="@id/line_bottom"/>
+
+    <include android:id="@+id/loading"
+        layout="@layout/loading_screen"
+        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/recycler_view"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,8 @@
 package myapplication.android.pixelpal.data.repository.games
 
 import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import myapplication.android.pixelpal.data.models.game_description.GameDescription
 import myapplication.android.pixelpal.data.repository.getAndCheckData
 import myapplication.android.pixelpal.data.source.games.GamesLocalSource
@@ -22,29 +24,40 @@ class GamesRepositoryImpl @Inject constructor(
 
     override suspend fun getGameScreenshots(
         gameId: String
-    ): ScreenShotDomainList = remoteSourceGames.getGameScreenshots(gameId).toDomain()
+    ): ScreenShotDomainList =
+        withContext(Dispatchers.IO) { remoteSourceGames.getGameScreenshots(gameId).toDomain() }
 
     override suspend fun getGamesFromTheSameSeries(
         gameId: String,
         page: Int
-    ): GamesShortDomainList = remoteSourceGames.getGamesFromTheSameSeries(gameId, page).toDomain()
+    ): GamesShortDomainList =
+        withContext(Dispatchers.IO) {
+            remoteSourceGames.getGamesFromTheSameSeries(gameId, page).toDomain()
+        }
 
     override suspend fun getGameAddition(
         gameId: String,
         page: Int
-    ): GamesShortDomainList = remoteSourceGames.getGameAddition(gameId, page).toDomain()
+    ): GamesShortDomainList =
+        withContext(Dispatchers.IO) {
+            remoteSourceGames.getGameAddition(gameId, page).toDomain()
+        }
 
     override suspend fun getParentGames(
         gameId: String,
         page: Int
-    ): GamesShortDomainList = remoteSourceGames.getParentGames(gameId, page).toDomain()
+    ): GamesShortDomainList = withContext(Dispatchers.IO) {
+        remoteSourceGames.getParentGames(gameId, page).toDomain()
+    }
 
     override suspend fun getGamesShortData(page: Int, genres: Long): GamesShortDomainList {
         val local = localSourceShortGames.getGamesShortData(page, genres)
         val result =
             if (local != null) local
             else {
-                val remote = remoteSourceGames.getGamesShortData(page, genres)
+                val remote = withContext(Dispatchers.IO) {
+                   remoteSourceGames.getGamesShortData(page, genres)
+                }
                 localSourceShortGames.insertGamesShortData(page, remote, genres)
                 remote
             }.toDomain()
@@ -56,7 +69,9 @@ class GamesRepositoryImpl @Inject constructor(
         val result =
             if (local != null) local
             else {
-                val remote = remoteSourceGames.getTopGames(page)
+                val remote = withContext(Dispatchers.IO){
+                    remoteSourceGames.getTopGames(page)
+                }
                 localSourceGames.insertTopGames(remote, page)
                 remote
             }
@@ -67,7 +82,9 @@ class GamesRepositoryImpl @Inject constructor(
         val local = localSourceGames.getGameNewReleases(dates, page)
         return if (local != null) local
         else {
-            val remote = remoteSourceGames.getGameByReleasesDate(dates, page)
+            val remote = withContext(Dispatchers.IO){
+                remoteSourceGames.getGameByReleasesDate(dates, page)
+            }
             localSourceGames.insertGameReleases(remote, page)
             remote
         }.toDomain()
@@ -77,25 +94,37 @@ class GamesRepositoryImpl @Inject constructor(
         val local = localSourceGames.getGameMonthReleases(dates, page)
         return if (local != null) local
         else {
-            val remote = remoteSourceGames.getGameByReleasesDate(dates, page)
+            val remote = withContext(Dispatchers.IO){
+                remoteSourceGames.getGameByReleasesDate(dates, page)
+            }
             localSourceGames.insertGameReleases(remote, page)
             remote
         }.toDomain()
     }
 
     override suspend fun getGameByPlatform(platformId: Int, page: Int): GamesNewsListDomain =
-        remoteSourceGames.getGameByPlatform(platformId, page).toDomain()
+        withContext(Dispatchers.IO) {
+            remoteSourceGames.getGameByPlatform(platformId, page).toDomain()
+        }
 
     override suspend fun getGameByStore(storeId: Int, page: Int): GamesNewsListDomain =
-        remoteSourceGames.getGameByStore(storeId, page).toDomain()
+        withContext(Dispatchers.IO){
+            remoteSourceGames.getGameByStore(storeId, page).toDomain()
+        }
 
     override suspend fun getGameByPublisher(publisherId: Long, page: Int): GamesNewsListDomain =
-        remoteSourceGames.getGameByPublisher(publisherId, page).toDomain()
+       withContext(Dispatchers.IO) {
+           remoteSourceGames.getGameByPublisher(publisherId, page).toDomain()
+       }
 
     override suspend fun getGameByCreator(creatorId: Long, page: Int): GamesNewsListDomain =
-        remoteSourceGames.getGameByCreator(creatorId, page).toDomain()
+        withContext(Dispatchers.IO){
+            remoteSourceGames.getGameByCreator(creatorId, page).toDomain()
+        }
 
     override suspend fun getGameDescription(gameId: Long): GameDescriptionDomain =
-        remoteSourceGames.getGameDescription(gameId).toDomain()
+       withContext(Dispatchers.IO){
+           remoteSourceGames.getGameDescription(gameId).toDomain()
+       }
 
 }

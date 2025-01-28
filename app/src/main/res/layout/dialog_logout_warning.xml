@@ -1,0 +1,92 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="24dp"
+    android:background="@color/dark_red"
+    android:padding="8dp">
+
+    <myapplication.android.pixelpal.ui.custom_view.IconShimmerView
+        android:id="@+id/icon_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/ic_log_out"
+        app:iconColor="@color/light_red"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shimmerColor="@color/light_red" />
+
+    <myapplication.android.pixelpal.ui.custom_view.TextShimmerView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/tektur_bold"
+        android:text="@string/are_you_sure"
+        android:textColor="@color/light_red"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/icon_logout"
+        app:textShimmerColor="@color/light_red" />
+
+    <myapplication.android.pixelpal.ui.custom_view.TextShimmerView
+        android:id="@+id/text_main"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:fontFamily="@font/tektur_regular"
+        android:text="@string/are_you_sure_you_want_to_log_out"
+        android:textColor="@color/light_red"
+        android:textSize="14sp"
+        android:layout_marginHorizontal="8dp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:textShimmerColor="@color/light_red" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:background="@color/transparent"
+        android:fontFamily="@font/tektur_bold"
+        android:text="@string/log_out"
+        android:textColor="@color/main_blue"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_main" />
+
+    <ProgressBar
+        android:id="@+id/loader"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/transparent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/button_logout"
+        app:layout_constraintEnd_toEndOf="@id/button_logout"
+        app:layout_constraintStart_toStartOf="@id/button_logout"
+        app:layout_constraintTop_toTopOf="@+id/button_logout" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:fontFamily="@font/tektur_medium"
+        android:text="@string/cancel"
+        android:textColor="@color/main_blue"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/button_logout"
+        app:layout_constraintEnd_toStartOf="@+id/button_logout"
+        app:layout_constraintTop_toTopOf="@+id/button_logout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

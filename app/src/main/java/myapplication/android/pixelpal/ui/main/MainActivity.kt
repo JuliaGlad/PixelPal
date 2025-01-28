@@ -2,6 +2,7 @@ package myapplication.android.pixelpal.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.Screen
@@ -13,7 +14,7 @@ import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.ActivityMainBinding
 import myapplication.android.pixelpal.ui.all_games.AllGamesActivity
 import myapplication.android.pixelpal.ui.creator_details.CreatorDetailsActivity
-import myapplication.android.pixelpal.ui.game_details.GameDetailsActivity
+import myapplication.android.pixelpal.ui.game_details.activity.GameDetailsActivity
 import myapplication.android.pixelpal.ui.main.BottomScreen.creators
 import myapplication.android.pixelpal.ui.main.BottomScreen.games
 import myapplication.android.pixelpal.ui.main.BottomScreen.home
@@ -21,6 +22,7 @@ import myapplication.android.pixelpal.ui.main.BottomScreen.platforms
 import myapplication.android.pixelpal.ui.main.BottomScreen.profile
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.platform_details.PlatformDetailsActivity
 import myapplication.android.pixelpal.ui.platforms.fragments.store.store_details.StoreDetailsActivity
+import myapplication.android.pixelpal.ui.profile.signing.AccountCreationActivity
 import myapplication.android.pixelpal.ui.publisher_details.PublisherDetailsActivity
 
 
@@ -29,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
     private val navigator = AppNavigator(this, R.id.main_container)
-    private val presenter: MainPresenter by lazy {
+    val presenter: MainPresenter by lazy {
         MainPresenter(
             app.router
         )
@@ -46,6 +48,8 @@ class MainActivity : AppCompatActivity() {
             presenter.setupRootFragment(home())
         }
     }
+
+
 
     private fun initBottomBar() {
         binding.bottomNav.itemIconTintList = null
@@ -71,6 +75,11 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         navigationHolder.removeNavigator()
         super.onPause()
+    }
+
+    fun launchCreateAccountActivity(launch: ActivityResultLauncher<Intent>){
+        val intent = Intent(this, AccountCreationActivity::class.java)
+        launch.launch(intent)
     }
 
     fun openAllTopGamesActivity(

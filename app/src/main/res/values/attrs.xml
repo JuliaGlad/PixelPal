@@ -11,6 +11,7 @@
         <attr name="textShimmerColor" format="color"/>
         <attr name="android:textColor"/>
         <attr name="android:text"/>
+        <attr name="android:textAlignment"/>
         <attr name="android:fontFamily"/>
         <attr name="android:textSize"/>
         <attr name="android:gravity"/>
