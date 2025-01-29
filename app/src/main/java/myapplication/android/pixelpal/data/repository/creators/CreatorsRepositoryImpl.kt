@@ -2,41 +2,40 @@ package myapplication.android.pixelpal.data.repository.creators
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import myapplication.android.pixelpal.data.models.creators.CreatorDetails
+import myapplication.android.pixelpal.data.repository.dto.creators.CreatorDetailsDto
+import myapplication.android.pixelpal.data.repository.dto.creators.CreatorRoleDto
+import myapplication.android.pixelpal.data.repository.dto.creators.CreatorsDtoList
 import myapplication.android.pixelpal.data.repository.getAndCheckData
+import myapplication.android.pixelpal.data.repository.mapper.creator.toDto
 import myapplication.android.pixelpal.data.source.creators.CreatorsLocalSource
 import myapplication.android.pixelpal.data.source.creators.CreatorsRemoteSource
-import myapplication.android.pixelpal.domain.model.creator.CreatorDetailsDomain
-import myapplication.android.pixelpal.domain.model.creator.CreatorDomainList
-import myapplication.android.pixelpal.domain.model.creator.RoleDomain
-import myapplication.android.pixelpal.domain.wrapper.creators.toDomain
 import javax.inject.Inject
 
 class CreatorsRepositoryImpl @Inject constructor(
     private val localSource: CreatorsLocalSource,
     private val remoteSource: CreatorsRemoteSource
 ) : CreatorsRepository {
-    override suspend fun getCreatorDetails(id: Long): CreatorDetailsDomain =
+    override suspend fun getCreatorDetails(id: Long): CreatorDetailsDto =
         withContext(Dispatchers.IO){
-            remoteSource.getCreatorDetails(id).toDomain()
+            remoteSource.getCreatorDetails(id).toDto()
         }
 
     override suspend fun getGameCreators(
         gameId: String,
         page: Int
-    ): CreatorDomainList =
+    ): CreatorsDtoList =
         withContext(Dispatchers.IO){
-            remoteSource.getGameCreators(gameId, page).toDomain()
+            remoteSource.getGameCreators(gameId, page).toDto()
         }
 
-    override suspend fun getCreatorsRoles(): List<RoleDomain> =
+    override suspend fun getCreatorsRoles(): List<CreatorRoleDto> =
         getAndCheckData(
             localSource::getCreatorsRoles,
             remoteSource::getCreatorsRoles,
             localSource::insertCreatorsRoles
-        ).toDomain()
+        ).toDto()
 
-    override suspend fun getCreators(page: Int, roleId: Int): CreatorDomainList {
+    override suspend fun getCreators(page: Int, roleId: Int): CreatorsDtoList {
         val local = localSource.getCreators(page, roleId)
         val result =
             if (local != null) local
@@ -46,7 +45,7 @@ class CreatorsRepositoryImpl @Inject constructor(
                 }
                 localSource.insertCreators(page,remote)
                 remote
-            }.toDomain(roleId)
+            }.toDto()
         return result
     }
 }

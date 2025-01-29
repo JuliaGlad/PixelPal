@@ -1,12 +1,11 @@
 package myapplication.android.pixelpal.data.repository.platforms
 
-import myapplication.android.pixelpal.data.models.platforms.PlatformDetails
-import myapplication.android.pixelpal.domain.model.platform.PlatformDomainDetails
-import myapplication.android.pixelpal.domain.model.platform.PlatformDomainList
+import myapplication.android.pixelpal.data.repository.dto.platforms.PlatformDtoDetails
+import myapplication.android.pixelpal.data.repository.dto.platforms.PlatformDtoList
 
 interface PlatformsRepository {
 
-    suspend fun getPlatformDetails(id: Int): PlatformDomainDetails
+    suspend fun getPlatformDetails(id: Int): PlatformDtoDetails
 
-    suspend fun getPlatforms(page: Int): PlatformDomainList
+    suspend fun getPlatforms(page: Int): PlatformDtoList
 }

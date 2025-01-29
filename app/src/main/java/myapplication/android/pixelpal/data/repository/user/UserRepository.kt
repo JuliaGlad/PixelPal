@@ -1,10 +1,11 @@
 package myapplication.android.pixelpal.data.repository.user
 
 import android.net.Uri
+import myapplication.android.pixelpal.data.repository.dto.user.UserDataDto
 
 interface UserRepository {
 
-    suspend fun getUserData(): UserDataModel
+    suspend fun getUserData(): UserDataDto
 
     suspend fun createAccount(email: String, password: String, name: String, image: Uri?)
 

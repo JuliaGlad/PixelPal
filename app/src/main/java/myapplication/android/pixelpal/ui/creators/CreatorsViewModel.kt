@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.ui.creators
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -11,6 +12,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import myapplication.android.pixelpal.data.repository.creators.CreatorsRepository
+import myapplication.android.pixelpal.domain.mapper.creators.toDomain
+import myapplication.android.pixelpal.domain.usecase.creators.GetCreatorsRolesUseCase
 import myapplication.android.pixelpal.ui.creators.model.roles.RolesUi
 import myapplication.android.pixelpal.ui.creators.model.roles.toUi
 import java.util.stream.Collectors
@@ -43,11 +46,10 @@ class CreatorsViewModel  @AssistedInject constructor(
     private fun getRoles() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val roles =
-                    creatorsRepository.getCreatorsRoles()
-                        .stream()
-                        .map { it.toUi() }
-                        .collect(Collectors.toList())
+                val roles = GetCreatorsRolesUseCase(creatorsRepository).invoke()
+                    .stream()
+                    .map { it.toUi() }
+                    .collect(Collectors.toList())
                 _roles.emit(roles)
             }
         }

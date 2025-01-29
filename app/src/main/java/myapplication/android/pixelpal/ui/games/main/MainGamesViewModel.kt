@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import myapplication.android.pixelpal.data.repository.genres.GenresRepository
+import myapplication.android.pixelpal.domain.mapper.genres.toDomain
 import myapplication.android.pixelpal.ui.games.model.GenreUiDescription
 import myapplication.android.pixelpal.ui.games.model.toUi
 
@@ -37,7 +38,7 @@ class MainGamesViewModel @AssistedInject constructor(
     fun getGenreDescription(id: Long) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val descriptionDomain = genresRepository.getGenresDescription(id)
+                val descriptionDomain = genresRepository.getGenresDescription(id).toDomain()
                 _genres.emit(descriptionDomain.toUi())
             }
         }

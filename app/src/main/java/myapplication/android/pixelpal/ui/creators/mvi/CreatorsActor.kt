@@ -29,7 +29,15 @@ class CreatorsActor(
             is CreatorsIntent.GetRolesCreators -> loadCreators(state.page + 1, intent.roleId)
             CreatorsIntent.Init -> init()
             CreatorsIntent.GetPublishers -> loadPublishers(state.page + 1)
+            is CreatorsIntent.Search -> TODO()
         }
+
+//    private fun searchCreators(query: String) =
+//        flow {
+//            kotlin.runCatching {
+//
+//            }
+//        }
 
     private fun loadPublishers(page: Int): Flow<CreatorsPartialState> =
         flow {

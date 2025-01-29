@@ -1,37 +1,34 @@
 package myapplication.android.pixelpal.data.repository.games
 
-import myapplication.android.pixelpal.data.models.game_description.GameDescription
-import myapplication.android.pixelpal.data.models.gamesMain.GamesShortDataList
-import myapplication.android.pixelpal.data.models.screenshots.ScreenshotsList
-import myapplication.android.pixelpal.domain.model.games.GameDescriptionDomain
-import myapplication.android.pixelpal.domain.model.games.GamesNewsListDomain
-import myapplication.android.pixelpal.domain.model.games.GamesShortDomainList
-import myapplication.android.pixelpal.domain.model.screenshot.ScreenShotDomainList
+import myapplication.android.pixelpal.data.repository.dto.game.GameDescriptionDto
+import myapplication.android.pixelpal.data.repository.dto.game.GameNewsDtoList
+import myapplication.android.pixelpal.data.repository.dto.game.GamesShortDtoList
+import myapplication.android.pixelpal.data.repository.dto.game.ScreenshotDtoList
 
 interface GamesRepository {
-    suspend fun getGameByPlatform(platformId: Int, page: Int): GamesNewsListDomain
+    suspend fun getGameByPlatform(platformId: Int, page: Int): GameNewsDtoList
 
-    suspend fun getGameByStore(storeId: Int, page: Int): GamesNewsListDomain
+    suspend fun getGameByStore(storeId: Int, page: Int): GameNewsDtoList
 
-    suspend fun getGameByPublisher(publisherId: Long, page: Int): GamesNewsListDomain
+    suspend fun getGameByPublisher(publisherId: Long, page: Int): GameNewsDtoList
 
-    suspend fun getGameByCreator(creatorId: Long, page: Int): GamesNewsListDomain
+    suspend fun getGameByCreator(creatorId: Long, page: Int): GameNewsDtoList
 
-    suspend fun getGameDescription(gameId: Long): GameDescriptionDomain
+    suspend fun getGameDescription(gameId: Long): GameDescriptionDto
 
-    suspend fun getGameScreenshots(gameId: String): ScreenShotDomainList
+    suspend fun getGameScreenshots(gameId: String): ScreenshotDtoList
 
-    suspend fun getGamesFromTheSameSeries(gameId: String, page: Int): GamesShortDomainList
+    suspend fun getGamesFromTheSameSeries(gameId: String, page: Int): GamesShortDtoList
 
-    suspend fun getGameAddition(gameId: String, page: Int): GamesShortDomainList
+    suspend fun getGameAddition(gameId: String, page: Int): GamesShortDtoList
 
-    suspend fun getParentGames(gameId: String, page: Int): GamesShortDomainList
+    suspend fun getParentGames(gameId: String, page: Int): GamesShortDtoList
 
-    suspend fun getGamesShortData(page: Int, genres: Long) : GamesShortDomainList
+    suspend fun getGamesShortData(page: Int, genres: Long) : GamesShortDtoList
 
-    suspend fun getTopGames(page: Int): GamesNewsListDomain
+    suspend fun getTopGames(page: Int): GameNewsDtoList
 
-    suspend fun getGameNewReleases(dates: String, page: Int): GamesNewsListDomain
+    suspend fun getGameNewReleases(dates: String, page: Int): GameNewsDtoList
 
-    suspend fun getGameMonthReleases(dates: String, page: Int): GamesNewsListDomain
+    suspend fun getGameMonthReleases(dates: String, page: Int): GameNewsDtoList
 }

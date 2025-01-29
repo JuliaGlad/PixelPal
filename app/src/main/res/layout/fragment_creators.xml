@@ -45,7 +45,7 @@
         android:fontFamily="@font/tektur_medium"
         android:padding="20dp"
         android:textColor="@color/main_blue"
-        android:textSize="24sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@id/search_item"
         app:layout_constraintTop_toTopOf="@id/background"
         app:textShimmerColor="@color/main_blue"

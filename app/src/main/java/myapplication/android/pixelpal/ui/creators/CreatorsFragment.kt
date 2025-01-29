@@ -136,7 +136,7 @@ class CreatorsFragment :
                 if (!needUpdate) {
                     initRecycler(state.ui.data)
                 } else {
-                    Log.i("Ui data", state.ui.data.toString())
+                    binding.loadingRecycler.root.visibility = GONE
                     updateRecycler(state.ui.data)
                 }
                 binding.loadingRecycler.root.visibility = GONE
@@ -309,23 +309,22 @@ class CreatorsFragment :
             name,
             famousProjects,
             roles,
-            image,
-            object : ClickListener {
-                override fun onClick() {
-                    val rolesArray = arrayOfNulls<String>(roles.size)
-                    for ((roleIndex, i) in roles.withIndex()){
-                        rolesArray[roleIndex] = i
-                    }
-                    store.sendEffect(CreatorsEffect.OpenCreatorDetailsScreen(
-                        creatorId,
-                        name,
-                        rolesArray,
-                        famousProjects,
-                        image
-                    ))
-                }
+            image
+        ) {
+            val rolesArray = arrayOfNulls<String>(roles.size)
+            for ((roleIndex, i) in roles.withIndex()) {
+                rolesArray[roleIndex] = i
             }
-        )))
+            store.sendEffect(
+                CreatorsEffect.OpenCreatorDetailsScreen(
+                    creatorId,
+                    name,
+                    rolesArray,
+                    famousProjects,
+                    image
+                )
+            )
+        }))
     }
 
     private fun MutableList<DelegateItem>.addPublisherItem(
@@ -340,18 +339,17 @@ class CreatorsFragment :
             creatorId,
             name,
             famousProjects,
-            image,
-            object : ClickListener {
-                override fun onClick() {
-                    store.sendEffect(CreatorsEffect.OpenPublisherDetailsScreen(
-                        creatorId,
-                        name,
-                        famousProjects,
-                        image
-                    ))
-                }
-            }
-        )))
+            image
+        ) {
+            store.sendEffect(
+                CreatorsEffect.OpenPublisherDetailsScreen(
+                    creatorId,
+                    name,
+                    famousProjects,
+                    image
+                )
+            )
+        }))
     }
 
     private fun FlexBoxLayout.addCreators(title: String, id: Int) {
@@ -393,6 +391,7 @@ class CreatorsFragment :
             }
         }
         store.sendIntent(CreatorsIntent.Init)
+      //  binding.loadingRecycler.root.visibility = VISIBLE
         items.clear()
         binding.recyclerView.post {
             adapter.notifyDataSetChanged()

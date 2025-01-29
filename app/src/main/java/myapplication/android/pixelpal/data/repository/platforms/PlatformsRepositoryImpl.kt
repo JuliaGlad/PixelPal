@@ -2,11 +2,11 @@ package myapplication.android.pixelpal.data.repository.platforms
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import myapplication.android.pixelpal.data.repository.dto.platforms.PlatformDtoDetails
+import myapplication.android.pixelpal.data.repository.dto.platforms.PlatformDtoList
+import myapplication.android.pixelpal.data.repository.mapper.platform.toDto
 import myapplication.android.pixelpal.data.source.platform.PlatformLocalSource
 import myapplication.android.pixelpal.data.source.platform.PlatformRemoteSource
-import myapplication.android.pixelpal.domain.model.platform.PlatformDomainDetails
-import myapplication.android.pixelpal.domain.model.platform.PlatformDomainList
-import myapplication.android.pixelpal.domain.wrapper.platforms.toDomain
 import javax.inject.Inject
 
 class PlatformsRepositoryImpl @Inject constructor(
@@ -14,12 +14,12 @@ class PlatformsRepositoryImpl @Inject constructor(
     private val remoteSource: PlatformRemoteSource
 ) : PlatformsRepository {
 
-    override suspend fun getPlatformDetails(id: Int): PlatformDomainDetails =
+    override suspend fun getPlatformDetails(id: Int): PlatformDtoDetails =
        withContext(Dispatchers.IO){
-           remoteSource.getPlatformDetails(id).toDomain()
+           remoteSource.getPlatformDetails(id).toDto()
        }
 
-    override suspend fun getPlatforms(page: Int): PlatformDomainList {
+    override suspend fun getPlatforms(page: Int): PlatformDtoList {
         val local = localSource.getPlatforms(page)
         val result =
             if (local != null) local
@@ -29,8 +29,8 @@ class PlatformsRepositoryImpl @Inject constructor(
                 }
                 localSource.insertPlatforms(page, remote)
                 remote
-            }.toDomain()
-        return result
+            }
+        return result.toDto()
     }
 
 }

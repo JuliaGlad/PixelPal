@@ -1,18 +1,16 @@
 package myapplication.android.pixelpal.data.repository.creators
 
-import myapplication.android.pixelpal.data.models.creators.CreatorDetails
-import myapplication.android.pixelpal.domain.model.creator.CreatorDetailsDomain
-import myapplication.android.pixelpal.domain.model.creator.CreatorDomainList
-import myapplication.android.pixelpal.domain.model.creator.RoleDomain
-import myapplication.android.pixelpal.ui.game_details.model.CreatorsGameUiList
+import myapplication.android.pixelpal.data.repository.dto.creators.CreatorDetailsDto
+import myapplication.android.pixelpal.data.repository.dto.creators.CreatorRoleDto
+import myapplication.android.pixelpal.data.repository.dto.creators.CreatorsDtoList
 
 interface CreatorsRepository {
 
-    suspend fun getCreatorDetails(id: Long): CreatorDetailsDomain
+    suspend fun getCreatorDetails(id: Long): CreatorDetailsDto
 
-    suspend fun getGameCreators(gameId: String,  page: Int): CreatorDomainList
+    suspend fun getGameCreators(gameId: String,  page: Int): CreatorsDtoList
 
-    suspend fun getCreatorsRoles(): List<RoleDomain>
+    suspend fun getCreatorsRoles(): List<CreatorRoleDto>
 
-    suspend fun getCreators(page: Int, roleId: Int): CreatorDomainList
+    suspend fun getCreators(page: Int, roleId: Int): CreatorsDtoList
 }

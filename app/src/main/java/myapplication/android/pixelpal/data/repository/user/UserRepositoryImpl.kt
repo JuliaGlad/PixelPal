@@ -1,17 +1,17 @@
 package myapplication.android.pixelpal.data.repository.user
 
 import android.net.Uri
-import com.google.api.AuthProvider
 import com.google.firebase.auth.EmailAuthProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import myapplication.android.pixelpal.app.Constants
+import myapplication.android.pixelpal.data.repository.dto.user.UserDataDto
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor() : UserRepository {
 
-    override suspend fun getUserData(): UserDataModel =
+    override suspend fun getUserData(): UserDataDto =
         withContext(Dispatchers.IO){
             val uid = FirebaseService.auth.currentUser!!.uid
             val result = FirebaseService.fireStore
@@ -20,7 +20,7 @@ class UserRepositoryImpl @Inject constructor() : UserRepository {
                 .get()
                 .await()
 
-            UserDataModel(
+            UserDataDto(
                 uid,
                 result.getString(Constants.USER_NAME),
                 result.getString(Constants.USER_EMAIL)

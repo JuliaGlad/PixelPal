@@ -2,23 +2,23 @@ package myapplication.android.pixelpal.data.repository.publishers
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import myapplication.android.pixelpal.data.repository.dto.publisher.PublisherDetailsDto
+import myapplication.android.pixelpal.data.repository.dto.publisher.PublisherDtoList
+import myapplication.android.pixelpal.data.repository.mapper.publisher.toDto
 import myapplication.android.pixelpal.data.source.pulisher.PublisherLocalSource
 import myapplication.android.pixelpal.data.source.pulisher.PublisherRemoteSource
-import myapplication.android.pixelpal.domain.model.publishers.PublisherDomainDetails
-import myapplication.android.pixelpal.domain.model.publishers.PublisherDomainList
-import myapplication.android.pixelpal.domain.wrapper.publishers.toDomain
 import javax.inject.Inject
 
 class PublishersRepositoryImpl @Inject constructor(
     private val localSource: PublisherLocalSource,
     private val remoteSource: PublisherRemoteSource
 ) : PublishersRepository {
-    override suspend fun getPublisherDetails(id: Long): PublisherDomainDetails =
+    override suspend fun getPublisherDetails(id: Long): PublisherDetailsDto =
         withContext(Dispatchers.IO) {
-            remoteSource.getPublisherDetails(id).toDomain()
+            remoteSource.getPublisherDetails(id).toDto()
         }
 
-    override suspend fun getPublishers(page: Int): PublisherDomainList {
+    override suspend fun getPublishers(page: Int): PublisherDtoList {
         val local = localSource.getPublishers(page)
         val result =
             if (local != null) local
@@ -28,8 +28,8 @@ class PublishersRepositoryImpl @Inject constructor(
                 }
                 localSource.insertPublishers(page, remote)
                 remote
-            }.toDomain()
-        return result
+            }
+        return result.toDto()
     }
 
 }

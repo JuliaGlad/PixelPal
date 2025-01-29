@@ -31,11 +31,9 @@ class DeleteAccountDialog : DialogFragment() {
                 dismiss()
             }
         }
-
         binding.buttonCancel.setOnClickListener {
             dismiss()
         }
-
         return builder.setView(binding.root).create()
     }
 

@@ -1,14 +1,12 @@
 package myapplication.android.pixelpal.data.repository.genres
 
-import myapplication.android.pixelpal.data.models.genres.GenreDescription
-import myapplication.android.pixelpal.data.models.genres.GenresList
-import myapplication.android.pixelpal.domain.model.genres.GenreDescriptionDomain
-import myapplication.android.pixelpal.domain.model.genres.GenreDomainList
+import myapplication.android.pixelpal.data.repository.dto.genre.GenreDescriptionDto
+import myapplication.android.pixelpal.data.repository.dto.genre.GenreDtoList
 
 interface GenresRepository {
 
-    suspend fun getGenres(): GenreDomainList
+    suspend fun getGenres(): GenreDtoList
 
-    suspend fun getGenresDescription(id: Long): GenreDescriptionDomain
+    suspend fun getGenresDescription(id: Long): GenreDescriptionDto
 
 }
