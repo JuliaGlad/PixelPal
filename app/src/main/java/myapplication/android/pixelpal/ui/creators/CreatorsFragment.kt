@@ -41,7 +41,6 @@ import myapplication.android.pixelpal.ui.delegates.delegates.publishers.Publishe
 import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
 import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
 import myapplication.android.pixelpal.ui.listener.ClickIntegerListener
-import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.listener.GridPaginationScrollListener
 import myapplication.android.pixelpal.ui.main.MainActivity
 import myapplication.android.pixelpal.ui.mvi.LceState
@@ -176,6 +175,12 @@ class CreatorsFragment :
         binding.recyclerView.post {
             adapter.notifyItemRangeInserted(startPosition, publishers.size)
         }
+        if (items.size <= 4) {
+            store.sendIntent(CreatorsIntent.GetPublishers)
+            loading = true
+            lastPage = true
+            needUpdate = true
+        }
     }
 
     private fun updateCreatorsRecycler(startPosition: Int, creators: List<CreatorUi>) {
@@ -197,7 +202,12 @@ class CreatorsFragment :
         binding.recyclerView.post {
             adapter.notifyItemRangeInserted(startPosition, creators.size)
         }
-
+        if (items.size <= 4) {
+            store.sendIntent(CreatorsIntent.GetRolesCreators(chosenRole))
+            loading = true
+            lastPage = true
+            needUpdate = true
+        }
     }
 
     private fun initAdapter() {
@@ -246,11 +256,7 @@ class CreatorsFragment :
                     loading = true
                     lastPage = true
                     needUpdate = true
-                    if (chosenRole != PUBLISHER_ID) {
-                        store.sendIntent(CreatorsIntent.GetRolesCreators(chosenRole))
-                    } else {
-                        store.sendIntent(CreatorsIntent.GetPublishers)
-                    }
+                    sendGetMoreIntent()
                 }
             }
         })
@@ -272,6 +278,12 @@ class CreatorsFragment :
         adapter.submitList(publishersModel)
         if (isFirst) isFirst = false
         else adapter.onCurrentListChanged(adapter.currentList, publishersModel)
+        if (items.size <= 4){
+            store.sendIntent(CreatorsIntent.GetPublishers)
+            loading = true
+            lastPage = true
+            needUpdate = true
+        }
     }
 
     private fun initCreatorsRecycler(creators: List<CreatorUi>) {
@@ -293,6 +305,12 @@ class CreatorsFragment :
         adapter.submitList(items)
         if (isFirst) isFirst = false
         else adapter.onCurrentListChanged(adapter.currentList, items)
+        if (items.size <= 4) {
+            store.sendIntent(CreatorsIntent.GetRolesCreators(chosenRole))
+            loading = true
+            lastPage = true
+            needUpdate = true
+        }
     }
 
     private fun MutableList<DelegateItem>.addCreatorItem(
@@ -391,12 +409,15 @@ class CreatorsFragment :
             }
         }
         store.sendIntent(CreatorsIntent.Init)
-      //  binding.loadingRecycler.root.visibility = VISIBLE
         items.clear()
         binding.recyclerView.post {
             adapter.notifyDataSetChanged()
         }
         needUpdate = true
+        sendGetMoreIntent()
+    }
+
+    private fun sendGetMoreIntent() {
         if (chosenRole != PUBLISHER_ID) {
             store.sendIntent(CreatorsIntent.GetRolesCreators(chosenRole))
         } else {
