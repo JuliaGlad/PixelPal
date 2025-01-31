@@ -14,8 +14,6 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App
-import myapplication.android.pixelpal.app.App.Companion.app
 import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmentMainGamesBinding
 import myapplication.android.pixelpal.ui.games.games.GamesFragment

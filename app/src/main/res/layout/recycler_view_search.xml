@@ -14,7 +14,6 @@
         app:boxCornerRadiusTopEnd="10dp"
         app:boxCornerRadiusTopStart="10dp"
         app:boxStrokeColor="@color/dark_blue"
-        app:endIconDrawable="@drawable/ic_filter"
         app:endIconMode="custom"
         app:endIconTint="@color/light_blue"
         app:hintEnabled="false"

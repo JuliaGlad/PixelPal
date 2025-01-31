@@ -16,31 +16,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <myapplication.android.pixelpal.ui.custom_view.IconShimmerView
-        android:id="@+id/filter_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawable="@drawable/ic_round_background"
-        app:iconColor="@color/main_blue"
-        app:layout_constraintBottom_toBottomOf="@id/icon_filter"
-        app:layout_constraintEnd_toEndOf="@id/icon_filter"
-        app:layout_constraintStart_toStartOf="@id/icon_filter"
-        app:layout_constraintTop_toBottomOf="@id/search_item"
-        app:layout_constraintTop_toTopOf="@id/icon_filter"
-        app:shimmerColor="@color/main_blue" />
-
-    <myapplication.android.pixelpal.ui.custom_view.IconShimmerView
-        android:id="@+id/icon_filter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="34dp"
-        android:layout_marginTop="24dp"
-        android:drawable="@drawable/ic_games_filters"
-        app:iconColor="@color/light_blue"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_item"
-        app:shimmerColor="@color/light_blue" />
-
-    <myapplication.android.pixelpal.ui.custom_view.IconShimmerView
         android:id="@+id/sort_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
