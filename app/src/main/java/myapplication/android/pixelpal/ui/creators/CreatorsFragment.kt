@@ -19,7 +19,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.app.App.Companion.appComponent
@@ -118,11 +117,12 @@ class CreatorsFragment :
 
     private fun setupObserves() {
         lifecycleScope.launch {
-            viewModel.searchResult
+            viewModel.searchCreatorsResult
                 .collect { result ->
                     updateRecycler(result)
                 }
         }
+
         lifecycleScope.launch {
             viewModel.roles.collect { items ->
                 items.forEach {
@@ -212,9 +212,27 @@ class CreatorsFragment :
             if (chosenRole != PUBLISHER_ID && creatorsUiList.creators != null) {
                 if (creatorsUiList.creators.isNotEmpty()) {
                     updateCreatorsRecycler(startPosition, creatorsUiList.creators)
+                    if (items.size <= 4) {
+                        if (binding.searchItem.messageInputLayout.isEmpty()) {
+                            store.sendIntent(CreatorsIntent.GetRolesCreators(chosenRole))
+                            changeVariableValue(true)
+                        } else {
+                            viewModel.searchQueryPublisher.tryEmit(binding.searchItem.messageEditText.text.toString())
+                        }
+                        changeVariableValue(true)
+                    }
                 }
             } else if (creatorsUiList.publishers != null) {
                 updatePublisherRecycler(startPosition, creatorsUiList.publishers)
+                if (items.size <= 4) {
+                    if (binding.searchItem.messageInputLayout.isEmpty()) {
+                        store.sendIntent(CreatorsIntent.GetPublishers)
+                        changeVariableValue(true)
+                    } else {
+                        viewModel.searchQueryPublisher.tryEmit(binding.searchItem.messageEditText.text.toString())
+                    }
+                    changeVariableValue(true)
+                }
             }
             changeVariableValue(false)
         }
@@ -260,16 +278,6 @@ class CreatorsFragment :
             )
         }
         adapter.notifyItemRangeInserted(startPosition, creators.size)
-        val isEmpty = binding.searchItem.messageInputLayout.isEmpty()
-        if (items.size <= 4) {
-            if (isEmpty) {
-                store.sendIntent(CreatorsIntent.GetRolesCreators(chosenRole))
-                changeVariableValue(true)
-            } else {
-                viewModel.searchQueryPublisher.tryEmit(binding.searchItem.messageEditText.text.toString())
-            }
-            changeVariableValue(true)
-        }
         binding.emptyQuery.root.visibility = GONE
     }
 
@@ -465,16 +473,11 @@ class CreatorsFragment :
     private fun sendGetMoreIntent() {
         val isEmpty = binding.searchItem.messageEditText.text?.isEmpty()
         if (chosenRole != PUBLISHER_ID) {
-            if (isEmpty == true) {
-                Log.i("Get creators", "get creators")
-                store.sendIntent(CreatorsIntent.GetRolesCreators(chosenRole))
-            }
-            else {
-                viewModel.searchQueryPublisher.tryEmit(binding.searchItem.messageEditText.text.toString())
-            }
-
+            if (isEmpty == true) store.sendIntent(CreatorsIntent.GetRolesCreators(chosenRole))
+            else viewModel.searchQueryPublisher.tryEmit(binding.searchItem.messageEditText.text.toString())
         } else {
-            store.sendIntent(CreatorsIntent.GetPublishers)
+            if (isEmpty == true) store.sendIntent(CreatorsIntent.GetPublishers)
+            else viewModel.searchQueryPublisher.tryEmit(binding.searchItem.messageEditText.text.toString())
         }
     }
 
