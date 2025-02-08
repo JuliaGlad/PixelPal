@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.ui.games.games.recycler_view.one_item
 
+import android.app.ActionBar.LayoutParams
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.ViewGroup
@@ -44,7 +45,7 @@ class GamesOneItemAdapter: ListAdapter<GamesShortModel, RecyclerView.ViewHolder>
                 if (model.image != null) {
                     Glide.with(itemView.context)
                         .load(model.image.toUri())
-                        .override(250, 250)
+                        .override(LayoutParams.MATCH_PARENT)
                         .into(image)
                 }
                 item.setOnClickListener { model.listener.onClick() }

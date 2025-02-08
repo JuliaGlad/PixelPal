@@ -8,4 +8,5 @@ sealed interface GamesIntent: MviIntent {
 
     data class GetGames(val id: Long): GamesIntent
 
+    data class GetGamesByQuery(val id: Long, val query: String): GamesIntent
 }

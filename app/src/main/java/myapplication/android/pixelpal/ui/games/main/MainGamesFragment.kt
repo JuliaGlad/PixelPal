@@ -8,6 +8,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayout
@@ -97,6 +98,7 @@ class MainGamesFragment : MviBaseFragment<
                 this.genres = genresList
                 initPager()
                 initTabs()
+                initSearchItem()
                 binding.loadingMain.root.visibility = GONE
             }
 
@@ -107,6 +109,18 @@ class MainGamesFragment : MviBaseFragment<
 
             LceState.Loading -> binding.loadingMain.root.visibility = VISIBLE
         }
+    }
+
+    private fun initSearchItem() {
+        binding.searchItem.messageEditText.addTextChangedListener(afterTextChanged = { text ->
+            val query = text.toString()
+            var chosenIndex = 0
+            for (i in genres.items) {
+                if (chosenId != ALL_ID && chosenId == i.id)
+                    chosenIndex = genres.items.indexOf(i) + 1
+            }
+            instances[chosenIndex].updateQuery(query)
+        })
     }
 
     private fun initLayoutType() {
@@ -134,9 +148,7 @@ class MainGamesFragment : MviBaseFragment<
             drawable,
             context?.theme
         )?.let {
-            binding.iconSort.setIcon(
-                it
-            )
+            binding.iconSort.setIcon(it)
         }
         var chosenIndex = 0
         for (i in genres.items) {
@@ -169,6 +181,12 @@ class MainGamesFragment : MviBaseFragment<
                         binding.infoBox.root.visibility = GONE
                     }
                     chosenId = it
+                    var chosenIndex = 0
+                    for (i in genres.items) {
+                        if (chosenId != ALL_ID && chosenId == i.id)
+                            chosenIndex = genres.items.indexOf(i) + 1
+                    }
+                    instances[chosenIndex].updateQuery(binding.searchItem.messageEditText.text.toString())
                 }
             }
 
@@ -187,12 +205,12 @@ class MainGamesFragment : MviBaseFragment<
         initPagerFragments(LayoutType.Grid)
     }
 
-    private fun initPagerFragments(layoutType: LayoutType) {
+    private fun initPagerFragments(layoutType: LayoutType, query: String = "") {
         instances.clear()
         for (i in genres.items) {
             with(i) {
                 instances.add(
-                    GamesFragment.getInstance(id, layoutType, title)
+                    GamesFragment.getInstance(id, layoutType, title, query)
                 )
             }
         }

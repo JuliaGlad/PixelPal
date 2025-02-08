@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.ui.games.games.recycler_view.linear
 
+import android.app.ActionBar.LayoutParams
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.net.toUri
@@ -43,7 +44,7 @@ class GamesShortLinearAdapter : ListAdapter<GamesShortModel, RecyclerView.ViewHo
                 if (model.image != null) {
                     Glide.with(itemView.context)
                         .load(model.image.toUri())
-                        .override(100, 100)
+                        .override(LayoutParams.MATCH_PARENT)
                         .into(image)
                 }
                 item.setOnClickListener { model.listener.onClick() }
