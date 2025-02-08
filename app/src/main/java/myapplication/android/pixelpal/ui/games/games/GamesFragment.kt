@@ -102,6 +102,7 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
     fun updateQuery(query: String) {
         previousQuery = this.query
         this.query = query
+
         if (isAdded) {
             if (previousQuery != query) store.sendIntent(GamesIntent.Init)
             needUpdate = true
@@ -162,6 +163,7 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
         adapter.notifyItemRangeInserted(startPosition, models.size)
         needUpdate = false
         loading = false
+        binding.loading.root.visibility = GONE
     }
 
     private fun updateRecycler(items: List<GamesShortDataUi>) {

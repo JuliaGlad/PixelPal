@@ -181,12 +181,14 @@ class MainGamesFragment : MviBaseFragment<
                         binding.infoBox.root.visibility = GONE
                     }
                     chosenId = it
-                    var chosenIndex = 0
-                    for (i in genres.items) {
-                        if (chosenId != ALL_ID && chosenId == i.id)
-                            chosenIndex = genres.items.indexOf(i) + 1
+                    if (binding.searchItem.messageEditText.text?.isNotEmpty() == true) {
+                        var chosenIndex = 0
+                        for (i in genres.items) {
+                            if (chosenId != ALL_ID && chosenId == i.id)
+                                chosenIndex = genres.items.indexOf(i) + 1
+                        }
+                        instances[chosenIndex].updateQuery(binding.searchItem.messageEditText.text.toString())
                     }
-                    instances[chosenIndex].updateQuery(binding.searchItem.messageEditText.text.toString())
                 }
             }
 
