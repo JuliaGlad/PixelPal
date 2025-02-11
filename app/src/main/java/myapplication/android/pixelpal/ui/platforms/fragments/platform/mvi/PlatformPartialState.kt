@@ -9,5 +9,7 @@ sealed interface PlatformPartialState: MviPartialState {
 
     data class DataLoaded(val ui: PlatformUiList): PlatformPartialState
 
+    data object Init: PlatformPartialState
+
     data class Error(val throwable: Throwable): PlatformPartialState
 }

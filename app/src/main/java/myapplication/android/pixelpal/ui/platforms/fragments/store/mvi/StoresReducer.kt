@@ -10,7 +10,11 @@ class StoresReducer : MviReducer<StoresPartialState, StoresState> {
             is StoresPartialState.DataLoaded -> updateDataLoaded(prevState, partialState.ui)
             is StoresPartialState.Error -> updateError(prevState, partialState.throwable)
             StoresPartialState.Loading -> updateLoading(prevState)
+            StoresPartialState.Init -> updateInit()
         }
+
+    private fun updateInit() =
+        StoresState(LceState.Loading, page = 0)
 
     private fun updateDataLoaded(prevState: StoresState, ui: StoresUiList) =
         prevState.copy(ui = LceState.Content(ui), page = prevState.page + 1)

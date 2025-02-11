@@ -7,4 +7,6 @@ sealed interface PlatformIntent: MviIntent {
     data object Init: PlatformIntent
 
     data object GetPlatforms: PlatformIntent
+
+    data class GetPlatformsByQuery(val query: String): PlatformIntent
 }

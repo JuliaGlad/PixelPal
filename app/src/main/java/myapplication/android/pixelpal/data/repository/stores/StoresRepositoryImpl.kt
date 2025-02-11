@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.data.repository.stores
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import myapplication.android.pixelpal.data.repository.dto.store.StoreDetailsDto
@@ -29,6 +30,7 @@ class StoresRepositoryImpl @Inject constructor(
 
     override suspend fun getStores(page: Int): StoreDtoList {
         val local = localSource.getStores(page)
+        Log.i("Local", local.toString())
         val result =
             if (local != null) local
             else {
@@ -38,6 +40,7 @@ class StoresRepositoryImpl @Inject constructor(
                 localSource.insertStores(page, remote)
                 remote
             }
+        Log.i("Result stores", result.toDto().stores.toString() + " " + result.toDto().stores.size)
         return result.toDto()
     }
 }

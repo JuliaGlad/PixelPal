@@ -11,4 +11,5 @@ sealed interface StoresPartialState: MviPartialState {
 
     data object Loading: StoresPartialState
 
+    data object Init: StoresPartialState
 }

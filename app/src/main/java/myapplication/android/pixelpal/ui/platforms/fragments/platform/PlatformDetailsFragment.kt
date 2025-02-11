@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.ui.platforms.fragments.platform
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,11 +14,11 @@ import androidx.recyclerview.widget.RecyclerView
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmentPlatformDetailsBinding
-import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.listener.GridPaginationScrollListener
 import myapplication.android.pixelpal.ui.main.MainActivity
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
+import myapplication.android.pixelpal.ui.platforms.PlatformPager
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.model.PlatformUiList
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.model.PlatformsUi
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.mvi.PlatformEffect
@@ -31,11 +32,12 @@ import myapplication.android.pixelpal.ui.platforms.fragments.platform.recycler_v
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.recycler_view.PlatformModel
 import javax.inject.Inject
 
+@SuppressLint("NotifyDataSetChanged")
 class PlatformDetailsFragment : MviBaseFragment<
         PlatformPartialState,
         PlatformIntent,
         PlatformState,
-        PlatformEffect>(R.layout.fragment_platforms) {
+        PlatformEffect>(R.layout.fragment_platforms), PlatformPager {
     private val platformComponent by lazy {
         appComponent.platformComponent().create()
     }
@@ -45,9 +47,10 @@ class PlatformDetailsFragment : MviBaseFragment<
 
     @Inject
     lateinit var platformLocalDI: PlatformLocalDI
-
+    private var previousQuery = ""
+    private var query = ""
     private var loading = false
-    private var lastPage = false
+    private var needUpdate = false
     private val models = mutableListOf<PlatformModel>()
 
     override val store: PlatformStore by viewModels {
@@ -68,6 +71,22 @@ class PlatformDetailsFragment : MviBaseFragment<
         return binding.root
     }
 
+    override fun updateQuery(query: String) {
+        previousQuery = this.query
+        this.query = query
+        if (isAdded) {
+            if (previousQuery != query) {
+                store.sendIntent(PlatformIntent.Init)
+                models.clear()
+                adapter.notifyDataSetChanged()
+                previousQuery = query
+            }
+            needUpdate = true
+            if (query.isEmpty()) store.sendIntent(PlatformIntent.GetPlatforms)
+            else store.sendIntent(PlatformIntent.GetPlatformsByQuery(query))
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (savedInstanceState == null) {
@@ -80,7 +99,6 @@ class PlatformDetailsFragment : MviBaseFragment<
         when (effect) {
             is PlatformEffect.OpenPlatformDetails -> {
                 with(effect) {
-                    Log.i("NamePlatform", name)
                     (activity as MainActivity).openPlatformDetailsActivity(
                         id,
                         name,
@@ -97,23 +115,48 @@ class PlatformDetailsFragment : MviBaseFragment<
         when (state.ui) {
             is LceState.Content -> {
                 binding.loadingRecycler.root.visibility = GONE
-                if (!lastPage) {
+                if (!needUpdate) {
                     initRecycler(state.ui.data)
+                } else if (query.isNotEmpty()){
+                    updateQueryRecycler(state.ui.data.list)
                 } else {
                     updateRecycler(state.ui.data.list)
+                    if (models.size <= 4) store.sendIntent(PlatformIntent.GetPlatforms)
                 }
             }
-
             is LceState.Error -> {
                 binding.loadingRecycler.root.visibility = GONE
                 Log.e("Platform error", state.ui.throwable.message.toString())
             }
-
             LceState.Loading -> binding.loadingRecycler.root.visibility = VISIBLE
         }
     }
 
+    private fun updateQueryRecycler(platforms: List<PlatformsUi>){
+        if (previousQuery != query){
+            models.clear()
+            adapter.notifyDataSetChanged()
+            previousQuery = query
+        }
+        val startPosition = models.size
+        val newItems = getPlatforms(platforms)
+        models.addAll(newItems)
+        adapter.notifyItemRangeInserted(startPosition, models.size)
+        needUpdate = false
+        loading = false
+        binding.loadingRecycler.root.visibility = GONE
+    }
+
     private fun updateRecycler(platforms: List<PlatformsUi>) {
+        val newItems = getPlatforms(platforms)
+        val position = models.size
+        models.addAll(newItems)
+        adapter.notifyItemRangeInserted(position, newItems.size)
+        loading = false
+        needUpdate = false
+    }
+
+    private fun getPlatforms(platforms: List<PlatformsUi>): MutableList<PlatformModel> {
         val newItems = mutableListOf<PlatformModel>()
         for (i in platforms) {
             with(i) {
@@ -127,27 +170,13 @@ class PlatformDetailsFragment : MviBaseFragment<
                 )
             }
         }
-        val position = models.size
-        models.addAll(newItems)
-        adapter.notifyItemRangeInserted(position, newItems.size)
-        loading = false
-        lastPage = false
+        return newItems
     }
 
     private fun initRecycler(platforms: PlatformUiList) {
         binding.recyclerView.adapter = adapter
-        for (i in platforms.list) {
-            with(i) {
-                models.addPlatforms(
-                    platforms.list.indexOf(i),
-                    id,
-                    name,
-                    startYear,
-                    gamesCount,
-                    background
-                )
-            }
-        }
+        val items = getPlatforms(platforms.list)
+        models.addAll(items)
         adapter.submitList(models)
         addScrollRecyclerListener()
     }
@@ -167,21 +196,18 @@ class PlatformDetailsFragment : MviBaseFragment<
                 name,
                 startYear,
                 gamesCount,
-                background,
-                object : ClickListener {
-                    override fun onClick() {
-                        store.sendEffect(
-                            PlatformEffect.OpenPlatformDetails(
-                                id,
-                                name,
-                                gamesCount,
-                                startYear,
-                                background
-                            )
-                        )
-                    }
-                }
-            ))
+                background
+            ) {
+                store.sendEffect(
+                    PlatformEffect.OpenPlatformDetails(
+                        id,
+                        name,
+                        gamesCount,
+                        startYear,
+                        background
+                    )
+                )
+            })
     }
 
     private fun addScrollRecyclerListener() {
@@ -189,13 +215,14 @@ class PlatformDetailsFragment : MviBaseFragment<
             addOnScrollListener(object : GridPaginationScrollListener(
                 layoutManager as GridLayoutManager
             ) {
-                override fun isLastPage(): Boolean = lastPage
+                override fun isLastPage(): Boolean = needUpdate
 
                 override fun isLoading(): Boolean = loading
 
                 override fun loadMoreItems() {
                     if (!isComputingLayout && scrollState == RecyclerView.SCROLL_STATE_IDLE) {
-                        store.sendIntent(PlatformIntent.GetPlatforms)
+                        if (query.isEmpty()) store.sendIntent(PlatformIntent.GetPlatforms)
+                        else store.sendIntent(PlatformIntent.GetPlatformsByQuery(query))
                     }
                 }
             })

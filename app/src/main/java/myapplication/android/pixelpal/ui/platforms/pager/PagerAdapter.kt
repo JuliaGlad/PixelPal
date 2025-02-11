@@ -16,9 +16,8 @@ class PagerAdapter(
 
     override fun createFragment(position: Int): Fragment = fragments[position]
 
-    fun addFragment(fragment: Fragment) {
-        this.fragments.add(fragment)
-    }
+    fun getFragment(position: Int): Fragment =
+        fragments[position]
 
     fun update(fragments : List<Fragment>){
         this.fragments.clear()

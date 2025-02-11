@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.ui.platforms.fragments.store
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,11 +14,12 @@ import androidx.recyclerview.widget.RecyclerView
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmnetStoreBinding
-import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.listener.GridPaginationScrollListener
 import myapplication.android.pixelpal.ui.main.MainActivity
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
+import myapplication.android.pixelpal.ui.platforms.PlatformPager
+import myapplication.android.pixelpal.ui.platforms.fragments.platform.mvi.PlatformIntent
 import myapplication.android.pixelpal.ui.platforms.fragments.store.model.StoreUi
 import myapplication.android.pixelpal.ui.platforms.fragments.store.model.StoresUiList
 import myapplication.android.pixelpal.ui.platforms.fragments.store.mvi.StoresEffect
@@ -31,11 +33,14 @@ import myapplication.android.pixelpal.ui.platforms.fragments.store.recycler_view
 import myapplication.android.pixelpal.ui.platforms.fragments.store.recycler_view.StoreModel
 import javax.inject.Inject
 
+@SuppressLint("NotifyDataSetChanged")
 class StoresFragment :
-    MviBaseFragment<StoresPartialState, StoresIntent, StoresState, StoresEffect>(R.layout.fragmnet_store) {
+    MviBaseFragment<StoresPartialState, StoresIntent, StoresState, StoresEffect>(R.layout.fragmnet_store), PlatformPager {
     private val storesComponent by lazy {
         appComponent.storesComponent().create()
     }
+    private var query: String = ""
+    private var previousQuery: String = ""
     private val adapter = StoreAdapter()
     private val models = mutableListOf<StoreModel>()
     private var _binding: FragmnetStoreBinding? = null
@@ -45,7 +50,7 @@ class StoresFragment :
     lateinit var storesLocalDI: StoresLocalDI
 
     var loading = false
-    var lastPage = false
+    var needUpdate = false
 
     override val store: StoresStore by viewModels {
         StoresStoreFactory(
@@ -70,7 +75,24 @@ class StoresFragment :
         if (savedInstanceState == null) {
             store.sendIntent(StoresIntent.Init)
         }
-        store.sendIntent(StoresIntent.GetStores)
+        if (query.isEmpty()) store.sendIntent(StoresIntent.GetStores)
+        else store.sendIntent(StoresIntent.GetStoresByQuery(query))
+    }
+
+    override fun updateQuery(query: String) {
+        previousQuery = this.query
+        this.query = query
+        if (isAdded) {
+            if (previousQuery != query) {
+                store.sendIntent(StoresIntent.Init)
+                models.clear()
+                adapter.notifyDataSetChanged()
+                previousQuery = query
+            }
+            needUpdate = true
+            if (query.isEmpty()) store.sendIntent(StoresIntent.GetStores)
+            else store.sendIntent(StoresIntent.GetStoresByQuery(query))
+        }
     }
 
     override fun resolveEffect(effect: StoresEffect) {
@@ -89,10 +111,13 @@ class StoresFragment :
         when (state.ui) {
             is LceState.Content -> {
                 binding.loadingRecycler.root.visibility = GONE
-                if (!lastPage) {
+                if (!needUpdate) {
                     initRecycler(state.ui.data)
+                } else if (query.isNotEmpty()) {
+                    updateQueryRecycler(state.ui.data.stores)
                 } else {
                     updateRecycler(state.ui.data.stores)
+                    if (models.size <= 4) store.sendIntent(StoresIntent.GetStores)
                 }
             }
 
@@ -105,7 +130,32 @@ class StoresFragment :
         }
     }
 
+
+    private fun updateQueryRecycler(stores: List<StoreUi>){
+        if (previousQuery != query){
+            models.clear()
+            adapter.notifyDataSetChanged()
+            previousQuery = query
+        }
+        val startPosition = models.size
+        val newItems = getStoreItems(stores)
+        models.addAll(newItems)
+        adapter.notifyItemRangeInserted(startPosition, models.size)
+        needUpdate = false
+        loading = false
+        binding.loadingRecycler.root.visibility = GONE
+    }
+
     private fun updateRecycler(stores: List<StoreUi>) {
+        val newItems = getStoreItems(stores)
+        val positionStart = models.size
+        models.addAll(newItems)
+        adapter.notifyItemRangeInserted(positionStart, newItems.size)
+        loading = false
+        needUpdate = false
+    }
+
+    private fun getStoreItems(stores: List<StoreUi>): MutableList<StoreModel> {
         val newItems = mutableListOf<StoreModel>()
         for (i in stores) {
             with(i) {
@@ -114,18 +164,13 @@ class StoresFragment :
                 )
             }
         }
-        val positionStart = models.size
-        models.addAll(newItems)
-        adapter.notifyItemRangeInserted(positionStart, newItems.size)
-        loading = false
-        lastPage = false
+        return newItems
     }
 
     private fun initRecycler(stores: StoresUiList) {
         binding.recyclerView.adapter = adapter
-        for (i in stores.stores) {
-            models.add(stores.stores.indexOf(i), i.id, i.name, i.domain, i.projects, i.image)
-        }
+        val items = getStoreItems(stores.stores)
+        models.addAll(items)
         adapter.submitList(models)
         addScrollRecyclerListener()
     }
@@ -135,15 +180,16 @@ class StoresFragment :
             addOnScrollListener(object : GridPaginationScrollListener(
                 layoutManager as GridLayoutManager
             ) {
-                override fun isLastPage(): Boolean = lastPage
+                override fun isLastPage(): Boolean = needUpdate
 
                 override fun isLoading(): Boolean = loading
 
                 override fun loadMoreItems() {
                     if (!isComputingLayout && scrollState == RecyclerView.SCROLL_STATE_IDLE) {
-                        lastPage = true
+                        needUpdate = true
                         loading = true
-                        store.sendIntent(StoresIntent.GetStores)
+                        if (query.isEmpty()) store.sendIntent(StoresIntent.GetStores)
+                        else store.sendIntent(StoresIntent.GetStoresByQuery(query))
                     }
                 }
 
@@ -154,15 +200,13 @@ class StoresFragment :
     private fun MutableList<StoreModel>.add(
         id: Int, storeId: Int, name: String, domain: String?, projects: Int?, image: String
     ) {
-        add(StoreModel(id, storeId, name, domain, projects, image, object : ClickListener {
-            override fun onClick() {
-                store.sendEffect(
-                    StoresEffect.OpenStoresDetailsScreen(
-                        id, name, image, domain, projects
-                    )
+        add(StoreModel(id, storeId, name, domain, projects, image) {
+            store.sendEffect(
+                StoresEffect.OpenStoresDetailsScreen(
+                    id, name, image, domain, projects
                 )
-            }
-        }))
+            )
+        })
     }
 
     override fun onDestroy() {

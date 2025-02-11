@@ -7,4 +7,6 @@ sealed interface StoresIntent: MviIntent {
     data object Init: StoresIntent
 
     data object GetStores: StoresIntent
+
+    data class GetStoresByQuery(val query: String): StoresIntent
 }
