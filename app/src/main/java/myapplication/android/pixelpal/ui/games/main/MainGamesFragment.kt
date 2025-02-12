@@ -87,8 +87,8 @@ class MainGamesFragment : MviBaseFragment<
         initLayoutType()
     }
 
-    override fun resolveEffect(effect: MainGamesEffects) {
-        TODO("handle effects No effects")
+    override fun resolveEffect(effect: MainGamesEffects){
+        Log.i("No effects", "no effects")
     }
 
     override fun render(state: MainGamesState) {

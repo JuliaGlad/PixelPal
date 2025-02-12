@@ -1,7 +1,6 @@
 package myapplication.android.pixelpal.ui.games.games
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -117,7 +116,6 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
 
     override fun resolveEffect(effect: GamesEffects) {
         when (effect) {
-            GamesEffects.OpenFilters -> TODO()
             is GamesEffects.OpenGameDetails -> {
                 with(effect) {
                     (activity as MainActivity).openGameDetailsActivity(

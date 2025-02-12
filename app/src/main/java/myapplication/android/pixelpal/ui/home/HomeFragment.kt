@@ -19,8 +19,6 @@ import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.FragmentHomeBinding
 import myapplication.android.pixelpal.ui.delegates.delegates.info_box.InfoBoxDelegate
-import myapplication.android.pixelpal.ui.delegates.delegates.info_box.InfoBoxDelegateItem
-import myapplication.android.pixelpal.ui.delegates.delegates.info_box.InfoBoxModel
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsItemModel
@@ -94,7 +92,6 @@ class HomeFragment :
 
     override fun resolveEffect(effect: HomeEffect) {
         when (effect) {
-            is HomeEffect.ShowDatesDialog -> TODO()
             is HomeEffect.OpenGameDetailsScreen -> {
                 with(effect) {
                     (activity as MainActivity).openGameDetailsActivity(
@@ -247,7 +244,7 @@ class HomeFragment :
         currentDate: String,
         monthEndDate: String,
         monthStartDate: String
-    ) = mutableListOf(
+    ) = mutableListOf<DelegateItem>(
         NewsDelegateItem(
             NewsItemModel(
                 NEW_RELEASES_ID,
@@ -279,12 +276,6 @@ class HomeFragment :
                     }
                 }
             )
-        ),
-        InfoBoxDelegateItem(
-            InfoBoxModel(
-                4,
-                getString(R.string.what_other_games_are_coming_out)
-            ) { TODO("Open dates dialog") }
         ),
         NewsDelegateItem(
             NewsItemModel(
