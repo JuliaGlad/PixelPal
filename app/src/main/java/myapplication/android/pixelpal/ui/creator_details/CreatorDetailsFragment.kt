@@ -195,10 +195,10 @@ class CreatorDetailsFragment : MviBaseFragment<
                         getString(R.string.famous_projects),
                         getString(R.string.unknown),
                         games,
-                        object : ClickListener {
-                            override fun onClick() {
-                                TODO("Open all screen")
-                            }
+                        {
+                            (activity as CreatorDetailsActivity).openAllGamesActivity(
+                                creatorArgumentsModel.creatorId
+                            )
                         },
                         object : RecyclerEndListener {
                             override fun onEndReached() {
@@ -230,18 +230,16 @@ class CreatorDetailsFragment : MviBaseFragment<
                         releaseDate,
                         playTime,
                         uri,
-                        object : ClickListener {
-                            override fun onClick() {
-                                store.sendEffect(
-                                    CreatorDetailsEffect.OpenGameDetails(
-                                        gameId,
-                                        genre,
-                                        name,
-                                        releaseDate!!,
-                                        uri!!
-                                    )
+                        {
+                            store.sendEffect(
+                                CreatorDetailsEffect.OpenGameDetails(
+                                    gameId,
+                                    genre,
+                                    name,
+                                    releaseDate!!,
+                                    uri!!
                                 )
-                            }
+                            )
                         }
                     )
                 )

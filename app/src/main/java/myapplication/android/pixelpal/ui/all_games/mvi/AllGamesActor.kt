@@ -3,6 +3,7 @@ package myapplication.android.pixelpal.ui.all_games.mvi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import myapplication.android.pixelpal.domain.usecase.games.GetGameAdditionsUseCase
+import myapplication.android.pixelpal.domain.usecase.games.GetGameByCreatorUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetGameMonthReleasesUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetGamesFromSameSeriesUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetGamesNewReleasesUseCase
@@ -24,6 +25,7 @@ class AllGamesActor(
     private val getParenGamesUseCase: GetParenGamesUseCase,
     private val getGameAdditionsUseCase: GetGameAdditionsUseCase,
     private val getGamesFromSameSeriesUseCase: GetGamesFromSameSeriesUseCase,
+    private val getGamesByCreatorUseCase: GetGameByCreatorUseCase
 ) : MviActor<
         AllGamesPartialState,
         AllGamesIntent,
@@ -54,9 +56,25 @@ class AllGamesActor(
 
             is AllGamesIntent.GetGameParentSeries ->
                 loadParenAndAdditions(intent.gameId, state.page + 1)
+
+            is AllGamesIntent.GetCreatorGames -> loadCreatorGames(intent.creatorId, state.page + 1)
         }
 
     private fun init() = flow { emit(AllGamesPartialState.Init) }
+
+    private fun loadCreatorGames(creatorId: Long, page: Int) =
+        flow {
+            kotlin.runCatching {
+                getCreatorGames(creatorId, page)
+            }.fold(
+                onSuccess = {data ->
+                    emit(AllGamesPartialState.DataLoaded(data))
+                },
+                onFailure = {throwable ->
+                    emit(AllGamesPartialState.Error(throwable))
+                }
+            )
+        }
 
     private fun loadGamesFromSameSeries(gameId: Long, page: Int) =
         flow {
@@ -188,6 +206,15 @@ class AllGamesActor(
                 { getGameMonthReleasesUseCase.invoke(date, page) }
             ) { result ->
                 result.toUi()
+            }
+        }.getOrThrow()
+
+    private suspend fun getCreatorGames(creatorId: Long, page: Int) =
+        runCatchingNonCancellation {
+            asyncAwait(
+                { getGamesByCreatorUseCase.invoke(creatorId, page) }
+            ){games ->
+                games.toUi()
             }
         }.getOrThrow()
 

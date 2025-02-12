@@ -2,6 +2,7 @@ package myapplication.android.pixelpal.ui.all_games.mvi
 
 import myapplication.android.pixelpal.data.repository.games.GamesRepository
 import myapplication.android.pixelpal.domain.usecase.games.GetGameAdditionsUseCase
+import myapplication.android.pixelpal.domain.usecase.games.GetGameByCreatorUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetGameMonthReleasesUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetGamesFromSameSeriesUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetGamesNewReleasesUseCase
@@ -22,6 +23,8 @@ class AllGamesLocalDI @Inject constructor(
 
     private val getGameAdditionsUseCase by lazy { GetGameAdditionsUseCase(gamesRepository) }
 
+    private val getGameByCreatorUseCase by lazy { GetGameByCreatorUseCase(gamesRepository) }
+
     private val getParenGamesUseCase by lazy { GetParenGamesUseCase(gamesRepository) }
 
     val actor by lazy { AllGamesActor(
@@ -30,7 +33,8 @@ class AllGamesLocalDI @Inject constructor(
         getGameMonthReleasesUseCase,
         getParenGamesUseCase,
         getGameAdditionsUseCase,
-        getGamesFromSameSeriesUseCase
+        getGamesFromSameSeriesUseCase,
+        getGameByCreatorUseCase
     ) }
 
     val reducer by lazy { AllGamesReducer() }

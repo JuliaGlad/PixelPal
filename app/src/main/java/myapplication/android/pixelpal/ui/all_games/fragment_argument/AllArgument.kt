@@ -17,7 +17,7 @@ interface AllArgument {
         val gameId: Long
     ): AllArgument
 
-    data class CreatorDetailsArgument(
-        val gameId: Long
+    data class CreatorGamesArgument(
+        val creatorId: Long
     ): AllArgument
 }

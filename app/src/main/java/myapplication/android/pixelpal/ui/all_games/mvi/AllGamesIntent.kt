@@ -8,6 +8,10 @@ sealed interface AllGamesIntent : MviIntent {
 
     data object GetGames: AllGamesIntent
 
+    data class GetCreatorGames(
+        val creatorId: Long
+    ): AllGamesIntent
+
     data class GetAllSameSeries(
         val gameId: Long
     ): AllGamesIntent

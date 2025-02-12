@@ -13,6 +13,8 @@ import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants.Companion.ADDITIONS_AND_PARENT_ID
 import myapplication.android.pixelpal.app.Constants.Companion.ALL_INTENT_ID
+import myapplication.android.pixelpal.app.Constants.Companion.CREATOR_GAMES_ID
+import myapplication.android.pixelpal.app.Constants.Companion.CREATOR_ID
 import myapplication.android.pixelpal.app.Constants.Companion.CURRENT_DATE
 import myapplication.android.pixelpal.app.Constants.Companion.END_DATE
 import myapplication.android.pixelpal.app.Constants.Companion.GAME_GENRES_ARG
@@ -36,7 +38,6 @@ import myapplication.android.pixelpal.ui.games.games.recycler_view.GamesShortMod
 import myapplication.android.pixelpal.ui.games.games.recycler_view.linear.GamesShortLinearAdapter
 import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
 import myapplication.android.pixelpal.ui.home.model.GamesUi
-import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.listener.LinearPaginationScrollListener
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
@@ -133,6 +134,15 @@ class AllGamesFragment : MviBaseFragment<
                 )
                 intent = AllGamesIntent.GetGameParentSeries(
                     (arguments as AllArgument.GameDetailsArgument).gameId
+                )
+            }
+
+            CREATOR_GAMES_ID -> {
+                arguments = AllArgument.CreatorGamesArgument(
+                    activity?.intent?.getLongExtra(CREATOR_ID, 0L)!!
+                )
+                intent = AllGamesIntent.GetCreatorGames(
+                    (arguments as AllArgument.CreatorGamesArgument).creatorId
                 )
             }
         }
@@ -292,18 +302,16 @@ class AllGamesFragment : MviBaseFragment<
         models.add(
             GamesShortModel(
                 gameId, name, rating?.toInt(), releaseDate, playTime, uri.toString(),
-                object : ClickListener {
-                    override fun onClick() {
-                        store.sendEffect(
-                            AllGamesEffect.OpenGameDetails(
-                                gameId,
-                                genre,
-                                name,
-                                releaseDate!!,
-                                uri.toString()
-                            )
+                {
+                    store.sendEffect(
+                        AllGamesEffect.OpenGameDetails(
+                            gameId,
+                            genre,
+                            name,
+                            releaseDate!!,
+                            uri.toString()
                         )
-                    }
+                    )
                 }
             )
         )
@@ -315,18 +323,16 @@ class AllGamesFragment : MviBaseFragment<
         models.add(
             GamesShortModel(
                 gameId, name, rating, releaseDate, playtime, image.toString(),
-                object : ClickListener {
-                    override fun onClick() {
-                        store.sendEffect(
-                            AllGamesEffect.OpenGameDetails(
-                                gameId,
-                                genre,
-                                name,
-                                releaseDate!!,
-                                image.toString()
-                            )
+                {
+                    store.sendEffect(
+                        AllGamesEffect.OpenGameDetails(
+                            gameId,
+                            genre,
+                            name,
+                            releaseDate!!,
+                            image.toString()
                         )
-                    }
+                    )
                 }
             )
         )
