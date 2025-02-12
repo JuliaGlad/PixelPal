@@ -202,7 +202,7 @@ class StoresFragment :
         add(StoreModel(id, storeId, name, domain, projects, image) {
             store.sendEffect(
                 StoresEffect.OpenStoresDetailsScreen(
-                    id, name, image, domain, projects
+                    storeId, name, image, domain, projects
                 )
             )
         })

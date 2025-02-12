@@ -125,14 +125,6 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun openAllStoresActivity(storeId: Int){
-        val intent = Intent(this, AllGamesActivity::class.java).apply {
-            putExtra(Constants.ALL_INTENT_ID, Constants.STORES_GAMES_ID)
-            putExtra(Constants.STORE_ID, storeId)
-        }
-        startActivity(intent)
-    }
-
     fun openPlatformDetailsActivity(
         id: Long,
         name: String,

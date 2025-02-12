@@ -194,7 +194,7 @@ class StoreDetailsFragment : MviBaseFragment<
                     getString(R.string.famous_projects),
                     getString(R.string.unknown),
                     games,
-                    { (activity as MainActivity).openAllStoresActivity(args.id) },
+                    { (activity as StoreDetailsActivity).openAllStoresActivity(args.id) },
                     object : RecyclerEndListener {
                         override fun onEndReached() {
                             isUpdated = true
