@@ -9,7 +9,7 @@ class GetPlatformDetailsUseCase @Inject constructor(
     private val platformsRepository: PlatformsRepository
 ) {
 
-    suspend fun invoke(id: Int): PlatformDomainDetails =
+    suspend fun invoke(id: Long): PlatformDomainDetails =
         platformsRepository.getPlatformDetails(id).toDomain()
 
 }

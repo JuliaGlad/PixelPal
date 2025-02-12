@@ -460,13 +460,6 @@ class CreatorsFragment :
                 binding.title.setShimmerText(it.creator)
             }
         }
-//        store.sendIntent(CreatorsIntent.Init)
-//        items.clear()
-//        binding.recyclerView.post {
-//            adapter.notifyDataSetChanged()
-//        }
-//        needUpdate = true
-//        sendGetMoreIntent()
         updateListItemsFromInit()
     }
 

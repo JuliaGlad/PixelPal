@@ -23,7 +23,7 @@ import retrofit2.http.Query
 interface GamesApi {
 
     @GET("games")
-    suspend fun getGamesByPlatform(@Query("platforms")platformId: Int, @Query("page")page: Int): GamesNewsList
+    suspend fun getGamesByPlatform(@Query("platforms")platformId: Long, @Query("page")page: Int): GamesNewsList
 
     @GET("games")
     suspend fun getGamesByStore(@Query("stores")storeId: Int, @Query("page")page: Int): GamesNewsList
@@ -41,7 +41,7 @@ interface GamesApi {
     suspend fun getStoreDetails(@Path("id")id: Int): StoreDetails
 
     @GET("platforms/{id}")
-    suspend fun getPlatformDetails(@Path("id")id: Int): PlatformDetails
+    suspend fun getPlatformDetails(@Path("id")id: Long): PlatformDetails
 
     @GET("creators/{id}")
     suspend fun getCreatorDetails(@Path("id")id: Long): CreatorDetails

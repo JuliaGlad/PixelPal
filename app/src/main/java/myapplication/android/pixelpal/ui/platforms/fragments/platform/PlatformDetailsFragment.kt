@@ -200,7 +200,7 @@ class PlatformDetailsFragment : MviBaseFragment<
             ) {
                 store.sendEffect(
                     PlatformEffect.OpenPlatformDetails(
-                        id,
+                        platformId,
                         name,
                         gamesCount,
                         startYear,

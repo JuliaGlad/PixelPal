@@ -34,7 +34,6 @@ import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
 import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
 import myapplication.android.pixelpal.ui.games.games.recycler_view.GamesShortModel
 import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
-import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.listener.RecyclerEndListener
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
@@ -185,11 +184,7 @@ class PublisherDetailsFragment : MviBaseFragment<
                         getString(R.string.famous_projects),
                         getString(R.string.unknown),
                         games,
-                        object : ClickListener {
-                            override fun onClick() {
-                                TODO("Open all screen")
-                            }
-                        },
+                        { (activity as PublisherDetailsActivity).openAllPublisherActivity(args.id) },
                         object : RecyclerEndListener {
                             override fun onEndReached() {
                                 isUpdated = true
@@ -220,18 +215,16 @@ class PublisherDetailsFragment : MviBaseFragment<
                         releaseDate,
                         playTime,
                         uri,
-                        object : ClickListener {
-                            override fun onClick() {
-                                store.sendEffect(
-                                    PublisherDetailsEffect.OpenGameDetails(
-                                        gameId,
-                                        genre,
-                                        name,
-                                        releaseDate!!,
-                                        uri!!
-                                    )
+                        {
+                            store.sendEffect(
+                                PublisherDetailsEffect.OpenGameDetails(
+                                    gameId,
+                                    genre,
+                                    name,
+                                    releaseDate!!,
+                                    uri!!
                                 )
-                            }
+                            )
                         }
                     )
                 )

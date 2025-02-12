@@ -8,6 +8,14 @@ sealed interface AllGamesIntent : MviIntent {
 
     data object GetGames: AllGamesIntent
 
+    data class GetGamesByPlatform(
+        val platformId: Long
+    ): AllGamesIntent
+
+    data class GetGamesByStore(
+        val storeId: Int
+    ): AllGamesIntent
+
     data class GetCreatorGames(
         val creatorId: Long
     ): AllGamesIntent
@@ -18,6 +26,10 @@ sealed interface AllGamesIntent : MviIntent {
 
     data class GetGameParentSeries(
         val gameId: Long
+    ): AllGamesIntent
+
+    data class GetGamesByPublisher(
+        val publisherId: Long
     ): AllGamesIntent
 
     data class GetAllCurrentReleases(

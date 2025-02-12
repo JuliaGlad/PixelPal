@@ -6,7 +6,7 @@ import myapplication.android.pixelpal.data.repository.dto.game.GamesShortDtoList
 import myapplication.android.pixelpal.data.repository.dto.game.ScreenshotDtoList
 
 interface GamesRepository {
-    suspend fun getGameByPlatform(platformId: Int, page: Int): GameNewsDtoList
+    suspend fun getGameByPlatform(platformId: Long, page: Int): GameNewsDtoList
 
     suspend fun getGameByStore(storeId: Int, page: Int): GameNewsDtoList
 

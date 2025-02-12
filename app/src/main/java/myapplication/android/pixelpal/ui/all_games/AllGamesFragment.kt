@@ -19,10 +19,16 @@ import myapplication.android.pixelpal.app.Constants.Companion.CURRENT_DATE
 import myapplication.android.pixelpal.app.Constants.Companion.END_DATE
 import myapplication.android.pixelpal.app.Constants.Companion.GAME_GENRES_ARG
 import myapplication.android.pixelpal.app.Constants.Companion.GAME_ID_ARG
+import myapplication.android.pixelpal.app.Constants.Companion.PLATFORM_GAMES_ID
+import myapplication.android.pixelpal.app.Constants.Companion.PLATFORM_ID
+import myapplication.android.pixelpal.app.Constants.Companion.PUBLISHER_GAMES_ID
+import myapplication.android.pixelpal.app.Constants.Companion.PUBLISHER_ID
 import myapplication.android.pixelpal.app.Constants.Companion.RELEASES_ID
 import myapplication.android.pixelpal.app.Constants.Companion.RELEASES_NEXT_ID
 import myapplication.android.pixelpal.app.Constants.Companion.SAME_SERIES_ID
 import myapplication.android.pixelpal.app.Constants.Companion.START_DATE
+import myapplication.android.pixelpal.app.Constants.Companion.STORES_GAMES_ID
+import myapplication.android.pixelpal.app.Constants.Companion.STORE_ID
 import myapplication.android.pixelpal.app.Constants.Companion.TOP_ID
 import myapplication.android.pixelpal.databinding.FragmentAllGamesBinding
 import myapplication.android.pixelpal.ui.all_games.fragment_argument.AllArgument
@@ -72,7 +78,7 @@ class AllGamesFragment : MviBaseFragment<
     private var loading = false
     private var lastPage = false
 
-    private val dataId: Int by lazy { getArgumentId() }
+    private val dataId: String by lazy { getArgumentId() }
     private var arguments: AllArgument? = null
     private var intent: AllGamesIntent? = null
 
@@ -85,9 +91,9 @@ class AllGamesFragment : MviBaseFragment<
         getOtherArguments(dataId)
     }
 
-    private fun getArgumentId() = activity?.intent?.getIntExtra(ALL_INTENT_ID, 0)!!
+    private fun getArgumentId() = activity?.intent?.getStringExtra(ALL_INTENT_ID)!!
 
-    private fun getOtherArguments(dataId: Int) {
+    private fun getOtherArguments(dataId: String) {
         when (dataId) {
             RELEASES_ID -> {
                 arguments = AllArgument.CurrentReleasesAllArgument(
@@ -143,6 +149,33 @@ class AllGamesFragment : MviBaseFragment<
                 )
                 intent = AllGamesIntent.GetCreatorGames(
                     (arguments as AllArgument.CreatorGamesArgument).creatorId
+                )
+            }
+
+            PLATFORM_GAMES_ID -> {
+                arguments = AllArgument.PlatformGamesArgument(
+                    activity?.intent?.getLongExtra(PLATFORM_ID, 0)!!
+                )
+                intent = AllGamesIntent.GetGamesByPlatform(
+                    (arguments as AllArgument.PlatformGamesArgument).platformId
+                )
+            }
+
+            STORES_GAMES_ID -> {
+                arguments = AllArgument.StoreGamesArgument(
+                    activity?.intent?.getIntExtra(STORE_ID, 0)!!
+                )
+                intent = AllGamesIntent.GetGamesByStore(
+                    (arguments as AllArgument.StoreGamesArgument).storeId
+                )
+            }
+
+            PUBLISHER_GAMES_ID ->{
+                arguments = AllArgument.PublisherGamesArgument(
+                    activity?.intent?.getLongExtra(PUBLISHER_ID, 0)!!
+                )
+                intent = AllGamesIntent.GetGamesByPublisher(
+                    (arguments as AllArgument.PublisherGamesArgument).publisherId
                 )
             }
         }

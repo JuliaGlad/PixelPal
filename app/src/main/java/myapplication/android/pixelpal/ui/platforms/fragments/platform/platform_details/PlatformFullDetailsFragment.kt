@@ -53,7 +53,7 @@ class PlatformFullDetailsFragment : MviBaseFragment<
         PlatformDetailsPartialState,
         PlatformDetailsIntent,
         PlatformDetailsState,
-        PlatformDetailsEffect>(R.layout.fragment_platform_details) {
+        PlatformDetailsEffect>(R.layout.fragment_platform_full_details) {
 
     private var _binding: FragmentPlatformFullDetailsBinding? = null
     private val binding get() = _binding!!
@@ -67,7 +67,7 @@ class PlatformFullDetailsFragment : MviBaseFragment<
         activity?.let {
             with(it.intent) {
                 argsModel = PlatformDetailsArgumentsModel(
-                    getIntExtra(Constants.PLATFORM_ID, 0),
+                    getLongExtra(Constants.PLATFORM_ID, 0L),
                     getStringExtra(Constants.PLATFORM_NAME)!!,
                     getIntExtra(Constants.PLATFORM_PROJECTS, 0),
                     getIntExtra(Constants.PLATFORM_YEAR_START, 0),
@@ -198,11 +198,7 @@ class PlatformFullDetailsFragment : MviBaseFragment<
                 getString(R.string.famous_projects),
                 getString(R.string.unknown),
                 games,
-                object : ClickListener {
-                    override fun onClick() {
-                        TODO("Open all screen")
-                    }
-                },
+                { (activity as PlatformDetailsActivity).openAllGamesActivity(args.id) },
                 object : RecyclerEndListener {
                     override fun onEndReached() {
                         isUpdated = true
@@ -251,18 +247,16 @@ class PlatformFullDetailsFragment : MviBaseFragment<
                         releaseDate,
                         playTime,
                         uri,
-                        object : ClickListener {
-                            override fun onClick() {
-                                store.sendEffect(
-                                    PlatformDetailsEffect.OpenGameDetails(
-                                        gameId,
-                                        genre,
-                                        name,
-                                        releaseDate!!,
-                                        uri!!
-                                    )
+                        {
+                            store.sendEffect(
+                                PlatformDetailsEffect.OpenGameDetails(
+                                    gameId,
+                                    genre,
+                                    name,
+                                    releaseDate!!,
+                                    uri!!
                                 )
-                            }
+                            )
                         }
                     )
                 )

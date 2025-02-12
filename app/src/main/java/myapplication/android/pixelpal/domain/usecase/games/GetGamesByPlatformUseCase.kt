@@ -8,6 +8,6 @@ import javax.inject.Inject
 class GetGamesByPlatformUseCase @Inject constructor(
     private val gamesRepository: GamesRepository
 ) {
-    suspend fun invoke(platformId: Int, page: Int): GamesNewsListDomain =
+    suspend fun invoke(platformId: Long, page: Int): GamesNewsListDomain =
         gamesRepository.getGameByPlatform(platformId, page).toDomain()
 }

@@ -65,7 +65,6 @@ class UserRepositoryImpl @Inject constructor() : UserRepository {
     }
 
     override suspend fun logout() {
-        //TODO("Anonymous login")
         FirebaseService.auth.signOut()
     }
 

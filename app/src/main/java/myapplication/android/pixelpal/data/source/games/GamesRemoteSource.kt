@@ -7,7 +7,7 @@ import myapplication.android.pixelpal.data.models.screenshots.ScreenshotsList
 import myapplication.android.pixelpal.domain.model.games.GamesNewsListDomain
 
 interface GamesRemoteSource {
-    suspend fun getGameByPlatform(platformId: Int, page: Int): GamesNewsList
+    suspend fun getGameByPlatform(platformId: Long, page: Int): GamesNewsList
 
     suspend fun getGameByStore(storeId: Int, page: Int): GamesNewsList
 

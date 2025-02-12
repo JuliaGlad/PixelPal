@@ -14,7 +14,7 @@ class PlatformsRepositoryImpl @Inject constructor(
     private val remoteSource: PlatformRemoteSource
 ) : PlatformsRepository {
 
-    override suspend fun getPlatformDetails(id: Int): PlatformDtoDetails =
+    override suspend fun getPlatformDetails(id: Long): PlatformDtoDetails =
        withContext(Dispatchers.IO){
            remoteSource.getPlatformDetails(id).toDto()
        }

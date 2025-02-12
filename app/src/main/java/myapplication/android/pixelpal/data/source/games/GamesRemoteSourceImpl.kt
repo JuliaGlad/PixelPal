@@ -1,21 +1,17 @@
 package myapplication.android.pixelpal.data.source.games
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import myapplication.android.pixelpal.data.api.GamesApi
 import myapplication.android.pixelpal.data.models.game_description.GameDescription
 import myapplication.android.pixelpal.data.models.gamesMain.GamesShortDataList
 import myapplication.android.pixelpal.data.models.gamesNews.GamesNewsList
 import myapplication.android.pixelpal.data.models.screenshots.ScreenshotsList
-import myapplication.android.pixelpal.domain.model.games.GamesNewsListDomain
 import javax.inject.Inject
 
 class GamesRemoteSourceImpl @Inject constructor(
     private val api: GamesApi,
 ): GamesRemoteSource {
-    override suspend fun getGameByPlatform(platformId: Int, page: Int): GamesNewsList =
+    override suspend fun getGameByPlatform(platformId: Long, page: Int): GamesNewsList =
             api.getGamesByPlatform(platformId, page)
-
 
     override suspend fun getGameByStore(storeId: Int, page: Int): GamesNewsList =
         api.getGamesByStore(storeId, page)

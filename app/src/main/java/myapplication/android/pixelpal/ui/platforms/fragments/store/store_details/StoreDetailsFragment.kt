@@ -36,6 +36,7 @@ import myapplication.android.pixelpal.ui.games.games.recycler_view.GamesShortMod
 import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
 import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.listener.RecyclerEndListener
+import myapplication.android.pixelpal.ui.main.MainActivity
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.mvi.MviStore
@@ -193,11 +194,7 @@ class StoreDetailsFragment : MviBaseFragment<
                     getString(R.string.famous_projects),
                     getString(R.string.unknown),
                     games,
-                    object : ClickListener {
-                        override fun onClick() {
-                            TODO("Open all screen")
-                        }
-                    },
+                    { (activity as MainActivity).openAllStoresActivity(args.id) },
                     object : RecyclerEndListener {
                         override fun onEndReached() {
                             isUpdated = true
@@ -227,18 +224,16 @@ class StoreDetailsFragment : MviBaseFragment<
                         releaseDate,
                         playTime,
                         uri,
-                        object : ClickListener {
-                            override fun onClick() {
-                                store.sendEffect(
-                                    StoreDetailsEffect.OpenGameDetails(
-                                        gameId,
-                                        genre,
-                                        name,
-                                        releaseDate!!,
-                                        uri!!
-                                    )
+                        {
+                            store.sendEffect(
+                                StoreDetailsEffect.OpenGameDetails(
+                                    gameId,
+                                    genre,
+                                    name,
+                                    releaseDate!!,
+                                    uri!!
                                 )
-                            }
+                            )
                         }
                     )
                 )

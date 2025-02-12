@@ -19,7 +19,6 @@ import myapplication.android.pixelpal.ui.main.MainActivity
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.platforms.PlatformPager
-import myapplication.android.pixelpal.ui.platforms.fragments.platform.mvi.PlatformIntent
 import myapplication.android.pixelpal.ui.platforms.fragments.store.model.StoreUi
 import myapplication.android.pixelpal.ui.platforms.fragments.store.model.StoresUiList
 import myapplication.android.pixelpal.ui.platforms.fragments.store.mvi.StoresEffect

@@ -6,7 +6,7 @@ sealed interface PlatformDetailsIntent: MviIntent {
 
     data object Init: PlatformDetailsIntent
 
-    data class GetPlatformDetails(val id: Int): PlatformDetailsIntent
+    data class GetPlatformDetails(val id: Long): PlatformDetailsIntent
 
-    data class GetGames(val id: Int): PlatformDetailsIntent
+    data class GetGames(val id: Long): PlatformDetailsIntent
 }

@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import myapplication.android.pixelpal.R
 import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants
+import myapplication.android.pixelpal.ui.all_games.AllGamesActivity
 import myapplication.android.pixelpal.ui.game_details.activity.GameDetailsActivity
 
 class PlatformDetailsActivity : AppCompatActivity() {
@@ -23,6 +24,15 @@ class PlatformDetailsActivity : AppCompatActivity() {
             insets
         }
     }
+
+    fun openAllGamesActivity(platformId: Long){
+        val intent = Intent(this, AllGamesActivity::class.java).apply {
+            putExtra(Constants.ALL_INTENT_ID, Constants.PLATFORM_GAMES_ID)
+            putExtra(Constants.PLATFORM_ID, platformId)
+        }
+        startActivity(intent)
+    }
+
     fun openGameDetailsActivity(gameId: Long, name: String, genres: String, released: String, image: String){
         val intent = Intent(this, GameDetailsActivity::class.java).apply {
             putExtra(Constants.GAME_ID_ARG, gameId)

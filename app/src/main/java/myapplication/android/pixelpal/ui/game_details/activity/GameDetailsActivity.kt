@@ -66,7 +66,7 @@ class GameDetailsActivity : AppCompatActivity() {
     }
 
     fun openAllGamesActivity(
-        intentId: Int,
+        intentId: String,
         gameId: Long,
         genre: String
     ) {

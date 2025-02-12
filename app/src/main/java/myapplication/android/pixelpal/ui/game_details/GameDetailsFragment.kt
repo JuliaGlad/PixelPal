@@ -331,11 +331,7 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
                 getString(R.string.same_series),
                 getString(R.string.unknown),
                 newItems,
-                object : ClickListener {
-                    override fun onClick() {
-                        store.sendEffect(GameDetailsEffect.OpenAllSameSeries(gameId!!))
-                    }
-                },
+                { store.sendEffect(GameDetailsEffect.OpenAllSameSeries(gameId!!)) },
                 object : RecyclerEndListener {
                     override fun onEndReached() {
                         if (!binding.recyclerView.isComputingLayout) {
@@ -358,11 +354,7 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
                 getString(R.string.dlcs_ultimate_edition_goty),
                 getString(R.string.unknown),
                 newItems,
-                object : ClickListener {
-                    override fun onClick() {
-                        store.sendEffect(GameDetailsEffect.OpenAllAdditionsAndParentGames(gameId!!))
-                    }
-                },
+                { store.sendEffect(GameDetailsEffect.OpenAllAdditionsAndParentGames(gameId!!)) },
                 object : RecyclerEndListener {
                     override fun onEndReached() {
                         if (!binding.recyclerView.isComputingLayout) {
@@ -396,18 +388,16 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
                         releaseDate,
                         playtime,
                         image,
-                        object : ClickListener {
-                            override fun onClick() {
-                                store.sendEffect(
-                                    GameDetailsEffect.OpenGameDetails(
-                                        gameId,
-                                        genres!!,
-                                        name,
-                                        releaseDate!!,
-                                        image!!
-                                    )
+                        {
+                            store.sendEffect(
+                                GameDetailsEffect.OpenGameDetails(
+                                    gameId,
+                                    genres!!,
+                                    name,
+                                    releaseDate!!,
+                                    image!!
                                 )
-                            }
+                            )
                         }
                     )
                 )
@@ -443,14 +433,11 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
                     StoreLinkModels(
                         index,
                         id,
-                        url,
-                        object : ClickListener {
-                            override fun onClick() {
-                                val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-                                startActivity(intent)
-                            }
-                        }
-                    )
+                        url
+                    ) {
+                        val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+                        startActivity(intent)
+                    }
                 }
             )
         }

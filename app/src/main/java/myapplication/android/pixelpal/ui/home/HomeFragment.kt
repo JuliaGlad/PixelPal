@@ -37,13 +37,11 @@ import myapplication.android.pixelpal.ui.home.mvi.HomeState
 import myapplication.android.pixelpal.ui.home.mvi.HomeStore
 import myapplication.android.pixelpal.ui.home.mvi.HomeStoreFactory
 import myapplication.android.pixelpal.ui.home.recycler_view.releases.ReleasesModel
-import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.listener.RecyclerEndListener
 import myapplication.android.pixelpal.ui.main.MainActivity
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import java.util.Date
 import javax.inject.Inject
-
 
 class HomeFragment :
     MviBaseFragment<
@@ -256,11 +254,7 @@ class HomeFragment :
                 getString(R.string.new_releases),
                 getString(R.string.there_is_no_new_games_released_this_month),
                 released,
-                object : ClickListener {
-                    override fun onClick() {
-                        store.sendEffect(HomeEffect.OpenAllCurrentReleasesScreen)
-                    }
-                },
+                { store.sendEffect(HomeEffect.OpenAllCurrentReleasesScreen) },
                 object : RecyclerEndListener {
                     override fun onEndReached() {
                         if (checkRecyclerForUpdate(newReleasesSize)) {
@@ -276,11 +270,7 @@ class HomeFragment :
                 getString(R.string.release_this_month),
                 getString(R.string.there_is_no_games_releases_this_month),
                 releaseThisMonth,
-                object : ClickListener {
-                    override fun onClick() {
-                        store.sendEffect(HomeEffect.OpenAllNextReleasesScreen)
-                    }
-                },
+                { store.sendEffect(HomeEffect.OpenAllNextReleasesScreen) },
                 object : RecyclerEndListener {
                     override fun onEndReached() {
                         if (checkRecyclerForUpdate(nextReleasesSize)) {
@@ -293,13 +283,8 @@ class HomeFragment :
         InfoBoxDelegateItem(
             InfoBoxModel(
                 4,
-                getString(R.string.what_other_games_are_coming_out),
-                object : ClickListener {
-                    override fun onClick() {
-                        TODO("Open dates dialog")
-                    }
-                }
-            )
+                getString(R.string.what_other_games_are_coming_out)
+            ) { TODO("Open dates dialog") }
         ),
         NewsDelegateItem(
             NewsItemModel(
@@ -307,11 +292,7 @@ class HomeFragment :
                 getString(R.string.all_time_top),
                 "",
                 topGames,
-                object : ClickListener {
-                    override fun onClick() {
-                        store.sendEffect(HomeEffect.OpenAllTopGamesScreen)
-                    }
-                },
+                { store.sendEffect(HomeEffect.OpenAllTopGamesScreen) },
                 object : RecyclerEndListener {
                     override fun onEndReached() {
                         if (checkRecyclerForUpdate(topGamesSize)) {
@@ -335,21 +316,18 @@ class HomeFragment :
                         name,
                         releaseDate.toString(),
                         genre,
-                        uri.toString(),
-                        object : ClickListener {
-                            override fun onClick() {
-                                store.sendEffect(
-                                    HomeEffect.OpenGameDetailsScreen(
-                                        gameId,
-                                        name,
-                                        genre,
-                                        releaseDate,
-                                        uri
-                                    )
-                                )
-                            }
-                        }
-                    )
+                        uri.toString()
+                    ) {
+                        store.sendEffect(
+                            HomeEffect.OpenGameDetailsScreen(
+                                gameId,
+                                name,
+                                genre,
+                                releaseDate,
+                                uri
+                            )
+                        )
+                    }
                 }
             )
             checkingSize++

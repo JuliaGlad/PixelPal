@@ -98,7 +98,7 @@ class GamesRepositoryImpl @Inject constructor(
         }.toDto()
     }
 
-    override suspend fun getGameByPlatform(platformId: Int, page: Int): GameNewsDtoList =
+    override suspend fun getGameByPlatform(platformId: Long, page: Int): GameNewsDtoList =
         withContext(Dispatchers.IO) {
             remoteSourceGames.getGameByPlatform(platformId, page).toDto()
         }

@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun openAllTopGamesActivity(
-        intentId: Int,
+        intentId: String,
         currentDate: String? = null,
         startDate: String? = null,
         endDate: String? = null
@@ -125,8 +125,16 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    fun openAllStoresActivity(storeId: Int){
+        val intent = Intent(this, AllGamesActivity::class.java).apply {
+            putExtra(Constants.ALL_INTENT_ID, Constants.STORES_GAMES_ID)
+            putExtra(Constants.STORE_ID, storeId)
+        }
+        startActivity(intent)
+    }
+
     fun openPlatformDetailsActivity(
-        id: Int,
+        id: Long,
         name: String,
         gamesCount: Int,
         startYear: Int?,

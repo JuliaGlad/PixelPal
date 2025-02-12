@@ -5,7 +5,7 @@ import myapplication.android.pixelpal.data.repository.dto.platforms.PlatformDtoL
 
 interface PlatformsRepository {
 
-    suspend fun getPlatformDetails(id: Int): PlatformDtoDetails
+    suspend fun getPlatformDetails(id: Long): PlatformDtoDetails
 
     suspend fun getPlatforms(page: Int): PlatformDtoList
 }

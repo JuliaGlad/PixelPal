@@ -2,10 +2,8 @@ package myapplication.android.pixelpal.ui.platforms.fragments.platform.platform_
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import myapplication.android.pixelpal.domain.usecase.games.GetGameByPublisherUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetGamesByPlatformUseCase
 import myapplication.android.pixelpal.domain.usecase.platofrms.GetPlatformDetailsUseCase
-import myapplication.android.pixelpal.ui.creator_details.mvi.CreatorDetailsPartialState
 import myapplication.android.pixelpal.ui.home.model.toUi
 import myapplication.android.pixelpal.ui.ktx.asyncAwait
 import myapplication.android.pixelpal.ui.ktx.runCatchingNonCancellation
@@ -36,7 +34,7 @@ class PlatformDetailsActor(
             )
         }
 
-    private fun loadGames(platformDetailsResult: PlatformDetailsResult, id: Int, page: Int) =
+    private fun loadGames(platformDetailsResult: PlatformDetailsResult, id: Long, page: Int) =
         flow {
             kotlin.runCatching {
                 getGames(id, page)
@@ -56,7 +54,7 @@ class PlatformDetailsActor(
             )
         }
 
-    private fun loadPlatformDetails(id: Int, page: Int) =
+    private fun loadPlatformDetails(id: Long, page: Int) =
         flow {
             kotlin.runCatching {
                 PlatformDetailsResult(
@@ -73,7 +71,7 @@ class PlatformDetailsActor(
             )
         }
 
-    private suspend fun getGames(id: Int, page: Int) =
+    private suspend fun getGames(id: Long, page: Int) =
         runCatchingNonCancellation {
             asyncAwait(
                 {getGameByPlatformUseCase.invoke(id, page)}
@@ -82,7 +80,7 @@ class PlatformDetailsActor(
             }
         }.getOrThrow()
 
-    private suspend fun getPlatformDetails(id: Int) =
+    private suspend fun getPlatformDetails(id: Long) =
         runCatchingNonCancellation {
             asyncAwait(
                 {getPlatformDetailsUseCase.invoke(id)}

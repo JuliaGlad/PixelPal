@@ -7,6 +7,10 @@ interface AllArgument {
         val currentDate: String
     ): AllArgument
 
+    data class StoreGamesArgument(
+        val storeId: Int
+    ): AllArgument
+
     data class NextReleasesAllArgument(
         val endDate: String,
         val currentDate: String
@@ -19,5 +23,13 @@ interface AllArgument {
 
     data class CreatorGamesArgument(
         val creatorId: Long
+    ): AllArgument
+
+    data class PublisherGamesArgument(
+        val publisherId: Long
+    ): AllArgument
+
+    data class PlatformGamesArgument(
+        val platformId: Long
     ): AllArgument
 }
