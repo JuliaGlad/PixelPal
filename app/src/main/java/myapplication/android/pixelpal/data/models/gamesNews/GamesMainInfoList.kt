@@ -4,6 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class GamesNewsList(
-   @SerialName("results") val items: List<GamesNews>
+class GamesMainInfoList(
+   @SerialName("results") val items: List<GamesMainInfo>
 )

@@ -1,18 +1,18 @@
 package myapplication.android.pixelpal.data.source.games
 
-import myapplication.android.pixelpal.data.models.gamesNews.GamesNewsList
+import myapplication.android.pixelpal.data.models.gamesNews.GamesMainInfoList
 
 interface GamesLocalSource {
 
-    fun getTopGames(currentPage: Int): GamesNewsList?
+    fun getTopGames(currentPage: Int): GamesMainInfoList?
 
-    fun getGameMonthReleases(dates: String, page: Int): GamesNewsList?
+    fun getGameMonthReleases(dates: String, page: Int): GamesMainInfoList?
 
-    fun getGameNewReleases(dates: String, page: Int): GamesNewsList?
+    fun getGameNewReleases(dates: String, page: Int): GamesMainInfoList?
 
-    fun insertTopGames(games: GamesNewsList, currentPage: Int)
+    fun insertTopGames(games: GamesMainInfoList, currentPage: Int)
 
-    fun insertGameReleases(games: GamesNewsList, currentPage: Int)
+    fun insertGameReleases(games: GamesMainInfoList, currentPage: Int)
 
     fun deleteTopGames()
 

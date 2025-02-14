@@ -1,10 +1,10 @@
 package myapplication.android.pixelpal.data.repository.dto.game
 
-class GameNewsDtoList(
-    val items: List<GameNewsDto>
+class GameMainInfoDtoList(
+    val items: List<GameMainInfoDto>
 )
 
-class GameNewsDto(
+class GameMainInfoDto(
     val gameId: Long,
     val name: String,
     val playTime: Int,

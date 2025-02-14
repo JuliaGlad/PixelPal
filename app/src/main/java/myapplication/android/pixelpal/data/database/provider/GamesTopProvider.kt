@@ -3,7 +3,7 @@ package myapplication.android.pixelpal.data.database.provider
 import kotlinx.serialization.json.jsonObject
 import myapplication.android.pixelpal.app.App.Companion.app
 import myapplication.android.pixelpal.data.database.entities.GameTopEntity
-import myapplication.android.pixelpal.data.models.gamesNews.GamesNewsList
+import myapplication.android.pixelpal.data.models.gamesNews.GamesMainInfoList
 
 class GamesTopProvider {
 
@@ -27,7 +27,7 @@ class GamesTopProvider {
         app.database.gameTopDao().deleteAll()
     }
 
-    fun insertGamesNews(games: GamesNewsList, page: Int) {
+    fun insertGamesNews(games: GamesMainInfoList, page: Int) {
         val entities = mutableListOf<GameTopEntity>()
         for (i in games.items) {
             with(i) {

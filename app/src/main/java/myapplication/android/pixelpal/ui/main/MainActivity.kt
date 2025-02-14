@@ -22,6 +22,7 @@ import myapplication.android.pixelpal.ui.main.BottomScreen.platforms
 import myapplication.android.pixelpal.ui.main.BottomScreen.profile
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.platform_details.PlatformDetailsActivity
 import myapplication.android.pixelpal.ui.platforms.fragments.store.store_details.StoreDetailsActivity
+import myapplication.android.pixelpal.ui.profile.favorite_games.FavoriteGamesActivity
 import myapplication.android.pixelpal.ui.profile.signing.AccountCreationActivity
 import myapplication.android.pixelpal.ui.publisher_details.PublisherDetailsActivity
 
@@ -49,7 +50,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
+    fun openFavoritesActivity(){
+        val intent = Intent(this, FavoriteGamesActivity::class.java)
+        startActivity(intent)
+    }
 
     private fun initBottomBar() {
         binding.bottomNav.itemIconTintList = null

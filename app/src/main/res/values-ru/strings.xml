@@ -12,6 +12,7 @@
     <string name="genre">Жанр:</string>
     <string name="release_date">Дата выхода:</string>
     <string name="description">Описание:</string>
+    <string name="looks_like_you_dont_have_any_favorite_games_yet">Похоже, пока что у вас нет любимых игр!</string>
     <string name="no_results_found_for_query">Ничего не найдено по запросу:</string>
     <string name="released">Вышла:</string>
     <string name="search">Поиск</string>

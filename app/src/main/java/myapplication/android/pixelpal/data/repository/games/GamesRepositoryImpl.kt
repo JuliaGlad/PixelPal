@@ -1,12 +1,15 @@
 package myapplication.android.pixelpal.data.repository.games
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import myapplication.android.pixelpal.data.repository.dto.game.GameDescriptionDto
-import myapplication.android.pixelpal.data.repository.dto.game.GameNewsDtoList
+import myapplication.android.pixelpal.app.Constants
+import myapplication.android.pixelpal.data.repository.dto.game.GameDetailsDto
+import myapplication.android.pixelpal.data.repository.dto.game.GameMainInfoDtoList
 import myapplication.android.pixelpal.data.repository.dto.game.GamesShortDtoList
 import myapplication.android.pixelpal.data.repository.dto.game.ScreenshotDtoList
 import myapplication.android.pixelpal.data.repository.mapper.game.toDto
+import myapplication.android.pixelpal.data.repository.user.FirebaseService
 import myapplication.android.pixelpal.data.source.games.GamesLocalSource
 import myapplication.android.pixelpal.data.source.games.GamesRemoteSource
 import myapplication.android.pixelpal.data.source.games.GamesShortDataLocalSource
@@ -60,7 +63,7 @@ class GamesRepositoryImpl @Inject constructor(
         return result
     }
 
-    override suspend fun getTopGames(page: Int): GameNewsDtoList {
+    override suspend fun getTopGames(page: Int): GameMainInfoDtoList {
         val local = localSourceGames.getTopGames(page)
         val result =
             if (local != null) local
@@ -74,7 +77,7 @@ class GamesRepositoryImpl @Inject constructor(
         return result.toDto()
     }
 
-    override suspend fun getGameNewReleases(dates: String, page: Int): GameNewsDtoList {
+    override suspend fun getGameNewReleases(dates: String, page: Int): GameMainInfoDtoList {
         val local = localSourceGames.getGameNewReleases(dates, page)
         return if (local != null) local
         else {
@@ -86,7 +89,7 @@ class GamesRepositoryImpl @Inject constructor(
         }.toDto()
     }
 
-    override suspend fun getGameMonthReleases(dates: String, page: Int): GameNewsDtoList {
+    override suspend fun getGameMonthReleases(dates: String, page: Int): GameMainInfoDtoList {
         val local = localSourceGames.getGameMonthReleases(dates, page)
         return if (local != null) local
         else {
@@ -98,29 +101,43 @@ class GamesRepositoryImpl @Inject constructor(
         }.toDto()
     }
 
-    override suspend fun getGameByPlatform(platformId: Long, page: Int): GameNewsDtoList =
+    override suspend fun getGameByPlatform(platformId: Long, page: Int): GameMainInfoDtoList =
         withContext(Dispatchers.IO) {
             remoteSourceGames.getGameByPlatform(platformId, page).toDto()
         }
 
-    override suspend fun getGameByStore(storeId: Int, page: Int): GameNewsDtoList =
+    override suspend fun getGameByStore(storeId: Int, page: Int): GameMainInfoDtoList =
         withContext(Dispatchers.IO){
             remoteSourceGames.getGameByStore(storeId, page).toDto()
         }
 
-    override suspend fun getGameByPublisher(publisherId: Long, page: Int): GameNewsDtoList =
+    override suspend fun getGameByPublisher(publisherId: Long, page: Int): GameMainInfoDtoList =
        withContext(Dispatchers.IO) {
            remoteSourceGames.getGameByPublisher(publisherId, page).toDto()
        }
 
-    override suspend fun getGameByCreator(creatorId: Long, page: Int): GameNewsDtoList =
+    override suspend fun getGameByCreator(creatorId: Long, page: Int): GameMainInfoDtoList =
         withContext(Dispatchers.IO){
             remoteSourceGames.getGameByCreator(creatorId, page).toDto()
         }
 
-    override suspend fun getGameDescription(gameId: Long): GameDescriptionDto =
+    override suspend fun getGameDescription(gameId: Long): GameDetailsDto =
        withContext(Dispatchers.IO){
-           remoteSourceGames.getGameDescription(gameId).toDto()
+           remoteSourceGames.getGameDescription(gameId).toDto(isFavoriteGame(gameId))
        }
+
+    private suspend fun isFavoriteGame(gameId: Long): Boolean {
+        var isFavorite = false
+        FirebaseService.auth.uid?.let {
+            val documentSnapshot = FirebaseService.fireStore
+                .collection(Constants.USER_COLLECTION)
+                .document(it)
+                .get()
+                .await()
+            val favs = documentSnapshot.get(Constants.FAVORITE_GAMES) as List<Long>
+            if (favs.contains(gameId)) isFavorite = true
+        }
+        return isFavorite
+    }
 
 }

@@ -4,7 +4,7 @@ import android.icu.util.Calendar
 import kotlinx.serialization.json.jsonObject
 import myapplication.android.pixelpal.app.App.Companion.app
 import myapplication.android.pixelpal.data.database.entities.GameReleaseEntity
-import myapplication.android.pixelpal.data.models.gamesNews.GamesNewsList
+import myapplication.android.pixelpal.data.models.gamesNews.GamesMainInfoList
 
 class GameReleasesProvider {
 
@@ -40,7 +40,7 @@ class GameReleasesProvider {
         app.database.gameReleasesDao().deleteAll()
     }
 
-    fun insertGamesReleases(games: GamesNewsList, page: Int) {
+    fun insertGamesReleases(games: GamesMainInfoList, page: Int) {
         val entities = mutableListOf<GameReleaseEntity>()
         for (i in games.items) {
             with(i) {

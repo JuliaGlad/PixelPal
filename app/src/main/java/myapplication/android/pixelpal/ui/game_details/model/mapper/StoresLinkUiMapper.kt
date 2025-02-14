@@ -1,4 +1,4 @@
-package myapplication.android.pixelpal.ui.game_details.model.wrapper
+package myapplication.android.pixelpal.ui.game_details.model.mapper
 
 import myapplication.android.pixelpal.domain.model.stores.StoreSellingGameLinksDomainList
 import myapplication.android.pixelpal.ui.game_details.model.StoreLinksUi

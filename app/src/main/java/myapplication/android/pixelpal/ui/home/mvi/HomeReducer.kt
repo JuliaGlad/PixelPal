@@ -1,6 +1,6 @@
 package myapplication.android.pixelpal.ui.home.mvi
 
-import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
+import myapplication.android.pixelpal.ui.home.model.GamesMainInfoListUi
 import myapplication.android.pixelpal.ui.mvi.MviReducer
 
 class HomeReducer : MviReducer<HomePartialState, HomeState> {
@@ -15,19 +15,19 @@ class HomeReducer : MviReducer<HomePartialState, HomeState> {
             is HomePartialState.ReleasesUpdated -> updateReleasesContent(prevState, partialState.ui)
         }
 
-    private fun updateReleasesContent(prevState: HomeState, ui: GamesNewsListUi) : HomeState=
+    private fun updateReleasesContent(prevState: HomeState, ui: GamesMainInfoListUi) : HomeState=
         prevState.copy(
             ui = HomeLceState.UpdateReleasesContent(ui),
             newReleasesPage = prevState.newReleasesPage + 1
         )
 
-    private fun updateNextReleasesContent(prevState: HomeState, ui: GamesNewsListUi) : HomeState=
+    private fun updateNextReleasesContent(prevState: HomeState, ui: GamesMainInfoListUi) : HomeState=
         prevState.copy(
             ui = HomeLceState.UpdateNextReleasesContent(ui),
             nextReleasesPage = prevState.nextReleasesPage + 1
         )
 
-    private fun updateTopContent(prevState: HomeState, ui: GamesNewsListUi) : HomeState=
+    private fun updateTopContent(prevState: HomeState, ui: GamesMainInfoListUi) : HomeState=
         prevState.copy(
             ui = HomeLceState.UpdateTopContent(ui),
             topPage = prevState.topPage + 1

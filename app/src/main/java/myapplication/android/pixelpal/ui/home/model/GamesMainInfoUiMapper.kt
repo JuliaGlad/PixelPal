@@ -1,10 +1,10 @@
 package myapplication.android.pixelpal.ui.home.model
 
-import myapplication.android.pixelpal.domain.model.games.GamesNewsListDomain
+import myapplication.android.pixelpal.domain.model.games.GamesMainInfoListDomain
 import java.util.stream.Collectors
 
-fun GamesNewsListDomain.toUi() =
-    GamesNewsListUi(items.stream()
+fun GamesMainInfoListDomain.toUi() =
+    GamesMainInfoListUi(items.stream()
         .map {
             with(it) {
                 GamesUi(

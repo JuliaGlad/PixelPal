@@ -42,7 +42,7 @@ import myapplication.android.pixelpal.ui.games.games.model.GamesShortDataUi
 import myapplication.android.pixelpal.ui.games.games.model.GamesShortDataUiList
 import myapplication.android.pixelpal.ui.games.games.recycler_view.GamesShortModel
 import myapplication.android.pixelpal.ui.games.games.recycler_view.linear.GamesShortLinearAdapter
-import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
+import myapplication.android.pixelpal.ui.home.model.GamesMainInfoListUi
 import myapplication.android.pixelpal.ui.home.model.GamesUi
 import myapplication.android.pixelpal.ui.listener.LinearPaginationScrollListener
 import myapplication.android.pixelpal.ui.mvi.LceState
@@ -225,7 +225,7 @@ class AllGamesFragment : MviBaseFragment<
             is LceState.Content -> {
                 binding.loading.root.visibility = GONE
                 when(state.ui.data){
-                    is GamesNewsListUi ->{
+                    is GamesMainInfoListUi ->{
                         initOrUpdate(
                             state.ui.data,
                             ::initGameNewsRecycler,
@@ -270,14 +270,14 @@ class AllGamesFragment : MviBaseFragment<
         adapter.notifyItemRangeInserted(startPosition, models.size)
     }
 
-    private fun updateGamesNewsRecycler(items: GamesNewsListUi) {
+    private fun updateGamesNewsRecycler(items: GamesMainInfoListUi) {
         val models = addDataShortModelFromNewsUi(items)
         val startPosition = gamesShortModels.size - 1
         gamesShortModels.addAll(models)
         adapter.notifyItemRangeInserted(startPosition, models.size)
     }
 
-    private fun addDataShortModelFromNewsUi(data: GamesNewsListUi): List<GamesShortModel> {
+    private fun addDataShortModelFromNewsUi(data: GamesMainInfoListUi): List<GamesShortModel> {
         val models = mutableListOf<GamesShortModel>()
         for (i in data.games) {
             with(i) {
@@ -305,7 +305,7 @@ class AllGamesFragment : MviBaseFragment<
         addScrollRecyclerListener()
     }
 
-    private fun initGameNewsRecycler(data: GamesNewsListUi) {
+    private fun initGameNewsRecycler(data: GamesMainInfoListUi) {
         gamesShortModels.addAll(addDataShortModelFromNewsUi(data))
         binding.recyclerView.adapter = adapter
         adapter.submitList(gamesShortModels)

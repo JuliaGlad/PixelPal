@@ -27,4 +27,8 @@ sealed interface GameDetailsLceState<out T>{
     data class UpdateCreators<out T>(val data: T): GameDetailsLceState<T>
 
     data class Error(val throwable: Throwable): GameDetailsLceState<Nothing>
+
+    data object GameRemovedFromFavorites: GameDetailsLceState<Nothing>
+
+    data object GameAddedToFavorites: GameDetailsLceState<Nothing>
 }

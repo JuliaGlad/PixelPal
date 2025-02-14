@@ -4,8 +4,10 @@ import myapplication.android.pixelpal.data.models.creators.CreatorDetails
 import myapplication.android.pixelpal.data.models.creators.CreatorsList
 import myapplication.android.pixelpal.data.models.creators_roles.RolesList
 import myapplication.android.pixelpal.data.models.game_description.GameDescription
+import myapplication.android.pixelpal.data.models.gamesMain.GameShortData
 import myapplication.android.pixelpal.data.models.gamesMain.GamesShortDataList
-import myapplication.android.pixelpal.data.models.gamesNews.GamesNewsList
+import myapplication.android.pixelpal.data.models.gamesNews.GamesMainInfo
+import myapplication.android.pixelpal.data.models.gamesNews.GamesMainInfoList
 import myapplication.android.pixelpal.data.models.genres.GenreDescription
 import myapplication.android.pixelpal.data.models.genres.GenresList
 import myapplication.android.pixelpal.data.models.platforms.PlatformDetails
@@ -22,17 +24,23 @@ import retrofit2.http.Query
 
 interface GamesApi {
 
-    @GET("games")
-    suspend fun getGamesByPlatform(@Query("platforms")platformId: Long, @Query("page")page: Int): GamesNewsList
+    @GET("games/{id}")
+    suspend fun getGameById(@Path("id")id: Long):GamesMainInfo
 
     @GET("games")
-    suspend fun getGamesByStore(@Query("stores")storeId: Int, @Query("page")page: Int): GamesNewsList
+    suspend fun getGamesByIds(@Query("tags")ids: List<Long>):GamesMainInfoList
 
     @GET("games")
-    suspend fun getGamesByPublisher(@Query("publishers")publisherId: Long, @Query("page")page: Int): GamesNewsList
+    suspend fun getGamesByPlatform(@Query("platforms")platformId: Long, @Query("page")page: Int): GamesMainInfoList
 
     @GET("games")
-    suspend fun getGamesByCreator(@Query("creators")creatorId: Long, @Query("page")page: Int): GamesNewsList
+    suspend fun getGamesByStore(@Query("stores")storeId: Int, @Query("page")page: Int): GamesMainInfoList
+
+    @GET("games")
+    suspend fun getGamesByPublisher(@Query("publishers")publisherId: Long, @Query("page")page: Int): GamesMainInfoList
+
+    @GET("games")
+    suspend fun getGamesByCreator(@Query("creators")creatorId: Long, @Query("page")page: Int): GamesMainInfoList
 
     @GET("publishers/{id}")
     suspend fun getPublisherDetails(@Path("id")id: Long): PublisherDetails
@@ -68,10 +76,10 @@ interface GamesApi {
     suspend fun getGameAdditions(@Path("game_pk") id: String, @Query("page") page: Int): GamesShortDataList
 
     @GET("games")
-    suspend fun getGamesByReleasesDate(@Query("dates") dates: String, @Query("page") page: Int): GamesNewsList
+    suspend fun getGamesByReleasesDate(@Query("dates") dates: String, @Query("page") page: Int): GamesMainInfoList
 
     @GET("games?ordering=-metacritics")
-    suspend fun getTopGames(@Query("page") page: Int): GamesNewsList
+    suspend fun getTopGames(@Query("page") page: Int): GamesMainInfoList
 
     @GET("games")
     suspend fun getGamesShortDataByGenre(@Query("page")page: Int, @Query("genres") genre: Long): GamesShortDataList

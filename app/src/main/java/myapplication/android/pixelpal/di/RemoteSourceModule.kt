@@ -4,6 +4,8 @@ import dagger.Binds
 import dagger.Module
 import myapplication.android.pixelpal.data.source.creators.CreatorsRemoteSource
 import myapplication.android.pixelpal.data.source.creators.CreatorsRemoteSourceImpl
+import myapplication.android.pixelpal.data.source.favorite_games.FavoriteGamesRemoteSource
+import myapplication.android.pixelpal.data.source.favorite_games.FavoriteGamesRemoteSourceImpl
 import myapplication.android.pixelpal.data.source.games.GamesRemoteSource
 import myapplication.android.pixelpal.data.source.games.GamesRemoteSourceImpl
 import myapplication.android.pixelpal.data.source.genres.GenresRemoteSource
@@ -18,6 +20,9 @@ import javax.inject.Singleton
 
 @Module
 interface RemoteSourceModule {
+    @Singleton
+    @Binds
+    fun bindRemoteSourceFavoriteGames(favoriteGamesRemoteSourceImpl: FavoriteGamesRemoteSourceImpl): FavoriteGamesRemoteSource
 
     @Singleton
     @Binds

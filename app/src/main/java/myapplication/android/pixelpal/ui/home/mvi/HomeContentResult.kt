@@ -1,9 +1,9 @@
 package myapplication.android.pixelpal.ui.home.mvi
 
-import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
+import myapplication.android.pixelpal.ui.home.model.GamesMainInfoListUi
 
 class HomeContentResult(
-    val gamesTop: GamesNewsListUi,
-    val gamesReleased: GamesNewsListUi,
-    val gameMonthReleases: GamesNewsListUi
+    val gamesTop: GamesMainInfoListUi,
+    val gamesReleased: GamesMainInfoListUi,
+    val gameMonthReleases: GamesMainInfoListUi
 )

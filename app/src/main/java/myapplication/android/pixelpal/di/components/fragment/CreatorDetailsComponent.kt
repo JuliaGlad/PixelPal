@@ -25,7 +25,7 @@ interface CreatorDetailsComponent {
 @Module
 class CreatorDetailsModule{
 
-    @AllGamesScope
+    @CreatorDetailsScope
     @Provides
     fun provideCreatorDetailsLocalDi(
         creatorsRepository: CreatorsRepository,

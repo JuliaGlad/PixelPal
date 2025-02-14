@@ -20,7 +20,7 @@
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/game_details_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:name="myapplication.android.pixelpal.ui.game_details.GameDetailsFragment"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

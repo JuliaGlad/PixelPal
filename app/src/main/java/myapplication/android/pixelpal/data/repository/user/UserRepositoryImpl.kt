@@ -78,7 +78,8 @@ class UserRepositoryImpl @Inject constructor() : UserRepository {
             .set(
                 hashMapOf(
                     Constants.USER_NAME to name,
-                    Constants.USER_EMAIL to email
+                    Constants.USER_EMAIL to email,
+                    Constants.FAVORITE_GAMES to listOf<Long>()
                 )
             )
 }

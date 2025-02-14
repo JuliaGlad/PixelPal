@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
+        android:paddingBottom="16dp"
         android:drawable="@drawable/ic_arrow_back"
         app:iconColor="@color/main_blue"
         app:layout_constraintStart_toStartOf="parent"

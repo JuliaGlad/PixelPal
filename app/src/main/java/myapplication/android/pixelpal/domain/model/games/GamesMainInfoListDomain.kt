@@ -1,6 +1,6 @@
 package myapplication.android.pixelpal.domain.model.games
 
-data class GamesNewsListDomain(
+data class GamesMainInfoListDomain(
     val items: List<GamesNewsDomain>
 )
 

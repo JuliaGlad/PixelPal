@@ -6,6 +6,14 @@ sealed interface GameDetailsIntent: MviIntent {
 
     data object Init : GameDetailsIntent
 
+    data class RemoveGameFromFavorites(
+        val gameId: Long
+    ): GameDetailsIntent
+
+    data class AddGameToFavorites(
+        val gameId: Long
+    ): GameDetailsIntent
+
     data class GetStoresSellingGame(
         val gameId: String
     ): GameDetailsIntent

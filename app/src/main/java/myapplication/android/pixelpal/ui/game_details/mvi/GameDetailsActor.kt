@@ -1,15 +1,18 @@
 package myapplication.android.pixelpal.ui.game_details.mvi
 
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import myapplication.android.pixelpal.domain.usecase.creators.GetGameCreatorsUseCase
+import myapplication.android.pixelpal.domain.usecase.favorite_games.AddFavoriteGamesUseCase
+import myapplication.android.pixelpal.domain.usecase.favorite_games.RemoveFavoriteGameUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetGameAdditionsUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetGameDescriptionUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetGameScreenshotsUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetGamesFromSameSeriesUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetParenGamesUseCase
 import myapplication.android.pixelpal.domain.usecase.stores.GetStoresSellingGameUseCase
-import myapplication.android.pixelpal.ui.game_details.model.wrapper.toUi
+import myapplication.android.pixelpal.ui.game_details.model.mapper.toUi
 import myapplication.android.pixelpal.ui.games.games.model.toUi
 import myapplication.android.pixelpal.ui.ktx.asyncAwait
 import myapplication.android.pixelpal.ui.ktx.runCatchingNonCancellation
@@ -22,7 +25,9 @@ class GameDetailsActor(
     private val getGameDescriptionUseCase: GetGameDescriptionUseCase,
     private val getGameScreenshotsUseCase: GetGameScreenshotsUseCase,
     private val getParentGamesUseCase: GetParenGamesUseCase,
-    private val getGamesFromSameSeriesUseCase: GetGamesFromSameSeriesUseCase
+    private val getGamesFromSameSeriesUseCase: GetGamesFromSameSeriesUseCase,
+    private val addFavoriteGamesUseCase: AddFavoriteGamesUseCase,
+    private val removeFavoriteGameUseCase: RemoveFavoriteGameUseCase
 ) : MviActor<GameDetailsPartialState, GameDetailsIntent, GameDetailsState, GameDetailsEffect>() {
     override fun resolve(
         intent: GameDetailsIntent,
@@ -36,6 +41,8 @@ class GameDetailsActor(
             is GameDetailsIntent.GetSameSeries -> loadSameSeries(intent.gameId, state.seriesPage + 1)
             GameDetailsIntent.Init -> updateInit()
             is GameDetailsIntent.GetStoresSellingGame -> loadStores(intent.gameId, state.storesPage + 1)
+            is GameDetailsIntent.AddGameToFavorites -> addFavoriteGame(intent.gameId)
+            is GameDetailsIntent.RemoveGameFromFavorites -> removeFavoriteGame(intent.gameId)
         }
 
     private fun loadParentAndAddition(gameId: String, page: Int) =
@@ -110,6 +117,38 @@ class GameDetailsActor(
             }.fold(
                 onSuccess = { data ->
                     emit(GameDetailsPartialState.UpdateDataLoaded(data))
+                },
+                onFailure = { throwable ->
+                    emit(GameDetailsPartialState.UpdateError(throwable))
+                }
+            )
+        }
+
+    private fun removeFavoriteGame(gameId: Long) =
+        flow {
+            kotlin.runCatching {
+                removeFavoriteGameUseCase.invoke(gameId)
+            }.fold(
+                onSuccess = {
+                    emit(GameDetailsPartialState.GameRemoved)
+                },
+                onFailure = { throwable ->
+                    emit(GameDetailsPartialState.UpdateError(throwable))
+                }
+            )
+        }
+
+    private fun addFavoriteGame(gameId: Long) =
+        flow {
+            kotlin.runCatching {
+               // runCatchingNonCancellation {
+               //     coroutineScope {
+                        addFavoriteGamesUseCase.invoke(gameId)
+             //       }
+            //    }.getOrThrow()
+            }.fold(
+                onSuccess = {
+                    emit(GameDetailsPartialState.GameAdded)
                 },
                 onFailure = { throwable ->
                     emit(GameDetailsPartialState.UpdateError(throwable))

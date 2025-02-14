@@ -4,6 +4,8 @@ import dagger.Binds
 import dagger.Module
 import myapplication.android.pixelpal.data.repository.creators.CreatorsRepository
 import myapplication.android.pixelpal.data.repository.creators.CreatorsRepositoryImpl
+import myapplication.android.pixelpal.data.repository.favorite_games.FavoriteGamesRepository
+import myapplication.android.pixelpal.data.repository.favorite_games.FavoriteGamesRepositoryImpl
 import myapplication.android.pixelpal.data.repository.games.GamesRepository
 import myapplication.android.pixelpal.data.repository.games.GamesRepositoryImpl
 import myapplication.android.pixelpal.data.repository.genres.GenresRepository
@@ -20,6 +22,10 @@ import javax.inject.Singleton
 
 @Module
 interface RepositoryModule {
+
+    @Singleton
+    @Binds
+    fun bindFavoriteGamesRepository(favoriteGamesRepositoryImlp: FavoriteGamesRepositoryImpl): FavoriteGamesRepository
 
     @Singleton
     @Binds

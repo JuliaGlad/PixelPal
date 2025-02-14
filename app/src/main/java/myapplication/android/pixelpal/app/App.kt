@@ -20,8 +20,10 @@ internal class App : Application() {
         app = this
     }
 
-    private fun createDatabase() =  databaseBuilder(this, LocalDataBase::class.java, "database")
-        .allowMainThreadQueries().build()
+    private fun createDatabase() =
+        databaseBuilder(this, LocalDataBase::class.java, "database")
+        .allowMainThreadQueries()
+        .build()
 
     private fun createComponent(): AppComponent {
         return DaggerAppComponent.factory().create(this.applicationContext)

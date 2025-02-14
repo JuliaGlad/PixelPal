@@ -1,10 +1,9 @@
 package myapplication.android.pixelpal.ui.creator_details.model
 
-import myapplication.android.pixelpal.ui.games.games.model.GamesShortDataUiList
-import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
+import myapplication.android.pixelpal.ui.home.model.GamesMainInfoListUi
 
 class CreatorDetailsResultUi(
     val creatorDetails: CreatorDetailsUi,
-    val games: GamesNewsListUi,
-    var newItems: GamesNewsListUi? = null
+    val games: GamesMainInfoListUi,
+    var newItems: GamesMainInfoListUi? = null
 )

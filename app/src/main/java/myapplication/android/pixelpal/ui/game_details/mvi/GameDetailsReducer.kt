@@ -36,6 +36,8 @@ class GameDetailsReducer : MviReducer<GameDetailsPartialState, GameDetailsState>
             )
 
             is GameDetailsPartialState.UpdateStores -> updateStores(prevState, partialState.stores)
+            GameDetailsPartialState.GameAdded -> prevState.copy(ui = GameDetailsLceState.GameAddedToFavorites)
+            GameDetailsPartialState.GameRemoved -> prevState.copy(ui = GameDetailsLceState.GameRemovedFromFavorites)
         }
 
     private fun updateStores(

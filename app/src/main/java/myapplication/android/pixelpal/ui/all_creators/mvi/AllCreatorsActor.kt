@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import myapplication.android.pixelpal.domain.usecase.creators.GetGameCreatorsUseCase
 import myapplication.android.pixelpal.ui.game_details.model.CreatorsGameUiList
-import myapplication.android.pixelpal.ui.game_details.model.wrapper.toUi
+import myapplication.android.pixelpal.ui.game_details.model.mapper.toUi
 import myapplication.android.pixelpal.ui.ktx.asyncAwait
 import myapplication.android.pixelpal.ui.ktx.runCatchingNonCancellation
 import myapplication.android.pixelpal.ui.mvi.MviActor

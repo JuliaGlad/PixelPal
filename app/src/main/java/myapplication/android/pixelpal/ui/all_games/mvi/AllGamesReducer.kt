@@ -1,6 +1,5 @@
 package myapplication.android.pixelpal.ui.all_games.mvi
 
-import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviReducer
 

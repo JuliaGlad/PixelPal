@@ -5,6 +5,7 @@ import myapplication.android.pixelpal.ui.game_details.model.StoresSellingGameUiL
 import myapplication.android.pixelpal.ui.games.games.model.GamesShortDataUiList
 import myapplication.android.pixelpal.ui.home.mvi.HomeContentResult
 import myapplication.android.pixelpal.ui.mvi.MviPartialState
+import myapplication.android.pixelpal.ui.profile.favorite_games.mvi.FavoriteGamesPartialState
 
 sealed interface GameDetailsPartialState : MviPartialState {
 
@@ -26,4 +27,8 @@ sealed interface GameDetailsPartialState : MviPartialState {
     ): GameDetailsPartialState
 
     data class UpdateCreators(val creatorsGameUiList: CreatorsGameUiList): GameDetailsPartialState
+
+    data object GameRemoved : GameDetailsPartialState
+
+    data object GameAdded : GameDetailsPartialState
 }

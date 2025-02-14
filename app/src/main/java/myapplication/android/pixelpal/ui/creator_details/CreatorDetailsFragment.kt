@@ -41,8 +41,7 @@ import myapplication.android.pixelpal.ui.delegates.delegates.title_textview.Titl
 import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
 import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
 import myapplication.android.pixelpal.ui.games.games.recycler_view.GamesShortModel
-import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
-import myapplication.android.pixelpal.ui.listener.ClickListener
+import myapplication.android.pixelpal.ui.home.model.GamesMainInfoListUi
 import myapplication.android.pixelpal.ui.listener.RecyclerEndListener
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
@@ -149,7 +148,7 @@ class CreatorDetailsFragment : MviBaseFragment<
         }
     }
 
-    private fun updateRecycler(data: GamesNewsListUi) {
+    private fun updateRecycler(data: GamesMainInfoListUi) {
         isUpdated = false
         val newItems = getCreatorGames(data)
         for (i in itemsRecycler){
@@ -218,7 +217,7 @@ class CreatorDetailsFragment : MviBaseFragment<
         adapter.submitList(itemsRecycler)
     }
 
-    private fun getCreatorGames(items: GamesNewsListUi): MutableList<GamesShortModel> {
+    private fun getCreatorGames(items: GamesMainInfoListUi): MutableList<GamesShortModel> {
         val list = mutableListOf<GamesShortModel>()
         for (i in items.games) {
             with(i) {

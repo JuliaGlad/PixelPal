@@ -12,6 +12,7 @@
         app:iconColor="@color/main_blue"
         android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
+        android:paddingBottom="16dp"
         android:drawable="@drawable/ic_arrow_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>

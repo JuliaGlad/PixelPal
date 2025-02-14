@@ -6,7 +6,7 @@ import kotlinx.serialization.json.JsonArray
 import myapplication.android.pixelpal.data.models.GameRating
 
 @Serializable
-class GamesNews(
+class GamesMainInfo(
     @SerialName("released") val releaseDate: String?,
     @SerialName("background_image") val image: String?,
     @SerialName("metacritic") val rating: Float?,

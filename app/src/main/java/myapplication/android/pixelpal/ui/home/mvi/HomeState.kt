@@ -1,10 +1,10 @@
 package myapplication.android.pixelpal.ui.home.mvi
 
-import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
+import myapplication.android.pixelpal.ui.home.model.GamesMainInfoListUi
 import myapplication.android.pixelpal.ui.mvi.MviState
 
 data class HomeState(
-    val ui: HomeLceState<HomeContentResult, GamesNewsListUi>,
+    val ui: HomeLceState<HomeContentResult, GamesMainInfoListUi>,
     val topPage: Int = 1,
     val newReleasesPage: Int = 1,
     val nextReleasesPage: Int = 1

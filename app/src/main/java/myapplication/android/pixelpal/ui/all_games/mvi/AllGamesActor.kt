@@ -15,7 +15,7 @@ import myapplication.android.pixelpal.domain.usecase.games.GetTopGamesUseCase
 import myapplication.android.pixelpal.ui.games.games.model.GamesShortDataUi
 import myapplication.android.pixelpal.ui.games.games.model.GamesShortDataUiList
 import myapplication.android.pixelpal.ui.games.games.model.toUi
-import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
+import myapplication.android.pixelpal.ui.home.model.GamesMainInfoListUi
 import myapplication.android.pixelpal.ui.home.model.toUi
 import myapplication.android.pixelpal.ui.ktx.asyncAwait
 import myapplication.android.pixelpal.ui.ktx.runCatchingNonCancellation
@@ -282,7 +282,7 @@ class AllGamesActor(
     private suspend fun getReleasesGames(
         date: String,
         page: Int
-    ): GamesNewsListUi =
+    ): GamesMainInfoListUi =
         runCatchingNonCancellation {
             asyncAwait(
                 { getGamesNewReleasesUseCase.invoke(date, page) }
@@ -294,7 +294,7 @@ class AllGamesActor(
     private suspend fun getNextReleasesGames(
         date: String,
         page: Int
-    ): GamesNewsListUi =
+    ): GamesMainInfoListUi =
         runCatchingNonCancellation {
             asyncAwait(
                 { getGameMonthReleasesUseCase.invoke(date, page) }

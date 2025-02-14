@@ -39,6 +39,7 @@ import myapplication.android.pixelpal.ui.dialogs.EditProfileDialog
 import myapplication.android.pixelpal.ui.dialogs.LogoutWarningDialog
 import myapplication.android.pixelpal.ui.listener.DialogDismissedListener
 import myapplication.android.pixelpal.ui.main.BottomScreen
+import myapplication.android.pixelpal.ui.main.MainActivity
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.mvi.MviStore
 import myapplication.android.pixelpal.ui.profile.main.mvi.ProfileMainEffect
@@ -110,7 +111,7 @@ class ProfileMainFragment : MviBaseFragment<
                 })
             }
 
-            ProfileMainEffect.OpenFavoritesActivity -> TODO()
+            ProfileMainEffect.OpenFavoritesActivity -> (activity as MainActivity).openFavoritesActivity()
             ProfileMainEffect.ShowDeleteDialog -> {
                 val dialogFragment = DeleteAccountDialog()
                 dialogFragment.show(activity?.supportFragmentManager!!, "DELETE_DIALOG")

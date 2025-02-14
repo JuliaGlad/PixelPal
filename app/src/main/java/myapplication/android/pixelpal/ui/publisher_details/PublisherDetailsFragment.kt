@@ -33,7 +33,7 @@ import myapplication.android.pixelpal.ui.delegates.delegates.title_textview.Titl
 import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
 import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
 import myapplication.android.pixelpal.ui.games.games.recycler_view.GamesShortModel
-import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
+import myapplication.android.pixelpal.ui.home.model.GamesMainInfoListUi
 import myapplication.android.pixelpal.ui.listener.RecyclerEndListener
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
@@ -143,7 +143,7 @@ class PublisherDetailsFragment : MviBaseFragment<
         }
     }
 
-    private fun updateRecycler(newItems: GamesNewsListUi?) {
+    private fun updateRecycler(newItems: GamesMainInfoListUi?) {
         isUpdated = false
         val new = getPublisherGames(newItems!!)
         for (i in recyclerItems){
@@ -203,7 +203,7 @@ class PublisherDetailsFragment : MviBaseFragment<
         adapter.submitList(recyclerItems)
     }
 
-    private fun getPublisherGames(items: GamesNewsListUi): MutableList<GamesShortModel> {
+    private fun getPublisherGames(items: GamesMainInfoListUi): MutableList<GamesShortModel> {
         val list = mutableListOf<GamesShortModel>()
         for (i in items.games) {
             with(i) {

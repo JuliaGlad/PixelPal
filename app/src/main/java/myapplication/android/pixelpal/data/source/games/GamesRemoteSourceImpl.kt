@@ -2,24 +2,29 @@ package myapplication.android.pixelpal.data.source.games
 
 import myapplication.android.pixelpal.data.api.GamesApi
 import myapplication.android.pixelpal.data.models.game_description.GameDescription
+import myapplication.android.pixelpal.data.models.gamesMain.GameShortData
 import myapplication.android.pixelpal.data.models.gamesMain.GamesShortDataList
-import myapplication.android.pixelpal.data.models.gamesNews.GamesNewsList
+import myapplication.android.pixelpal.data.models.gamesNews.GamesMainInfo
+import myapplication.android.pixelpal.data.models.gamesNews.GamesMainInfoList
 import myapplication.android.pixelpal.data.models.screenshots.ScreenshotsList
 import javax.inject.Inject
 
 class GamesRemoteSourceImpl @Inject constructor(
     private val api: GamesApi,
-): GamesRemoteSource {
-    override suspend fun getGameByPlatform(platformId: Long, page: Int): GamesNewsList =
-            api.getGamesByPlatform(platformId, page)
+) : GamesRemoteSource {
+    override suspend fun getGameById(gameId: Long): GamesMainInfo =
+        api.getGameById(gameId)
 
-    override suspend fun getGameByStore(storeId: Int, page: Int): GamesNewsList =
+    override suspend fun getGameByPlatform(platformId: Long, page: Int): GamesMainInfoList =
+        api.getGamesByPlatform(platformId, page)
+
+    override suspend fun getGameByStore(storeId: Int, page: Int): GamesMainInfoList =
         api.getGamesByStore(storeId, page)
 
-    override suspend fun getGameByPublisher(publisherId: Long, page: Int): GamesNewsList =
+    override suspend fun getGameByPublisher(publisherId: Long, page: Int): GamesMainInfoList =
         api.getGamesByPublisher(publisherId, page)
 
-    override suspend fun getGameByCreator(creatorId: Long, page: Int): GamesNewsList =
+    override suspend fun getGameByCreator(creatorId: Long, page: Int): GamesMainInfoList =
         api.getGamesByCreator(creatorId, page)
 
     override suspend fun getGameDescription(gameId: Long): GameDescription =
@@ -40,10 +45,10 @@ class GamesRemoteSourceImpl @Inject constructor(
     override suspend fun getGamesShortData(page: Int, id: Long): GamesShortDataList =
         api.getGamesShortDataByGenre(page, id)
 
-    override suspend fun getTopGames(page: Int): GamesNewsList =
+    override suspend fun getTopGames(page: Int): GamesMainInfoList =
         api.getTopGames(page)
 
-    override suspend fun getGameByReleasesDate(date: String, page: Int): GamesNewsList =
+    override suspend fun getGameByReleasesDate(date: String, page: Int): GamesMainInfoList =
         api.getGamesByReleasesDate(date, page)
 
 }

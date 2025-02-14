@@ -1,4 +1,4 @@
-package myapplication.android.pixelpal.ui.game_details.model.wrapper
+package myapplication.android.pixelpal.ui.game_details.model.mapper
 
 import myapplication.android.pixelpal.domain.model.creator.CreatorDomainList
 import myapplication.android.pixelpal.ui.creators.model.creatores.CreatorUi

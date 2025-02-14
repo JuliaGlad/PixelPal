@@ -1,12 +1,11 @@
 package myapplication.android.pixelpal.ui.home.mvi
 
-import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import myapplication.android.pixelpal.domain.usecase.games.GetGameMonthReleasesUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetGamesNewReleasesUseCase
 import myapplication.android.pixelpal.domain.usecase.games.GetTopGamesUseCase
-import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
+import myapplication.android.pixelpal.ui.home.model.GamesMainInfoListUi
 import myapplication.android.pixelpal.ui.home.model.toUi
 import myapplication.android.pixelpal.ui.ktx.asyncAwait
 import myapplication.android.pixelpal.ui.ktx.runCatchingNonCancellation
@@ -62,9 +61,7 @@ class HomeActor(
                 getTopGames(page)
             }.fold(
                 onSuccess = { data ->
-                    emit(
-                        HomePartialState.TopReleasesUpdated(data)
-                    )
+                    emit(HomePartialState.TopReleasesUpdated(data))
                 },
                 onFailure = { throwable ->
                     emit(HomePartialState.Error(throwable))
@@ -135,7 +132,7 @@ class HomeActor(
     private suspend fun getReleasesGames(
         date: String,
         page: Int
-    ): GamesNewsListUi =
+    ): GamesMainInfoListUi =
         runCatchingNonCancellation {
             asyncAwait(
                 { getGamesNewReleasesUseCase.invoke(date, page) }
@@ -147,7 +144,7 @@ class HomeActor(
     private suspend fun getNextReleasesGames(
         date: String,
         page: Int
-    ): GamesNewsListUi =
+    ): GamesMainInfoListUi =
         runCatchingNonCancellation {
             asyncAwait(
                 { getGameMonthReleasesUseCase.invoke(date, page) }
@@ -158,10 +155,12 @@ class HomeActor(
 
     private suspend fun getTopGames(
         page: Int
-    ): GamesNewsListUi =
+    ): GamesMainInfoListUi =
         runCatchingNonCancellation {
             asyncAwait(
-                { getTopGamesUseCase.invoke(page) }
+                {
+                    getTopGamesUseCase.invoke(page)
+                }
             ) { result ->
                 result.toUi()
             }

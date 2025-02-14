@@ -2,7 +2,7 @@ package myapplication.android.pixelpal.ui.home.model
 
 import myapplication.android.pixelpal.ui.all_games.mvi.AllGameResult
 
-class GamesNewsListUi(
+class GamesMainInfoListUi(
    val games: MutableList<GamesUi>
 ): AllGameResult
 

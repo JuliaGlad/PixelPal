@@ -1,5 +1,6 @@
 package myapplication.android.pixelpal.ui.game_details
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,8 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import myapplication.android.pixelpal.R
@@ -67,7 +70,6 @@ import myapplication.android.pixelpal.ui.game_details.mvi.GameDetailsStoreFactor
 import myapplication.android.pixelpal.ui.game_details.recycler_view.stores_details.StoreLinkModels
 import myapplication.android.pixelpal.ui.games.games.model.GamesShortDataUiList
 import myapplication.android.pixelpal.ui.games.games.recycler_view.GamesShortModel
-import myapplication.android.pixelpal.ui.listener.ClickListener
 import myapplication.android.pixelpal.ui.listener.RecyclerEndListener
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import java.util.stream.Collectors
@@ -90,13 +92,14 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
 
     private var _binding: FragmentGameDetailsBinding? = null
     val binding get() = _binding!!
-    private var isFragment = false
     private val adapter = MainAdapter()
     private var gameId: Long? = null
     private var releaseDate: String? = null
     private var genres: String? = null
     private var gameName: String? = null
     private var gameImage: String? = null
+    private var isNotFavorite: Boolean = false
+    private var isFavorite: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -146,7 +149,6 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
         if (savedInstanceState == null) {
             store.sendIntent(GameDetailsIntent.Init)
         }
-        initBackButton()
         store.sendIntent(GameDetailsIntent.GetGameMainData(gameId.toString()))
     }
 
@@ -158,7 +160,15 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
 
     override fun resolveEffect(effect: GameDetailsEffect) {
         when (effect) {
-            GameDetailsEffect.NavigateBack -> activity?.finish()
+            GameDetailsEffect.NavigateBack -> {
+                if (!isNotFavorite) activity?.finish()
+                else {
+                    activity?.apply {
+                        setResult(Activity.RESULT_OK, Intent().putExtra(GAME_ID_ARG, gameId))
+                        finish()
+                    }
+                }
+            }
             is GameDetailsEffect.OpenGameDetails -> {
                 (activity as GameDetailsActivity).presenter.navigateTo(GameDetailsScreen.gameDetails())
             }
@@ -179,7 +189,7 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
             }
 
             is GameDetailsEffect.OpenCreatorDetails -> {
-                with(effect){
+                with(effect) {
                     (activity as GameDetailsActivity).openCreatorDetailsActivity(
                         creatorId,
                         name,
@@ -191,7 +201,7 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
             }
 
             is GameDetailsEffect.OpenAllCreators -> {
-                with(effect){
+                with(effect) {
                     (activity as GameDetailsActivity).openAllCreatorsActivity(gameId)
                 }
             }
@@ -202,7 +212,12 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
         when (state.ui) {
             is GameDetailsLceState.Content -> {
                 binding.loading.root.visibility = GONE
-                initRecycler(state.ui.data as GameDetailsContentResult)
+                val data = state.ui.data as GameDetailsContentResult
+                isFavorite = data.gameDetails.isFavorite
+                initRecycler(data)
+                checkBackButtonPressed()
+                initBackButton()
+                initFavoriteButton()
             }
 
             is GameDetailsLceState.Error -> {
@@ -225,6 +240,56 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
 
             is GameDetailsLceState.UpdateStoresSellingGame ->
                 updateStoresRecycler(state.ui.data as StoresSellingGameUiList)
+
+            GameDetailsLceState.GameAddedToFavorites ->{
+                Log.i("Added To Favorites", "game with id $gameId added to userFavs")
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_favorite,
+                    activity?.theme
+                )?.let { binding.iconFav.setIcon(it) }
+            }
+
+            GameDetailsLceState.GameRemovedFromFavorites -> {
+                Log.i("Removed From Favorites", "game with id $gameId removed from userFavs")
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_favorite_outline,
+                    activity?.theme
+                )?.let { binding.iconFav.setIcon(it) }
+            }
+        }
+    }
+
+    private fun initFavoriteButton() {
+        with(binding) {
+            val icon =
+                if (isFavorite) ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_favorite,
+                    activity?.theme
+                )
+                else ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_favorite_outline,
+                    activity?.theme
+                )
+
+            iconFav.setIcon(icon!!)
+            iconFav.setOnClickListener {
+                gameId?.let { id ->
+                    if (isFavorite){
+                        isNotFavorite = true
+                        isFavorite = false
+                        store.sendIntent(GameDetailsIntent.RemoveGameFromFavorites(id))
+                    } else {
+                        isNotFavorite = false
+                        isFavorite = true
+                        store.sendIntent(GameDetailsIntent.AddGameToFavorites(id))
+                    }
+                }
+
+            }
         }
     }
 
@@ -260,18 +325,16 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
                                         releaseDate,
                                         playtime,
                                         image,
-                                        object : ClickListener {
-                                            override fun onClick() {
-                                                store.sendEffect(
-                                                    GameDetailsEffect.OpenGameDetails(
-                                                        gameId,
-                                                        genres!!,
-                                                        name,
-                                                        releaseDate!!,
-                                                        image!!
-                                                    )
+                                        {
+                                            store.sendEffect(
+                                                GameDetailsEffect.OpenGameDetails(
+                                                    gameId,
+                                                    genres!!,
+                                                    name,
+                                                    releaseDate!!,
+                                                    image!!
                                                 )
-                                            }
+                                            )
                                         }
                                     )
                                 )
@@ -314,7 +377,7 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
 
     private fun initRecycler(items: GameDetailsContentResult) {
         initAdapter()
-        addMainInfo(items.gameDescription.description)
+        addMainInfo(items.gameDetails.description)
         addScreenshots(items.screenshotsUiList)
         addCreators(items.creators)
         addSameSeries(items.sameSeries)
@@ -450,49 +513,23 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
         creators.items.forEachIndexed { index, creatorUi ->
             with(creatorUi) {
                 newItems.add(
-                    CreatorsModel(index, creatorId, name, famousProjects,
-                        role.stream().map { it.title }.collect(Collectors.toList()), image,
-                        object : ClickListener {
-                            override fun onClick() {
-                                store.sendEffect(
-                                    GameDetailsEffect.OpenCreatorDetails(
-                                        creatorId,
-                                        name,
-                                        role.toStringArray(),
-                                        famousProjects, image
-                                    )
-                                )
-                            }
-                        }
-                    )
+                    CreatorsModel(
+                        index, creatorId, name, famousProjects,
+                        role.stream().map { it.title }.collect(Collectors.toList()), image
+                    ) {
+                        store.sendEffect(
+                            GameDetailsEffect.OpenCreatorDetails(
+                                creatorId,
+                                name,
+                                role.toStringArray(),
+                                famousProjects, image
+                            )
+                        )
+                    }
                 )
             }
         }
         return newItems
-//        add(CreatorsDelegateItem(CreatorsModel(
-//            index,
-//            creatorId,
-//            name,
-//            famousProjects,
-//            roles,
-//            image,
-//            object : ClickListener {
-//                override fun onClick() {
-//                    val rolesArray = arrayOfNulls<String>(roles.size)
-//                    for ((roleIndex, i) in roles.withIndex()){
-//                        rolesArray[roleIndex] = i
-//                    }
-//                    store.sendEffect(
-//                        CreatorsEffect.OpenCreatorDetailsScreen(
-//                        creatorId,
-//                        name,
-//                        rolesArray,
-//                        famousProjects,
-//                        image
-//                    ))
-//                }
-//            }
-//        )))
     }
 
     private fun List<RolesUi>.toStringArray(): Array<String?> {
@@ -512,12 +549,7 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
                     getString(R.string.creators),
                     getString(R.string.unknown),
                     newItems,
-                    object : ClickListener {
-                        override fun onClick() {
-                            store.sendEffect(GameDetailsEffect.OpenAllCreators(gameId!!))
-                        }
-
-                    },
+                    { store.sendEffect(GameDetailsEffect.OpenAllCreators(gameId!!)) },
                     object : RecyclerEndListener {
                         override fun onEndReached() {
                             if (!binding.recyclerView.isComputingLayout) {
@@ -588,6 +620,14 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
             addDelegate(TitleTextViewDelegate())
         }
         binding.recyclerView.adapter = adapter
+    }
+
+    private fun checkBackButtonPressed() {
+        activity?.onBackPressedDispatcher?.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                store.sendEffect(GameDetailsEffect.NavigateBack)
+            }
+        })
     }
 
     override fun onDestroy() {

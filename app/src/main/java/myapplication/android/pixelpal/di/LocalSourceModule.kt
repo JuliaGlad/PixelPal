@@ -4,6 +4,8 @@ import dagger.Binds
 import dagger.Module
 import myapplication.android.pixelpal.data.source.creators.CreatorsLocalSource
 import myapplication.android.pixelpal.data.source.creators.CreatorsLocalSourceImpl
+import myapplication.android.pixelpal.data.source.favorite_games.FavoriteGamesLocalSource
+import myapplication.android.pixelpal.data.source.favorite_games.FavoriteGamesLocalSourceImpl
 import myapplication.android.pixelpal.data.source.games.GamesLocalSource
 import myapplication.android.pixelpal.data.source.games.GamesLocalSourceImpl
 import myapplication.android.pixelpal.data.source.games.GamesShortDataLocalSource
@@ -20,6 +22,10 @@ import javax.inject.Singleton
 
 @Module
 interface LocalSourceModule {
+
+    @Singleton
+    @Binds
+    fun bindLocalSourceFavoriteGames(favoriteLocalSourceImpl: FavoriteGamesLocalSourceImpl): FavoriteGamesLocalSource
 
     @Singleton
     @Binds

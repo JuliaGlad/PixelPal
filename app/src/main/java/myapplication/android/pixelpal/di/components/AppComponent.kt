@@ -12,6 +12,7 @@ import myapplication.android.pixelpal.di.RetrofitModule
 import myapplication.android.pixelpal.di.components.activity.AllCreatorsActivityComponent
 import myapplication.android.pixelpal.di.components.activity.CreateAccountActivityComponent
 import myapplication.android.pixelpal.di.components.activity.CreatorDetailsActivityComponent
+import myapplication.android.pixelpal.di.components.activity.FavoriteGamesActivityComponent
 import myapplication.android.pixelpal.di.components.activity.GameDetailsActivityComponent
 import myapplication.android.pixelpal.di.components.activity.MainActivityComponent
 import myapplication.android.pixelpal.di.components.activity.PlatformDetailsActivityComponent
@@ -21,6 +22,7 @@ import myapplication.android.pixelpal.di.components.fragment.AllCreatorsComponen
 import myapplication.android.pixelpal.di.components.fragment.AllGamesComponent
 import myapplication.android.pixelpal.di.components.fragment.CreatorDetailsComponent
 import myapplication.android.pixelpal.di.components.fragment.CreatorsComponent
+import myapplication.android.pixelpal.di.components.fragment.FavoriteGamesComponent
 import myapplication.android.pixelpal.di.components.fragment.GameDetailsComponent
 import myapplication.android.pixelpal.di.components.fragment.GamesComponent
 import myapplication.android.pixelpal.di.components.fragment.HomeComponent
@@ -45,6 +47,10 @@ import javax.inject.Singleton
     ]
 )
 interface AppComponent {
+
+    fun favoriteGamesActivityComponent(): FavoriteGamesActivityComponent.Factory
+
+    fun favoriteGamesComponent(): FavoriteGamesComponent.Factory
 
     fun profileMainComponent(): ProfileMainComponent.Factory
 
@@ -102,6 +108,8 @@ interface AppComponent {
 
 @Module(
     subcomponents = [
+        FavoriteGamesActivityComponent::class,
+        FavoriteGamesComponent::class,
         ProfileMainComponent::class,
         CreateAccountComponent::class,
         CreateAccountActivityComponent::class,

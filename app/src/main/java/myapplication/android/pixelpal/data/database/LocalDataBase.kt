@@ -9,6 +9,7 @@ import myapplication.android.pixelpal.data.database.converters.JsonArrayConverte
 import myapplication.android.pixelpal.data.database.converters.RoleListConverter
 import myapplication.android.pixelpal.data.database.dao.CreatorRolesDao
 import myapplication.android.pixelpal.data.database.dao.CreatorsDao
+import myapplication.android.pixelpal.data.database.dao.FavoriteGamesDao
 import myapplication.android.pixelpal.data.database.dao.GameTopDao
 import myapplication.android.pixelpal.data.database.dao.GameShortDao
 import myapplication.android.pixelpal.data.database.dao.GamesReleaseDao
@@ -18,6 +19,7 @@ import myapplication.android.pixelpal.data.database.dao.PublisherDao
 import myapplication.android.pixelpal.data.database.dao.StoreDao
 import myapplication.android.pixelpal.data.database.entities.CreatorEntity
 import myapplication.android.pixelpal.data.database.entities.CreatorsRolesEntity
+import myapplication.android.pixelpal.data.database.entities.FavoriteGamesEntity
 import myapplication.android.pixelpal.data.database.entities.GameReleaseEntity
 import myapplication.android.pixelpal.data.database.entities.GameTopEntity
 import myapplication.android.pixelpal.data.database.entities.GamesShortEntity
@@ -35,6 +37,7 @@ import myapplication.android.pixelpal.data.database.entities.StoreEntity
 )
 @Database(
     entities = [
+        FavoriteGamesEntity::class,
         GameReleaseEntity::class,
         GameTopEntity::class,
         CreatorEntity::class,
@@ -48,6 +51,8 @@ import myapplication.android.pixelpal.data.database.entities.StoreEntity
     version = 1
 )
 abstract class LocalDataBase : RoomDatabase() {
+
+    abstract fun favoriteGamesDao(): FavoriteGamesDao
 
     abstract fun gameTopDao(): GameTopDao
 

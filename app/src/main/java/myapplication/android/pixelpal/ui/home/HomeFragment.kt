@@ -24,7 +24,7 @@ import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsDeleg
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsItemModel
 import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
 import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
-import myapplication.android.pixelpal.ui.home.model.GamesNewsListUi
+import myapplication.android.pixelpal.ui.home.model.GamesMainInfoListUi
 import myapplication.android.pixelpal.ui.home.mvi.HomeContentResult
 import myapplication.android.pixelpal.ui.home.mvi.HomeEffect
 import myapplication.android.pixelpal.ui.home.mvi.HomeIntent
@@ -162,7 +162,7 @@ class HomeFragment :
         }
     }
 
-    private fun updateRecycler(items: GamesNewsListUi, requiredId: Int, itemsSize: Int): Int {
+    private fun updateRecycler(items: GamesMainInfoListUi, requiredId: Int, itemsSize: Int): Int {
         var newSize = 0
         recyclerItems.forEach {
             if (it is NewsDelegateItem) {
@@ -295,7 +295,7 @@ class HomeFragment :
         )
     )
 
-    private fun addReleaseItems(list: GamesNewsListUi, itemsSize: Int): Pair<MutableList<ReleasesModel>, Int> {
+    private fun addReleaseItems(list: GamesMainInfoListUi, itemsSize: Int): Pair<MutableList<ReleasesModel>, Int> {
         var checkingSize = itemsSize
         val items = mutableListOf<ReleasesModel>()
         for (i in list.games) {
