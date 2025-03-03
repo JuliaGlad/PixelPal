@@ -1,7 +1,7 @@
 package myapplication.android.pixelpal.data.database.provider
 
 import kotlinx.serialization.json.jsonObject
-import myapplication.android.pixelpal.app.App.Companion.app
+import myapplication.android.pixelpal.App.Companion.app
 import myapplication.android.pixelpal.data.database.entities.FavoriteGamesEntity
 import myapplication.android.pixelpal.data.models.gamesNews.GamesMainInfo
 import myapplication.android.pixelpal.data.models.gamesNews.GamesMainInfoList

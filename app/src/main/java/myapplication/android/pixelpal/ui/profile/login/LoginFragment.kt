@@ -16,8 +16,8 @@ import androidx.fragment.app.viewModels
 import com.github.terrakok.cicerone.androidx.FragmentScreen
 import com.google.android.material.snackbar.Snackbar
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmentLoginBinding
+import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.domain.usecase.user.CheckUserUseCase
 import myapplication.android.pixelpal.ui.delegates.delegates.text_input.TextInputLayoutDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.text_input.TextInputLayoutDelegateItem
@@ -30,7 +30,7 @@ import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
 import myapplication.android.pixelpal.ui.main.MainActivity
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.mvi.MviStore
-import myapplication.android.pixelpal.ui.profile.main.ProfileMainFragment
+import myapplication.android.pixelpal.ui.profile.login.di.DaggerLoginComponent
 import myapplication.android.pixelpal.ui.profile.login.mvi.LoginEffect
 import myapplication.android.pixelpal.ui.profile.login.mvi.LoginIntent
 import myapplication.android.pixelpal.ui.profile.login.mvi.LoginLceState
@@ -38,6 +38,7 @@ import myapplication.android.pixelpal.ui.profile.login.mvi.LoginLocalDI
 import myapplication.android.pixelpal.ui.profile.login.mvi.LoginPartialState
 import myapplication.android.pixelpal.ui.profile.login.mvi.LoginState
 import myapplication.android.pixelpal.ui.profile.login.mvi.LoginStoreFactory
+import myapplication.android.pixelpal.ui.profile.main.ProfileMainFragment
 import javax.inject.Inject
 
 class LoginFragment : MviBaseFragment<
@@ -61,8 +62,9 @@ class LoginFragment : MviBaseFragment<
             by viewModels { LoginStoreFactory(localDI.reducer, localDI.actor) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        appComponent.loginComponent().create().inject(this)
         super.onCreate(savedInstanceState)
+        val appComponent = DaggerAppComponent.factory().create(requireContext())
+        DaggerLoginComponent.factory().create(appComponent).inject(this)
         launcher = setLauncher()
     }
 

@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants.Companion.ADDITIONS_AND_PARENT_ID
 import myapplication.android.pixelpal.app.Constants.Companion.ALL_INTENT_ID
 import myapplication.android.pixelpal.app.Constants.Companion.CREATOR_GAMES_ID
@@ -31,6 +30,8 @@ import myapplication.android.pixelpal.app.Constants.Companion.STORES_GAMES_ID
 import myapplication.android.pixelpal.app.Constants.Companion.STORE_ID
 import myapplication.android.pixelpal.app.Constants.Companion.TOP_ID
 import myapplication.android.pixelpal.databinding.FragmentAllGamesBinding
+import myapplication.android.pixelpal.di.DaggerAppComponent
+import myapplication.android.pixelpal.ui.all_games.di.DaggerAllGamesComponent
 import myapplication.android.pixelpal.ui.all_games.fragment_argument.AllArgument
 import myapplication.android.pixelpal.ui.all_games.mvi.AllGamesEffect
 import myapplication.android.pixelpal.ui.all_games.mvi.AllGamesIntent
@@ -58,10 +59,6 @@ class AllGamesFragment : MviBaseFragment<
 
     private val adapter by lazy { GamesShortLinearAdapter() }
 
-    private val component by lazy {
-        appComponent.allGamesComponent().create()
-    }
-
     private val gamesShortModels = mutableListOf<GamesShortModel>()
 
     @Inject
@@ -86,7 +83,8 @@ class AllGamesFragment : MviBaseFragment<
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        component.inject(this)
+        val appComponent = DaggerAppComponent.factory().create(requireContext())
+        DaggerAllGamesComponent.factory().create(appComponent).inject(this)
         super.onCreate(savedInstanceState)
         getOtherArguments(dataId)
     }

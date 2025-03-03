@@ -15,9 +15,9 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.FragmentFavoriteGamesBinding
+import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.ui.games.games.recycler_view.GamesShortModel
 import myapplication.android.pixelpal.ui.games.games.recycler_view.linear.GamesShortLinearAdapter
 import myapplication.android.pixelpal.ui.home.model.GamesMainInfoListUi
@@ -25,6 +25,7 @@ import myapplication.android.pixelpal.ui.home.model.GamesUi
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.mvi.MviStore
+import myapplication.android.pixelpal.ui.profile.favorite_games.di.DaggerFavoriteGamesComponent
 import myapplication.android.pixelpal.ui.profile.favorite_games.mvi.FavoriteGamesEffect
 import myapplication.android.pixelpal.ui.profile.favorite_games.mvi.FavoriteGamesIntent
 import myapplication.android.pixelpal.ui.profile.favorite_games.mvi.FavoriteGamesLocalDI
@@ -58,7 +59,8 @@ class FavoriteGamesFragment : MviBaseFragment<
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        appComponent.favoriteGamesComponent().create().inject(this)
+        val appComponent = DaggerAppComponent.factory().create(requireContext())
+        DaggerFavoriteGamesComponent.factory().create(appComponent).inject(this)
         launcher = setActivityResultLauncher()
     }
 
@@ -124,12 +126,10 @@ class FavoriteGamesFragment : MviBaseFragment<
                 initRecycler(state.ui.data)
                 initBackButton()
             }
-
             is LceState.Error -> {
                 binding.loading.root.visibility = GONE
                 Log.i("FavoriteGamesError", state.ui.throwable.message.toString())
             }
-
             LceState.Loading -> binding.loading.root.visibility = VISIBLE
         }
     }

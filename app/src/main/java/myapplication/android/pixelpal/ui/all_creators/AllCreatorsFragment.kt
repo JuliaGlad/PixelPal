@@ -10,9 +10,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.FragmentAllCreatorsBinding
+import myapplication.android.pixelpal.di.DaggerAppComponent
+import myapplication.android.pixelpal.ui.all_creators.di.DaggerAllCreatorsComponent
 import myapplication.android.pixelpal.ui.all_creators.mvi.AllCreatorsEffect
 import myapplication.android.pixelpal.ui.all_creators.mvi.AllCreatorsIntent
 import myapplication.android.pixelpal.ui.all_creators.mvi.AllCreatorsLocalDI
@@ -43,7 +44,7 @@ class AllCreatorsFragment : MviBaseFragment<
     private var lastPage = false
 
     private val gameId by lazy { activity?.intent?.getLongExtra(Constants.GAME_ID_ARG, 0L) }
-    val recyclerItems = mutableListOf<AllCreatorsModel>()
+    private val recyclerItems = mutableListOf<AllCreatorsModel>()
     val adapter = AllCreatorsAdapter()
 
     private var _binding: FragmentAllCreatorsBinding? = null
@@ -53,7 +54,8 @@ class AllCreatorsFragment : MviBaseFragment<
             by viewModels { AllCreatorsStoreFactory(localDI.actor, localDI.reducer) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        appComponent.allCreatorsComponent().create().inject(this)
+        val appComponent = DaggerAppComponent.factory().create(requireContext())
+        DaggerAllCreatorsComponent.factory().create(appComponent).inject(this)
         super.onCreate(savedInstanceState)
     }
 
@@ -69,7 +71,7 @@ class AllCreatorsFragment : MviBaseFragment<
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initButtonBack()
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             store.sendIntent(AllCreatorsIntent.Init)
         }
         store.sendIntent(AllCreatorsIntent.GetCreators(gameId!!))
@@ -79,7 +81,7 @@ class AllCreatorsFragment : MviBaseFragment<
         binding.buttonBack.setOnClickListener { store.sendEffect(AllCreatorsEffect.NavigateBack) }
     }
 
-    private fun updateRecycler(items: List<CreatorUi>){
+    private fun updateRecycler(items: List<CreatorUi>) {
         val models = getCreatorModels(items)
         val startPosition = adapter.currentList.size
         recyclerItems.addAll(models)
@@ -87,10 +89,10 @@ class AllCreatorsFragment : MviBaseFragment<
     }
 
     override fun resolveEffect(effect: AllCreatorsEffect) {
-        when(effect){
+        when (effect) {
             AllCreatorsEffect.NavigateBack -> activity?.finish()
-            is AllCreatorsEffect.OpenAllCreatorDetails ->{
-                with(effect){
+            is AllCreatorsEffect.OpenAllCreatorDetails -> {
+                with(effect) {
                     (activity as AllCreatorsActivity).openCreatorDetailsActivity(
                         creatorId, name, role, famousProjects, image
                     )
@@ -100,7 +102,7 @@ class AllCreatorsFragment : MviBaseFragment<
     }
 
     override fun render(state: AllCreatorsState) {
-        when(state.ui){
+        when (state.ui) {
             is LceState.Content -> {
                 binding.loading.root.visibility = GONE
                 if (!lastPage) {
@@ -109,10 +111,12 @@ class AllCreatorsFragment : MviBaseFragment<
                     updateRecycler(state.ui.data.items)
                 }
             }
+
             is LceState.Error -> {
                 binding.loading.root.visibility = GONE
                 Log.e("AllCreatorsError", state.ui.throwable.message.toString())
             }
+
             LceState.Loading -> binding.loading.root.visibility = VISIBLE
         }
     }
@@ -144,7 +148,7 @@ class AllCreatorsFragment : MviBaseFragment<
 
     private fun getCreatorModels(items: List<CreatorUi>): List<AllCreatorsModel> {
         val models = mutableListOf<AllCreatorsModel>()
-        for (i in items){
+        for (i in items) {
             with(i) {
                 models.add(
                     AllCreatorsModel(
@@ -153,16 +157,17 @@ class AllCreatorsFragment : MviBaseFragment<
                         role,
                         famousProjects,
                         image,
-                        object : ClickListener{
+                        object : ClickListener {
                             override fun onClick() {
                                 store.sendEffect(
                                     AllCreatorsEffect.OpenAllCreatorDetails(
-                                    creatorId,
-                                    name,
-                                    role.toStringArray(),
-                                    famousProjects,
-                                    image
-                                ))
+                                        creatorId,
+                                        name,
+                                        role.toStringArray(),
+                                        famousProjects,
+                                        image
+                                    )
+                                )
                             }
                         }
                     )
@@ -172,9 +177,9 @@ class AllCreatorsFragment : MviBaseFragment<
         return models
     }
 
-    fun List<RolesUi>.toStringArray(): Array<String?>{
+    fun List<RolesUi>.toStringArray(): Array<String?> {
         val array = arrayOfNulls<String>(size)
-        for (i in this.indices){
+        for (i in this.indices) {
             array[i] = get(i).title
         }
         return array

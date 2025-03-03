@@ -9,9 +9,9 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.FragmentStoreDetailsBinding
+import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewModel
@@ -38,6 +38,7 @@ import myapplication.android.pixelpal.ui.listener.RecyclerEndListener
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.mvi.MviStore
+import myapplication.android.pixelpal.ui.platforms.fragments.store.store_details.di.DaggerStoresDetailsComponent
 import myapplication.android.pixelpal.ui.platforms.fragments.store.store_details.model.StoreArgumentModel
 import myapplication.android.pixelpal.ui.platforms.fragments.store.store_details.model.StoreDetailsResult
 import myapplication.android.pixelpal.ui.platforms.fragments.store.store_details.mvi.StoreDetailsEffect
@@ -85,8 +86,9 @@ class StoreDetailsFragment : MviBaseFragment<
             by viewModels { StoreDetailsStoreFactory(localDI.reducer, localDI.actor) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        appComponent.storeDetailsComponent().create().inject(this)
         super.onCreate(savedInstanceState)
+        val appComponent = DaggerAppComponent.factory().create(requireContext())
+        DaggerStoresDetailsComponent.factory().create(appComponent).inject(this)
     }
 
     override fun onCreateView(

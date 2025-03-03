@@ -12,13 +12,14 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmnetStoreBinding
+import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.ui.listener.GridPaginationScrollListener
 import myapplication.android.pixelpal.ui.main.MainActivity
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.platforms.PlatformPager
+import myapplication.android.pixelpal.ui.platforms.fragments.store.di.DaggerStoresComponent
 import myapplication.android.pixelpal.ui.platforms.fragments.store.model.StoreUi
 import myapplication.android.pixelpal.ui.platforms.fragments.store.model.StoresUiList
 import myapplication.android.pixelpal.ui.platforms.fragments.store.mvi.StoresEffect
@@ -35,9 +36,6 @@ import javax.inject.Inject
 @SuppressLint("NotifyDataSetChanged")
 class StoresFragment :
     MviBaseFragment<StoresPartialState, StoresIntent, StoresState, StoresEffect>(R.layout.fragmnet_store), PlatformPager {
-    private val storesComponent by lazy {
-        appComponent.storesComponent().create()
-    }
     private var query: String = ""
     private var previousQuery: String = ""
     private val adapter = StoreAdapter()
@@ -59,7 +57,8 @@ class StoresFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        storesComponent.inject(this)
+        val appComponent = DaggerAppComponent.factory().create(requireContext())
+        DaggerStoresComponent.factory().create(appComponent).inject(this)
     }
 
     override fun onCreateView(

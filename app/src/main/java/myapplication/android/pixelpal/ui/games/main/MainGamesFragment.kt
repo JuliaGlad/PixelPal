@@ -15,10 +15,11 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmentMainGamesBinding
+import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.ui.games.games.GamesFragment
 import myapplication.android.pixelpal.ui.games.games.recycler_view.LayoutType
+import myapplication.android.pixelpal.ui.games.main.di.DaggerMainGamesComponent
 import myapplication.android.pixelpal.ui.games.main.mvi.MainGamesEffects
 import myapplication.android.pixelpal.ui.games.main.mvi.MainGamesIntent
 import myapplication.android.pixelpal.ui.games.main.mvi.MainGamesLocalDI
@@ -39,9 +40,6 @@ class MainGamesFragment : MviBaseFragment<
         MainGamesIntent,
         MainGamesState,
         MainGamesEffects>(R.layout.fragment_main_games) {
-    private val mainGamesComponent by lazy {
-        appComponent.mainGamesComponent().create()
-    }
     private var chosenId: Long = ALL_ID
     private var _binding: FragmentMainGamesBinding? = null
     private var layoutType: LayoutType = LayoutType.Grid
@@ -53,7 +51,12 @@ class MainGamesFragment : MviBaseFragment<
     @Inject
     lateinit var mainGamesLocalDI: MainGamesLocalDI
 
-    private val viewModel: MainGamesViewModel by viewModels {
+    private val mainGamesComponent by lazy {
+        val appComponent = DaggerAppComponent.factory().create(requireContext())
+        DaggerMainGamesComponent.factory().create(appComponent)
+    }
+
+    private val viewModel: MainGamesViewModel by viewModels{
         MainGamesViewModel.Factory(
             mainGamesComponent.mainGamesViewModelFactory()
         )

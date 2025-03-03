@@ -14,8 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmentGamesBinding
+import myapplication.android.pixelpal.di.DaggerAppComponent
+import myapplication.android.pixelpal.ui.games.games.di.DaggerGamesComponent
 import myapplication.android.pixelpal.ui.games.games.model.GamesShortDataUi
 import myapplication.android.pixelpal.ui.games.games.mvi.GamesEffects
 import myapplication.android.pixelpal.ui.games.games.mvi.GamesIntent
@@ -42,9 +43,6 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
         GamesIntent,
         GamesState,
         GamesEffects>(R.layout.fragment_games) {
-    private val gamesComponent by lazy {
-        appComponent.gamesComponent().create()
-    }
     private var id: Long = 0
     private var genre: String = ""
     private var query: String = ""
@@ -69,7 +67,8 @@ class GamesFragment @Inject constructor() : MviBaseFragment<
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        gamesComponent.inject(this)
+        val appComponent = DaggerAppComponent.factory().create(requireContext())
+        DaggerGamesComponent.factory().create(appComponent).inject(this)
     }
 
     override fun onCreateView(

@@ -9,9 +9,10 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.FragmentCreatorDetailsBinding
+import myapplication.android.pixelpal.di.DaggerAppComponent
+import myapplication.android.pixelpal.ui.creator_details.di.DaggerCreatorsDetailsComponent
 import myapplication.android.pixelpal.ui.creator_details.model.CreatorArgumentsModel
 import myapplication.android.pixelpal.ui.creator_details.model.CreatorDetailsResultUi
 import myapplication.android.pixelpal.ui.creator_details.mvi.CreatorDetailsEffect
@@ -57,7 +58,7 @@ class CreatorDetailsFragment : MviBaseFragment<
     private var _binding: FragmentCreatorDetailsBinding? = null
     private val binding get() = _binding!!
     private val itemsRecycler = mutableListOf<DelegateItem>()
-    private val adapter by lazy { initAdapter()}
+    private val adapter by lazy { initAdapter() }
     private var isUpdated = false
     private val creatorArgumentsModel: CreatorArgumentsModel by lazy { getActivityArguments()!! }
 
@@ -88,7 +89,8 @@ class CreatorDetailsFragment : MviBaseFragment<
             > by viewModels { CreatorDetailsStoreFactory(localDI.actor, localDI.reducer) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        appComponent.creatorDetailsComponent().create().inject(this)
+        val appComponent = DaggerAppComponent.factory().create(requireContext())
+        DaggerCreatorsDetailsComponent.factory().create(appComponent).inject(this)
         super.onCreate(savedInstanceState)
     }
 
@@ -151,9 +153,9 @@ class CreatorDetailsFragment : MviBaseFragment<
     private fun updateRecycler(data: GamesMainInfoListUi) {
         isUpdated = false
         val newItems = getCreatorGames(data)
-        for (i in itemsRecycler){
-            if (i is GameDetailsShortDataDelegateItem){
-                    adapter.notifyItemChanged(itemsRecycler.indexOf(i), newItems)
+        for (i in itemsRecycler) {
+            if (i is GameDetailsShortDataDelegateItem) {
+                adapter.notifyItemChanged(itemsRecycler.indexOf(i), newItems)
             }
         }
     }

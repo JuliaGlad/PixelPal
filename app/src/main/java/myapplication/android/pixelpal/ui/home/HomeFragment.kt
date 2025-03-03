@@ -15,15 +15,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.FragmentHomeBinding
+import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.ui.delegates.delegates.info_box.InfoBoxDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.news_main.NewsItemModel
 import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
 import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
+import myapplication.android.pixelpal.ui.home.di.DaggerHomeComponent
 import myapplication.android.pixelpal.ui.home.model.GamesMainInfoListUi
 import myapplication.android.pixelpal.ui.home.mvi.HomeContentResult
 import myapplication.android.pixelpal.ui.home.mvi.HomeEffect
@@ -48,9 +49,6 @@ class HomeFragment :
             HomeState,
             HomeEffect
             >(R.layout.fragment_home) {
-    private val homeComponent by lazy {
-        appComponent.homeComponent().create()
-    }
     private val adapter: MainAdapter by lazy(LazyThreadSafetyMode.NONE) { initAdapter() }
     private var recyclerItems: MutableList<DelegateItem> = mutableListOf()
     private var newReleasesSize = 0
@@ -71,7 +69,8 @@ class HomeFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        homeComponent.inject(this)
+        val appComponent = DaggerAppComponent.factory().create(requireContext())
+        DaggerHomeComponent.factory().create(appComponent).inject(this)
     }
 
     override fun onCreateView(

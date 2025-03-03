@@ -15,11 +15,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import com.github.dhaval2404.imagepicker.ImagePicker
+import myapplication.android.pixelpal.App
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App.Companion.app
-import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.FragmentProfileMainBinding
+import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.ui.delegates.delegates.button_with_icon.ButtonWithIconDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.button_with_icon.ButtonWithIconDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.button_with_icon.ButtonWithIconModel
@@ -42,6 +42,7 @@ import myapplication.android.pixelpal.ui.main.BottomScreen
 import myapplication.android.pixelpal.ui.main.MainActivity
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.mvi.MviStore
+import myapplication.android.pixelpal.ui.profile.main.di.DaggerProfileMainComponent
 import myapplication.android.pixelpal.ui.profile.main.mvi.ProfileMainEffect
 import myapplication.android.pixelpal.ui.profile.main.mvi.ProfileMainIntent
 import myapplication.android.pixelpal.ui.profile.main.mvi.ProfileMainLceState
@@ -72,9 +73,10 @@ class ProfileMainFragment : MviBaseFragment<
             by viewModels { ProfileMainStoreFactory(localDI.reducer, localDI.actor) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        appComponent.profileMainComponent().create().inject(this)
-        launcher = setActivityResultLauncher()
         super.onCreate(savedInstanceState)
+        val appComponent = DaggerAppComponent.factory().create(requireContext())
+        DaggerProfileMainComponent.factory().create(appComponent).inject(this)
+        launcher = setActivityResultLauncher()
     }
 
     override fun onCreateView(
@@ -139,7 +141,7 @@ class ProfileMainFragment : MviBaseFragment<
             }
 
             ProfileMainEffect.NavigateToLogin ->
-                app.router.navigateTo(BottomScreen.profile())
+                (activity?.application as App).router.navigateTo(BottomScreen.profile())
         }
     }
 

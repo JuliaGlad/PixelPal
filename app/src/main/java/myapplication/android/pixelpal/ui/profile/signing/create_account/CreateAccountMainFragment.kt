@@ -17,8 +17,8 @@ import androidx.fragment.app.viewModels
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.snackbar.Snackbar
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmentCreateAccountBinding
+import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.ui.delegates.delegates.text_input.TextInputLayoutDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.text_input.TextInputLayoutDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.text_input.TextInputLayoutModel
@@ -33,6 +33,7 @@ import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
 import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.mvi.MviStore
+import myapplication.android.pixelpal.ui.profile.signing.create_account.di.DaggerCreateAccountComponent
 import myapplication.android.pixelpal.ui.profile.signing.create_account.mvi.CreateAccountEffect
 import myapplication.android.pixelpal.ui.profile.signing.create_account.mvi.CreateAccountIntent
 import myapplication.android.pixelpal.ui.profile.signing.create_account.mvi.CreateAccountLceState
@@ -65,9 +66,10 @@ class CreateAccountMainFragment : MviBaseFragment<
             by viewModels { CreateAccountStoreFactory(localDI.reducer, localDI.actor) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        appComponent.createAccountComponent().create().inject(this)
-        launcher = setActivityResultLauncher()
         super.onCreate(savedInstanceState)
+        val appComponent = DaggerAppComponent.factory().create(requireContext())
+        DaggerCreateAccountComponent.factory().create(appComponent).inject(this)
+        launcher = setActivityResultLauncher()
     }
 
     override fun onCreateView(
@@ -97,7 +99,8 @@ class CreateAccountMainFragment : MviBaseFragment<
                     Snackbar.LENGTH_LONG
                 ).show()
             }
-            CreateAccountEffect.OpenProfile ->{
+
+            CreateAccountEffect.OpenProfile -> {
                 activity?.setResult(Activity.RESULT_OK)
                 activity?.finish()
             }
@@ -110,10 +113,12 @@ class CreateAccountMainFragment : MviBaseFragment<
                 binding.loading.root.visibility = GONE
                 store.sendEffect(CreateAccountEffect.OpenProfile)
             }
+
             is CreateAccountLceState.Error -> {
                 binding.nextLoading.root.visibility = VISIBLE
                 binding.loading.root.visibility = GONE
             }
+
             CreateAccountLceState.Init -> initUi()
             CreateAccountLceState.Loading -> binding.loading.root.visibility = VISIBLE
         }
@@ -208,8 +213,8 @@ class CreateAccountMainFragment : MviBaseFragment<
             val data = result.data
             if (data != null) {
                 uri = data.data
-                for (i in recyclerItems!!){
-                    if (i is AvatarDelegateItem){
+                for (i in recyclerItems!!) {
+                    if (i is AvatarDelegateItem) {
                         (i.content() as AvatarModel).uri = uri.toString()
                         adapter.notifyItemChanged(recyclerItems!!.indexOf(i))
                     }

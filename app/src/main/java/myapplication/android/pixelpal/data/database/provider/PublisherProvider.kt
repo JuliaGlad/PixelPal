@@ -1,6 +1,6 @@
 package myapplication.android.pixelpal.data.database.provider
 
-import myapplication.android.pixelpal.app.App.Companion.app
+import myapplication.android.pixelpal.App.Companion.app
 import myapplication.android.pixelpal.data.database.entities.PublisherEntity
 import myapplication.android.pixelpal.data.models.publishers.PublishersList
 

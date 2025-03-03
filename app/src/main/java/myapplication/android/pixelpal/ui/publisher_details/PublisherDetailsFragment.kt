@@ -9,9 +9,9 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.FragmentPublisherDetailsBinding
+import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewDelegateItem
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewModel
@@ -38,6 +38,7 @@ import myapplication.android.pixelpal.ui.listener.RecyclerEndListener
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.mvi.MviStore
+import myapplication.android.pixelpal.ui.publisher_details.di.DaggerPublisherDetailsComponent
 import myapplication.android.pixelpal.ui.publisher_details.model.PublisherArgumentsModel
 import myapplication.android.pixelpal.ui.publisher_details.model.PublisherDetailsResult
 import myapplication.android.pixelpal.ui.publisher_details.mvi.PublisherDetailsEffect
@@ -84,8 +85,9 @@ class PublisherDetailsFragment : MviBaseFragment<
             by viewModels { PublisherDetailsStoreFactory(localDi.actor, localDi.reducer) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        appComponent.publisherDetailsComponent().create().inject(this)
         super.onCreate(savedInstanceState)
+        val appComponent = DaggerAppComponent.factory().create(requireContext())
+        DaggerPublisherDetailsComponent.factory().create(appComponent).inject(this)
     }
 
     override fun onCreateView(

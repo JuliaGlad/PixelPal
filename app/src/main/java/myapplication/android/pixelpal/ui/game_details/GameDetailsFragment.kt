@@ -14,7 +14,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.app.Constants.Companion.GAME_GENRES_ARG
 import myapplication.android.pixelpal.app.Constants.Companion.GAME_ID_ARG
@@ -22,6 +21,7 @@ import myapplication.android.pixelpal.app.Constants.Companion.GAME_IMAGE_ARG
 import myapplication.android.pixelpal.app.Constants.Companion.GAME_NAME_ARG
 import myapplication.android.pixelpal.app.Constants.Companion.GAME_RELEASE_ARG
 import myapplication.android.pixelpal.databinding.FragmentGameDetailsBinding
+import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.ui.creators.model.roles.RolesUi
 import myapplication.android.pixelpal.ui.delegates.delegates.creator_game_details.CreatorGameDetailsDelegate
 import myapplication.android.pixelpal.ui.delegates.delegates.creator_game_details.CreatorGameDetailsDelegateItem
@@ -54,7 +54,7 @@ import myapplication.android.pixelpal.ui.delegates.delegates.title_textview.Titl
 import myapplication.android.pixelpal.ui.delegates.main.DelegateItem
 import myapplication.android.pixelpal.ui.delegates.main.MainAdapter
 import myapplication.android.pixelpal.ui.game_details.activity.GameDetailsActivity
-import myapplication.android.pixelpal.ui.game_details.activity.GameDetailsScreen
+import myapplication.android.pixelpal.ui.game_details.di.DaggerGameDetailsComponent
 import myapplication.android.pixelpal.ui.game_details.model.CreatorsGameUiList
 import myapplication.android.pixelpal.ui.game_details.model.ScreenshotsUiList
 import myapplication.android.pixelpal.ui.game_details.model.StoresSellingGameUiList
@@ -81,10 +81,6 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
         GameDetailsState,
         GameDetailsEffect>(R.layout.fragment_game_details) {
 
-    private val gameDetailsComponent by lazy {
-        appComponent.gameDetailsComponent().create()
-    }
-
     @Inject
     lateinit var gameDetailsLocalDI: GameDetailsLocalDI
 
@@ -103,19 +99,9 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        gameDetailsComponent.inject(this)
+        val appComponent = DaggerAppComponent.factory().create(requireContext())
+        DaggerGameDetailsComponent.factory().create(appComponent).inject(this)
         if (activity?.intent != null) getActivityArguments()
-        else getFragmentArguments()
-    }
-
-    private fun getFragmentArguments() {
-        with(arguments) {
-            gameId = this?.getLong(GAME_ID_ARG, 0L)
-            releaseDate = this?.getString(GAME_RELEASE_ARG)
-            genres = this?.getString(GAME_GENRES_ARG)
-            gameName = this?.getString(GAME_NAME_ARG)
-            gameImage = this?.getString(GAME_IMAGE_ARG)
-        }
     }
 
     private fun getActivityArguments() {
@@ -169,8 +155,9 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
                     }
                 }
             }
+
             is GameDetailsEffect.OpenGameDetails -> {
-                (activity as GameDetailsActivity).presenter.navigateTo(GameDetailsScreen.gameDetails())
+                TODO("Change game")
             }
 
             is GameDetailsEffect.OpenAllSameSeries ->
@@ -241,7 +228,7 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
             is GameDetailsLceState.UpdateStoresSellingGame ->
                 updateStoresRecycler(state.ui.data as StoresSellingGameUiList)
 
-            GameDetailsLceState.GameAddedToFavorites ->{
+            GameDetailsLceState.GameAddedToFavorites -> {
                 Log.i("Added To Favorites", "game with id $gameId added to userFavs")
                 ResourcesCompat.getDrawable(
                     resources,
@@ -278,7 +265,7 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
             iconFav.setIcon(icon!!)
             iconFav.setOnClickListener {
                 gameId?.let { id ->
-                    if (isFavorite){
+                    if (isFavorite) {
                         isNotFavorite = true
                         isFavorite = false
                         store.sendIntent(GameDetailsIntent.RemoveGameFromFavorites(id))
@@ -638,6 +625,23 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
     companion object {
         const val SAME_SERIES = 66
         const val ADDITION = 33
-    }
 
+        fun getInstance(
+            id: Long = 0,
+            name: String = "",
+            genres: String = "",
+            released: String = "",
+            image: String = ""
+        ): GameDetailsFragment {
+            val fragment = GameDetailsFragment()
+            fragment.apply {
+                gameName = name
+                gameId = id
+                this.genres = genres
+                releaseDate = released
+                gameImage = image
+            }
+            return fragment
+        }
+    }
 }

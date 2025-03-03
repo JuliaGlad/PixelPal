@@ -7,9 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.Screen
 import com.github.terrakok.cicerone.androidx.AppNavigator
+import myapplication.android.pixelpal.App
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App.Companion.app
-import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.ActivityMainBinding
 import myapplication.android.pixelpal.ui.all_games.AllGamesActivity
@@ -28,7 +27,7 @@ import myapplication.android.pixelpal.ui.publisher_details.PublisherDetailsActiv
 
 
 class MainActivity : AppCompatActivity() {
-
+    private val app by lazy { (application as App) }
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
     private val navigator = AppNavigator(this, R.id.main_container)
@@ -40,7 +39,6 @@ class MainActivity : AppCompatActivity() {
     private val navigationHolder: NavigatorHolder by lazy { app.navigatorHolder }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        appComponent.mainActivityComponent().create().inject(this)
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

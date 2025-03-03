@@ -5,7 +5,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import kotlinx.serialization.json.Json
-import myapplication.android.pixelpal.app.AuthQueryInterceptor
 import myapplication.android.pixelpal.data.api.GamesApi
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient

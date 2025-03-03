@@ -2,27 +2,21 @@ package myapplication.android.pixelpal.ui.platforms.fragments.platform.platform_
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.app.Constants
+import myapplication.android.pixelpal.databinding.ActivityPlatformDetailsBinding
 import myapplication.android.pixelpal.ui.all_games.AllGamesActivity
 import myapplication.android.pixelpal.ui.game_details.activity.GameDetailsActivity
 
 class PlatformDetailsActivity : AppCompatActivity() {
+
+    private var _binding: ActivityPlatformDetailsBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        appComponent.platformDetailsActivityComponent().create().inject(this)
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_platform_details)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        _binding = ActivityPlatformDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     fun openAllGamesActivity(platformId: Long){
@@ -42,5 +36,10 @@ class PlatformDetailsActivity : AppCompatActivity() {
             putExtra(Constants.GAME_IMAGE_ARG, image)
         }
         startActivity(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

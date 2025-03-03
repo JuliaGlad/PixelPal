@@ -21,8 +21,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmentCreatorsBinding
+import myapplication.android.pixelpal.di.DaggerAppComponent
+import myapplication.android.pixelpal.ui.creators.di.DaggerCreatorsComponent
 import myapplication.android.pixelpal.ui.creators.model.creatores.CreatorUi
 import myapplication.android.pixelpal.ui.creators.model.creatores.CreatorsUiList
 import myapplication.android.pixelpal.ui.creators.model.publisher.PublisherUi
@@ -61,7 +62,8 @@ class CreatorsFragment :
             CreatorsState,
             CreatorsEffect>(R.layout.fragment_creators) {
     private val creatorsComponent by lazy {
-        appComponent.creatorsComponent().create()
+        val appComponent = DaggerAppComponent.factory().create(requireContext())
+        DaggerCreatorsComponent.factory().create(appComponent)
     }
     private val adapter = MainAdapter()
     private var isFirst = true
@@ -179,6 +181,7 @@ class CreatorsFragment :
                 binding.loadingRecycler.root.visibility = GONE
                 Log.i("Error creators", state.ui.throwable.message.toString())
             }
+
             LceState.Loading -> binding.loading.root.visibility = VISIBLE
         }
     }

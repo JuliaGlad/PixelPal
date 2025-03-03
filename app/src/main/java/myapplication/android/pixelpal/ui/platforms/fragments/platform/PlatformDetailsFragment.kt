@@ -12,13 +12,14 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.App.Companion.appComponent
 import myapplication.android.pixelpal.databinding.FragmentPlatformDetailsBinding
+import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.ui.listener.GridPaginationScrollListener
 import myapplication.android.pixelpal.ui.main.MainActivity
 import myapplication.android.pixelpal.ui.mvi.LceState
 import myapplication.android.pixelpal.ui.mvi.MviBaseFragment
 import myapplication.android.pixelpal.ui.platforms.PlatformPager
+import myapplication.android.pixelpal.ui.platforms.fragments.platform.di.DaggerPlatformComponent
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.model.PlatformUiList
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.model.PlatformsUi
 import myapplication.android.pixelpal.ui.platforms.fragments.platform.mvi.PlatformEffect
@@ -38,9 +39,6 @@ class PlatformDetailsFragment : MviBaseFragment<
         PlatformIntent,
         PlatformState,
         PlatformEffect>(R.layout.fragment_platforms), PlatformPager {
-    private val platformComponent by lazy {
-        appComponent.platformComponent().create()
-    }
     private val adapter = PlatformAdapter()
     private var _binding: FragmentPlatformDetailsBinding? = null
     private val binding get() = _binding!!
@@ -59,7 +57,8 @@ class PlatformDetailsFragment : MviBaseFragment<
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        platformComponent.inject(this)
+        val appComponent = DaggerAppComponent.factory().create(requireContext())
+        DaggerPlatformComponent.factory().create(appComponent).inject(this)
     }
 
     override fun onCreateView(
