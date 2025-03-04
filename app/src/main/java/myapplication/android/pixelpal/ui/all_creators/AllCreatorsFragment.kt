@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.FragmentAllCreatorsBinding
 import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.ui.all_creators.di.DaggerAllCreatorsComponent
@@ -43,7 +42,7 @@ class AllCreatorsFragment : MviBaseFragment<
     private var loading = false
     private var lastPage = false
 
-    private val gameId by lazy { activity?.intent?.getLongExtra(Constants.GAME_ID_ARG, 0L) }
+    private val gameId by lazy { activity?.intent?.getLongExtra(GAME_ID_ARG, 0L) }
     private val recyclerItems = mutableListOf<AllCreatorsModel>()
     val adapter = AllCreatorsAdapter()
 
@@ -188,5 +187,9 @@ class AllCreatorsFragment : MviBaseFragment<
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    companion object{
+        const val GAME_ID_ARG = "gameIdArg"
     }
 }

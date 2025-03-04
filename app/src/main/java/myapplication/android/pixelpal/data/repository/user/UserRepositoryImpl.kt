@@ -5,25 +5,24 @@ import com.google.firebase.auth.EmailAuthProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.data.repository.dto.user.UserDataDto
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor() : UserRepository {
 
     override suspend fun getUserData(): UserDataDto =
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             val uid = FirebaseService.auth.currentUser!!.uid
             val result = FirebaseService.fireStore
-                .collection(Constants.USER_COLLECTION)
+                .collection(USER_COLLECTION)
                 .document(uid)
                 .get()
                 .await()
 
             UserDataDto(
                 uid,
-                result.getString(Constants.USER_NAME),
-                result.getString(Constants.USER_EMAIL)
+                result.getString(USER_NAME),
+                result.getString(USER_EMAIL)
             )
         }
 
@@ -52,13 +51,12 @@ class UserRepositoryImpl @Inject constructor() : UserRepository {
     }
 
     override suspend fun editData(name: String) {
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             FirebaseService.auth.currentUser?.uid?.let { uid ->
                 FirebaseService.fireStore
-                    .collection(Constants.USER_COLLECTION)
+                    .collection(USER_COLLECTION)
                     .document(uid)
-                    .update(
-                        Constants.USER_NAME, name
+                    .update(USER_NAME, name
                     ).await()
             }
         }
@@ -73,13 +71,20 @@ class UserRepositoryImpl @Inject constructor() : UserRepository {
         name: String,
         email: String
     ) = FirebaseService.fireStore
-            .collection(Constants.USER_COLLECTION)
-            .document(userId)
-            .set(
-                hashMapOf(
-                    Constants.USER_NAME to name,
-                    Constants.USER_EMAIL to email,
-                    Constants.FAVORITE_GAMES to listOf<Long>()
-                )
+        .collection(USER_COLLECTION)
+        .document(userId)
+        .set(
+            hashMapOf(
+                USER_NAME to name,
+                USER_EMAIL to email,
+                FAVORITE_GAMES to listOf<Long>()
             )
+        )
+
+    companion object {
+        const val FAVORITE_GAMES = "FavoriteGames"
+        const val USER_COLLECTION = "UserCollection"
+        const val USER_NAME = "UserName"
+        const val USER_EMAIL = "UserEmail"
+    }
 }

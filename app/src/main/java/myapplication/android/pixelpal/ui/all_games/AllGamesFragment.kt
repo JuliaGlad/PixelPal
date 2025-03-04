@@ -10,25 +10,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.Constants.Companion.ADDITIONS_AND_PARENT_ID
-import myapplication.android.pixelpal.app.Constants.Companion.ALL_INTENT_ID
-import myapplication.android.pixelpal.app.Constants.Companion.CREATOR_GAMES_ID
-import myapplication.android.pixelpal.app.Constants.Companion.CREATOR_ID
-import myapplication.android.pixelpal.app.Constants.Companion.CURRENT_DATE
-import myapplication.android.pixelpal.app.Constants.Companion.END_DATE
-import myapplication.android.pixelpal.app.Constants.Companion.GAME_GENRES_ARG
-import myapplication.android.pixelpal.app.Constants.Companion.GAME_ID_ARG
-import myapplication.android.pixelpal.app.Constants.Companion.PLATFORM_GAMES_ID
-import myapplication.android.pixelpal.app.Constants.Companion.PLATFORM_ID
-import myapplication.android.pixelpal.app.Constants.Companion.PUBLISHER_GAMES_ID
-import myapplication.android.pixelpal.app.Constants.Companion.PUBLISHER_ID
-import myapplication.android.pixelpal.app.Constants.Companion.RELEASES_ID
-import myapplication.android.pixelpal.app.Constants.Companion.RELEASES_NEXT_ID
-import myapplication.android.pixelpal.app.Constants.Companion.SAME_SERIES_ID
-import myapplication.android.pixelpal.app.Constants.Companion.START_DATE
-import myapplication.android.pixelpal.app.Constants.Companion.STORES_GAMES_ID
-import myapplication.android.pixelpal.app.Constants.Companion.STORE_ID
-import myapplication.android.pixelpal.app.Constants.Companion.TOP_ID
 import myapplication.android.pixelpal.databinding.FragmentAllGamesBinding
 import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.ui.all_games.di.DaggerAllGamesComponent
@@ -371,6 +352,28 @@ class AllGamesFragment : MviBaseFragment<
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    companion object{
+        const val CREATOR_ID = "CreatorId"
+        const val PLATFORM_ID = "PlatformId"
+        const val STORE_ID = "StoreId"
+        const val ALL_INTENT_ID = "AllIntentId"
+        const val PUBLISHER_ID = "PublisherId"
+        const val PUBLISHER_GAMES_ID = "PublisherGamesId"
+        const val GAME_ID_ARG = "gameIdArg"
+        const val GAME_GENRES_ARG = "gameGenresArg"
+        const val RELEASES_ID = "ReleasesId"
+        const val RELEASES_NEXT_ID = "ReleasesNextId"
+        const val TOP_ID = "TopId"
+        const val END_DATE = "EndDate"
+        const val START_DATE = "StartDate"
+        const val CURRENT_DATE = "CurrentDate"
+        const val ADDITIONS_AND_PARENT_ID = "AdditionsAndParentId"
+        const val SAME_SERIES_ID = "SameSeriesId"
+        const val CREATOR_GAMES_ID = "CreatorGamesId"
+        const val PLATFORM_GAMES_ID = "PlatformGamesId"
+        const val STORES_GAMES_ID = "StoreGamesId"
     }
 
 }

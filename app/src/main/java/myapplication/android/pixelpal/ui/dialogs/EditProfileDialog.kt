@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.core.view.isNotEmpty
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.DialogEditProfileBinding
 import myapplication.android.pixelpal.ui.listener.DialogDismissedListener
 
@@ -42,7 +41,7 @@ class EditProfileDialog : DialogFragment() {
         super.onDismiss(dialog)
         if (name != null){
             dialogDismissedListener?.handleDialogClose(Bundle().apply {
-                putString(Constants.NAME_ARG, name)
+                putString(NAME_ARG, name)
             })
         }
     }
@@ -51,6 +50,7 @@ class EditProfileDialog : DialogFragment() {
         fun getInstance(name: String) : EditProfileDialog = EditProfileDialog().apply {
             previousName = name
         }
+        const val NAME_ARG = "NameArg"
     }
 
 }

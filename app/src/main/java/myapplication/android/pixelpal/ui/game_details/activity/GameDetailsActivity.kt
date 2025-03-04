@@ -3,7 +3,6 @@ package myapplication.android.pixelpal.ui.game_details.activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.ActivityGameDetailsBinding
 import myapplication.android.pixelpal.ui.all_creators.AllCreatorsActivity
 import myapplication.android.pixelpal.ui.all_games.AllGamesActivity
@@ -28,11 +27,11 @@ class GameDetailsActivity : AppCompatActivity() {
         image: String?
     ) {
         val intent = Intent(this, CreatorDetailsActivity::class.java).apply {
-            putExtra(Constants.CREATOR_ID, creatorId)
-            putExtra(Constants.CREATOR_NAME, name)
-            putExtra(Constants.CREATOR_ROLE, role)
-            putExtra(Constants.CREATOR_FAMOUS_PROJECTS, famousProjects)
-            putExtra(Constants.CREATOR_IMAGE, image)
+            putExtra(CREATOR_ID, creatorId)
+            putExtra(CREATOR_NAME, name)
+            putExtra(CREATOR_ROLE, role)
+            putExtra(CREATOR_FAMOUS_PROJECTS, famousProjects)
+            putExtra(CREATOR_IMAGE, image)
         }
         startActivity(intent)
     }
@@ -41,8 +40,8 @@ class GameDetailsActivity : AppCompatActivity() {
         gameId: Long
     ) {
         val intent = Intent(this, AllCreatorsActivity::class.java).apply {
-            putExtra(Constants.ALL_INTENT_ID, Constants.CREATORS_ID)
-            putExtra(Constants.GAME_ID_ARG, gameId)
+            putExtra(ALL_INTENT_ID, CREATORS_ID)
+            putExtra(GAME_ID_ARG, gameId)
         }
         startActivity(intent)
     }
@@ -53,9 +52,9 @@ class GameDetailsActivity : AppCompatActivity() {
         genre: String
     ) {
         val intent = Intent(this, AllGamesActivity::class.java).apply {
-            putExtra(Constants.ALL_INTENT_ID, intentId)
-            putExtra(Constants.GAME_ID_ARG, gameId)
-            putExtra(Constants.GAME_GENRES_ARG, genre)
+            putExtra(ALL_INTENT_ID, intentId)
+            putExtra(GAME_ID_ARG, gameId)
+            putExtra(GAME_GENRES_ARG, genre)
         }
         startActivity(intent)
     }
@@ -63,5 +62,17 @@ class GameDetailsActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    companion object{
+        const val GAME_ID_ARG = "gameIdArg"
+        const val GAME_GENRES_ARG = "gameGenresArg"
+        const val ALL_INTENT_ID = "AllIntentId"
+        const val CREATOR_ID = "CreatorId"
+        const val CREATOR_NAME = "CreatorName"
+        const val CREATOR_ROLE = "CreatorRoles"
+        const val CREATOR_FAMOUS_PROJECTS = "CreatorFamousProjects"
+        const val CREATOR_IMAGE = "CreatorImage"
+        const val CREATORS_ID = "CreatorId"
     }
 }

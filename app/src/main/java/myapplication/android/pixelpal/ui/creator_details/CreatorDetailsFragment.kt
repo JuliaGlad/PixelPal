@@ -9,7 +9,6 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.FragmentCreatorDetailsBinding
 import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.ui.creator_details.di.DaggerCreatorsDetailsComponent
@@ -67,11 +66,11 @@ class CreatorDetailsFragment : MviBaseFragment<
         with(activity?.intent) {
             this?.let {
                 model = CreatorArgumentsModel(
-                    getLongExtra(Constants.CREATOR_ID, 0L),
-                    getStringExtra(Constants.CREATOR_NAME)!!,
-                    getStringArrayExtra(Constants.CREATOR_ROLE)!!,
-                    getIntExtra(Constants.CREATOR_FAMOUS_PROJECTS, 0),
-                    getStringExtra(Constants.CREATOR_IMAGE)!!,
+                    getLongExtra(CREATOR_ID, 0L),
+                    getStringExtra(CREATOR_NAME)!!,
+                    getStringArrayExtra(CREATOR_ROLE)!!,
+                    getIntExtra(CREATOR_FAMOUS_PROJECTS, 0),
+                    getStringExtra(CREATOR_IMAGE)!!,
                 )
             }
         }
@@ -270,6 +269,14 @@ class CreatorDetailsFragment : MviBaseFragment<
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    companion object{
+        const val CREATOR_ID = "CreatorId"
+        const val CREATOR_NAME = "CreatorName"
+        const val CREATOR_ROLE = "CreatorRoles"
+        const val CREATOR_FAMOUS_PROJECTS = "CreatorFamousProjects"
+        const val CREATOR_IMAGE = "CreatorImage"
     }
 
 }

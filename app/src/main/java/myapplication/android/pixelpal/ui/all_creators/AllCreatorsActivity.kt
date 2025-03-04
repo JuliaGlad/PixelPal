@@ -3,7 +3,6 @@ package myapplication.android.pixelpal.ui.all_creators
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.ActivityAllCreatorsBinding
 import myapplication.android.pixelpal.ui.creator_details.CreatorDetailsActivity
 
@@ -26,11 +25,11 @@ class AllCreatorsActivity : AppCompatActivity() {
         image: String?
     ) {
         val intent = Intent(this, CreatorDetailsActivity::class.java).apply {
-            putExtra(Constants.CREATOR_ID, creatorId)
-            putExtra(Constants.CREATOR_NAME, name)
-            putExtra(Constants.CREATOR_ROLE, role)
-            putExtra(Constants.CREATOR_FAMOUS_PROJECTS, famousProjects)
-            putExtra(Constants.CREATOR_IMAGE, image)
+            putExtra(CREATOR_ID, creatorId)
+            putExtra(CREATOR_NAME, name)
+            putExtra(CREATOR_ROLE, role)
+            putExtra(CREATOR_FAMOUS_PROJECTS, famousProjects)
+            putExtra(CREATOR_IMAGE, image)
         }
         startActivity(intent)
     }
@@ -38,6 +37,14 @@ class AllCreatorsActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    companion object{
+        const val CREATOR_ID = "CreatorId"
+        const val CREATOR_NAME = "CreatorName"
+        const val CREATOR_ROLE = "CreatorRoles"
+        const val CREATOR_FAMOUS_PROJECTS = "CreatorFamousProjects"
+        const val CREATOR_IMAGE = "CreatorImage"
     }
 
 }

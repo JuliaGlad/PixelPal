@@ -9,7 +9,6 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.FragmentPublisherDetailsBinding
 import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewDelegate
@@ -68,10 +67,10 @@ class PublisherDetailsFragment : MviBaseFragment<
         activity?.let {
             with(it.intent) {
                 args = PublisherArgumentsModel(
-                    getLongExtra(Constants.PUBLISHER_ID, 0),
-                    getStringExtra(Constants.PUBLISHER_NAME)!!,
-                    getIntExtra(Constants.PUBLISHER_GAME_COUNT, 0),
-                    getStringExtra(Constants.PUBLISHER_BACKGROUND)
+                    getLongExtra(PUBLISHER_ID, 0),
+                    getStringExtra(PUBLISHER_NAME)!!,
+                    getIntExtra(PUBLISHER_GAME_COUNT, 0),
+                    getStringExtra(PUBLISHER_BACKGROUND)
                 )
             }
         }
@@ -249,6 +248,13 @@ class PublisherDetailsFragment : MviBaseFragment<
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    companion object{
+        const val PUBLISHER_ID = "PublisherId"
+        const val PUBLISHER_NAME = "PublisherName"
+        const val PUBLISHER_GAME_COUNT = "PublisherGameCount"
+        const val PUBLISHER_BACKGROUND = "PublisherBackground"
     }
 
 }

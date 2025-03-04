@@ -9,7 +9,6 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.FragmentPlatformFullDetailsBinding
 import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewDelegate
@@ -67,11 +66,11 @@ class PlatformFullDetailsFragment : MviBaseFragment<
         activity?.let {
             with(it.intent) {
                 argsModel = PlatformDetailsArgumentsModel(
-                    getLongExtra(Constants.PLATFORM_ID, 0L),
-                    getStringExtra(Constants.PLATFORM_NAME)!!,
-                    getIntExtra(Constants.PLATFORM_PROJECTS, 0),
-                    getIntExtra(Constants.PLATFORM_YEAR_START, 0),
-                    getStringExtra(Constants.PLATFORM_BACKGROUND)!!
+                    getLongExtra(PLATFORM_ID, 0L),
+                    getStringExtra(PLATFORM_NAME)!!,
+                    getIntExtra(PLATFORM_PROJECTS, 0),
+                    getIntExtra(PLATFORM_YEAR_START, 0),
+                    getStringExtra(PLATFORM_BACKGROUND)!!
                 )
             }
         }
@@ -280,5 +279,13 @@ class PlatformFullDetailsFragment : MviBaseFragment<
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    companion object{
+        const val PLATFORM_ID = "PlatformId"
+        const val PLATFORM_NAME = "PlatformName"
+        const val PLATFORM_BACKGROUND = "PlatformBackground"
+        const val PLATFORM_YEAR_START = "PlatformYearStart"
+        const val PLATFORM_PROJECTS = "PlatformProjects"
     }
 }

@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.core.view.isNotEmpty
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.DialogDeleteAccountBinding
 import myapplication.android.pixelpal.ui.listener.DialogDismissedListener
 
@@ -40,7 +39,11 @@ class DeleteAccountDialog : DialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         if (delete) dialogDismissedListener?.handleDialogClose(Bundle().apply {
-            putString(Constants.PASSWORD_ARG, password)
+            putString(PASSWORD_ARG, password)
         })
+    }
+
+    companion object{
+        const val PASSWORD_ARG = "PasswordArg"
     }
 }

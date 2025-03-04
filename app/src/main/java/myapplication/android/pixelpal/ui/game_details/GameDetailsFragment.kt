@@ -14,12 +14,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.Constants
-import myapplication.android.pixelpal.app.Constants.Companion.GAME_GENRES_ARG
-import myapplication.android.pixelpal.app.Constants.Companion.GAME_ID_ARG
-import myapplication.android.pixelpal.app.Constants.Companion.GAME_IMAGE_ARG
-import myapplication.android.pixelpal.app.Constants.Companion.GAME_NAME_ARG
-import myapplication.android.pixelpal.app.Constants.Companion.GAME_RELEASE_ARG
 import myapplication.android.pixelpal.databinding.FragmentGameDetailsBinding
 import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.ui.creators.model.roles.RolesUi
@@ -163,14 +157,14 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
             is GameDetailsEffect.OpenAllSameSeries ->
                 with(effect) {
                     (activity as GameDetailsActivity).openAllGamesActivity(
-                        Constants.SAME_SERIES_ID, gameId, genres!!
+                        SAME_SERIES_ID, gameId, genres!!
                     )
                 }
 
             is GameDetailsEffect.OpenAllAdditionsAndParentGames -> {
                 with(effect) {
                     (activity as GameDetailsActivity).openAllGamesActivity(
-                        Constants.ADDITIONS_AND_PARENT_ID, gameId, genres!!
+                       ADDITIONS_AND_PARENT_ID, gameId, genres!!
                     )
                 }
             }
@@ -623,6 +617,13 @@ class GameDetailsFragment @Inject constructor() : MviBaseFragment<
     }
 
     companion object {
+        const val ADDITIONS_AND_PARENT_ID = "AdditionsAndParentId"
+        const val SAME_SERIES_ID = "SameSeriesId"
+        const val GAME_ID_ARG = "gameIdArg"
+        const val GAME_NAME_ARG = "gameNameArg"
+        const val GAME_RELEASE_ARG = "gameReleaseArg"
+        const val GAME_GENRES_ARG = "gameGenresArg"
+        const val GAME_IMAGE_ARG = "gameImageArg"
         const val SAME_SERIES = 66
         const val ADDITION = 33
 

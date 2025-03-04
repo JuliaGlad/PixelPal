@@ -3,7 +3,6 @@ package myapplication.android.pixelpal.data.repository.games
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.data.repository.dto.game.GameDetailsDto
 import myapplication.android.pixelpal.data.repository.dto.game.GameMainInfoDtoList
 import myapplication.android.pixelpal.data.repository.dto.game.GamesShortDtoList
@@ -130,14 +129,19 @@ class GamesRepositoryImpl @Inject constructor(
         var isFavorite = false
         FirebaseService.auth.uid?.let {
             val documentSnapshot = FirebaseService.fireStore
-                .collection(Constants.USER_COLLECTION)
+                .collection(USER_COLLECTION)
                 .document(it)
                 .get()
                 .await()
-            val favs = documentSnapshot.get(Constants.FAVORITE_GAMES) as List<Long>
+            val favs = documentSnapshot.get(FAVORITE_GAMES) as List<Long>
             if (favs.contains(gameId)) isFavorite = true
         }
         return isFavorite
+    }
+
+    companion object{
+        const val FAVORITE_GAMES = "FavoriteGames"
+        const val USER_COLLECTION = "UserCollection"
     }
 
 }

@@ -9,7 +9,6 @@ import com.github.terrakok.cicerone.Screen
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import myapplication.android.pixelpal.App
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.ActivityMainBinding
 import myapplication.android.pixelpal.ui.all_games.AllGamesActivity
 import myapplication.android.pixelpal.ui.creator_details.CreatorDetailsActivity
@@ -91,10 +90,10 @@ class MainActivity : AppCompatActivity() {
         endDate: String? = null
     ) {
         val intent = Intent(this, AllGamesActivity::class.java).apply {
-            putExtra(Constants.ALL_INTENT_ID, intentId)
-            currentDate?.let { putExtra(Constants.CURRENT_DATE, it) }
-            startDate?.let { putExtra(Constants.START_DATE, it) }
-            endDate?.let { putExtra(Constants.END_DATE, it) }
+            putExtra(ALL_INTENT_ID, intentId)
+            currentDate?.let { putExtra(CURRENT_DATE, it) }
+            startDate?.let { putExtra(START_DATE, it) }
+            endDate?.let { putExtra(END_DATE, it) }
         }
         startActivity(intent)
     }
@@ -107,22 +106,22 @@ class MainActivity : AppCompatActivity() {
         image: String?
     ) {
         val intent = Intent(this, CreatorDetailsActivity::class.java).apply {
-            putExtra(Constants.CREATOR_ID, creatorId)
-            putExtra(Constants.CREATOR_NAME, name)
-            putExtra(Constants.CREATOR_ROLE, role)
-            putExtra(Constants.CREATOR_FAMOUS_PROJECTS, famousProjects)
-            putExtra(Constants.CREATOR_IMAGE, image)
+            putExtra(CREATOR_ID, creatorId)
+            putExtra(CREATOR_NAME, name)
+            putExtra(CREATOR_ROLE, role)
+            putExtra(CREATOR_FAMOUS_PROJECTS, famousProjects)
+            putExtra(CREATOR_IMAGE, image)
         }
         startActivity(intent)
     }
 
     fun openGameDetailsActivity(gameId: Long, name: String, genres: String, released: String, image: String){
         val intent = Intent(this, GameDetailsActivity::class.java).apply {
-            putExtra(Constants.GAME_ID_ARG, gameId)
-            putExtra(Constants.GAME_NAME_ARG, name)
-            putExtra(Constants.GAME_GENRES_ARG, genres)
-            putExtra(Constants.GAME_RELEASE_ARG, released)
-            putExtra(Constants.GAME_IMAGE_ARG, image)
+            putExtra(GAME_ID_ARG, gameId)
+            putExtra(GAME_NAME_ARG, name)
+            putExtra(GAME_GENRES_ARG, genres)
+            putExtra(GAME_RELEASE_ARG, released)
+            putExtra(GAME_IMAGE_ARG, image)
         }
         startActivity(intent)
     }
@@ -136,11 +135,11 @@ class MainActivity : AppCompatActivity() {
     ){
         val intent = Intent(this, PlatformDetailsActivity::class.java)
             .apply {
-                putExtra(Constants.PLATFORM_ID, id)
-                putExtra(Constants.PLATFORM_NAME, name)
-                putExtra(Constants.PLATFORM_PROJECTS, gamesCount)
-                putExtra(Constants.PLATFORM_YEAR_START, startYear)
-                putExtra(Constants.PLATFORM_BACKGROUND, background)
+                putExtra(PLATFORM_ID, id)
+                putExtra(PLATFORM_NAME, name)
+                putExtra(PLATFORM_PROJECTS, gamesCount)
+                putExtra(PLATFORM_YEAR_START, startYear)
+                putExtra(PLATFORM_BACKGROUND, background)
             }
         startActivity(intent)
     }
@@ -153,10 +152,10 @@ class MainActivity : AppCompatActivity() {
     ){
         val intent = Intent(this, PublisherDetailsActivity::class.java)
             .apply {
-                putExtra(Constants.PUBLISHER_ID, id)
-                putExtra(Constants.PUBLISHER_NAME, name)
-                putExtra(Constants.PUBLISHER_GAME_COUNT, gameCount)
-                putExtra(Constants.PUBLISHER_BACKGROUND, background)
+                putExtra(PUBLISHER_ID, id)
+                putExtra(PUBLISHER_NAME, name)
+                putExtra(PUBLISHER_GAME_COUNT, gameCount)
+                putExtra(PUBLISHER_BACKGROUND, background)
             }
         startActivity(intent)
     }
@@ -170,11 +169,11 @@ class MainActivity : AppCompatActivity() {
     ){
         val intent = Intent(this, StoreDetailsActivity::class.java)
             .apply {
-                putExtra(Constants.STORE_ID, id)
-                putExtra(Constants.STORE_NAME, name)
-                putExtra(Constants.STORE_PROJECTS, projects)
-                putExtra(Constants.STORE_DOMAIN, domain)
-                putExtra(Constants.STORE_IMAGE, image)
+                putExtra(STORE_ID, id)
+                putExtra(STORE_NAME, name)
+                putExtra(STORE_PROJECTS, projects)
+                putExtra(STORE_DOMAIN, domain)
+                putExtra(STORE_IMAGE, image)
             }
         startActivity(intent)
     }
@@ -182,5 +181,36 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    companion object{
+        const val GAME_ID_ARG = "gameIdArg"
+        const val GAME_NAME_ARG = "gameNameArg"
+        const val GAME_RELEASE_ARG = "gameReleaseArg"
+        const val GAME_GENRES_ARG = "gameGenresArg"
+        const val GAME_IMAGE_ARG = "gameImageArg"
+        const val ALL_INTENT_ID = "AllIntentId"
+        const val END_DATE = "EndDate"
+        const val START_DATE = "StartDate"
+        const val CURRENT_DATE = "CurrentDate"
+        const val PUBLISHER_ID = "PublisherId"
+        const val PUBLISHER_NAME = "PublisherName"
+        const val PUBLISHER_GAME_COUNT = "PublisherGameCount"
+        const val PUBLISHER_BACKGROUND = "PublisherBackground"
+        const val PLATFORM_ID = "PlatformId"
+        const val PLATFORM_NAME = "PlatformName"
+        const val PLATFORM_BACKGROUND = "PlatformBackground"
+        const val PLATFORM_YEAR_START = "PlatformYearStart"
+        const val PLATFORM_PROJECTS = "PlatformProjects"
+        const val STORE_ID = "StoreId"
+        const val STORE_NAME = "StoreName"
+        const val STORE_DOMAIN = "StoreDomain"
+        const val STORE_IMAGE = "StoreImage"
+        const val STORE_PROJECTS = "StoreProjects"
+        const val CREATOR_ID = "CreatorId"
+        const val CREATOR_NAME = "CreatorName"
+        const val CREATOR_ROLE = "CreatorRoles"
+        const val CREATOR_FAMOUS_PROJECTS = "CreatorFamousProjects"
+        const val CREATOR_IMAGE = "CreatorImage"
     }
 }

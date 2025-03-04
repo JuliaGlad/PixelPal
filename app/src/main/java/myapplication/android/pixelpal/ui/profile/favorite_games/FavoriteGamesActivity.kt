@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
-import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.ActivityFavoriteGamesBinding
 import myapplication.android.pixelpal.ui.game_details.activity.GameDetailsActivity
 
@@ -28,11 +27,11 @@ class FavoriteGamesActivity : AppCompatActivity() {
         launcher: ActivityResultLauncher<Intent>
     ) {
         val intent = Intent(this, GameDetailsActivity::class.java).apply {
-            putExtra(Constants.GAME_ID_ARG, gameId)
-            putExtra(Constants.GAME_NAME_ARG, name)
-            putExtra(Constants.GAME_GENRES_ARG, genres)
-            putExtra(Constants.GAME_RELEASE_ARG, released)
-            putExtra(Constants.GAME_IMAGE_ARG, image)
+            putExtra(GAME_ID_ARG, gameId)
+            putExtra(GAME_NAME_ARG, name)
+            putExtra(GAME_GENRES_ARG, genres)
+            putExtra(GAME_RELEASE_ARG, released)
+            putExtra(GAME_IMAGE_ARG, image)
         }
         launcher.launch(intent)
     }
@@ -40,6 +39,14 @@ class FavoriteGamesActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    companion object{
+        const val GAME_ID_ARG = "gameIdArg"
+        const val GAME_NAME_ARG = "gameNameArg"
+        const val GAME_RELEASE_ARG = "gameReleaseArg"
+        const val GAME_GENRES_ARG = "gameGenresArg"
+        const val GAME_IMAGE_ARG = "gameImageArg"
     }
 
 }

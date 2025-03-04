@@ -9,7 +9,6 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.FragmentStoreDetailsBinding
 import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.ui.delegates.delegates.description_textview.DescriptionTextViewDelegate
@@ -71,11 +70,11 @@ class StoreDetailsFragment : MviBaseFragment<
         activity?.let {
             with(it.intent) {
                 storeArgumentModel = StoreArgumentModel(
-                    getIntExtra(Constants.STORE_ID, 0),
-                    getStringExtra(Constants.STORE_NAME)!!,
-                    getStringExtra(Constants.STORE_IMAGE)!!,
-                    getStringExtra(Constants.STORE_DOMAIN),
-                    getIntExtra(Constants.STORE_PROJECTS, 0)
+                    getIntExtra(STORE_ID, 0),
+                    getStringExtra(STORE_NAME)!!,
+                    getStringExtra(STORE_IMAGE)!!,
+                    getStringExtra(STORE_DOMAIN),
+                    getIntExtra(STORE_PROJECTS, 0)
                 )
             }
         }
@@ -256,6 +255,14 @@ class StoreDetailsFragment : MviBaseFragment<
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    companion object{
+        const val STORE_ID = "StoreId"
+        const val STORE_NAME = "StoreName"
+        const val STORE_DOMAIN = "StoreDomain"
+        const val STORE_IMAGE = "StoreImage"
+        const val STORE_PROJECTS = "StoreProjects"
     }
 
 }

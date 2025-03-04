@@ -15,7 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.FragmentHomeBinding
 import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.ui.delegates.delegates.info_box.InfoBoxDelegate
@@ -104,13 +103,13 @@ class HomeFragment :
             }
 
             is HomeEffect.OpenAllTopGamesScreen -> {
-                (activity as MainActivity).openAllTopGamesActivity(Constants.TOP_ID)
+                (activity as MainActivity).openAllTopGamesActivity(TOP_ID_STR)
             }
 
             is HomeEffect.OpenAllCurrentReleasesScreen -> {
                 val (currentDate, _, monthStartDate) = getVariables()
                 (activity as MainActivity).openAllTopGamesActivity(
-                    Constants.RELEASES_ID,
+                    RELEASES_ID,
                     currentDate = currentDate,
                     startDate = monthStartDate
                 )
@@ -119,7 +118,7 @@ class HomeFragment :
             is HomeEffect.OpenAllNextReleasesScreen -> {
                 val (currentDate, monthEndDate, _) = getVariables()
                 (activity as MainActivity).openAllTopGamesActivity(
-                    Constants.RELEASES_NEXT_ID,
+                    RELEASES_NEXT_ID,
                     currentDate = currentDate,
                     endDate = monthEndDate
                 )
@@ -334,10 +333,13 @@ class HomeFragment :
     }
 
     companion object {
-        private const val TAG = "HomeFragmentException"
-        private const val NEW_RELEASES_ID = 1
-        private const val TOP_ID = 2
-        private const val NEXT_ID = 3
+        const val TAG = "HomeFragmentException"
+        const val NEW_RELEASES_ID = 1
+        const val TOP_ID = 2
+        const val NEXT_ID = 3
+        const val RELEASES_ID = "ReleasesId"
+        const val RELEASES_NEXT_ID = "ReleasesNextId"
+        const val TOP_ID_STR = "TopId"
     }
 
 }

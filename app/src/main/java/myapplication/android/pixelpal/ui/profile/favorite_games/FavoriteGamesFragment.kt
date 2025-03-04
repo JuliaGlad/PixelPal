@@ -15,7 +15,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.FragmentFavoriteGamesBinding
 import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.ui.games.games.recycler_view.GamesShortModel
@@ -70,7 +69,7 @@ class FavoriteGamesFragment : MviBaseFragment<
         if (result.resultCode == Activity.RESULT_OK) {
             val data = result.data
             if (data != null) {
-                val id = data.getLongExtra(Constants.GAME_ID_ARG, 0L)
+                val id = data.getLongExtra(GAME_ID_ARG, 0L)
                 var position = -1
                 for (model in models) {
                     if (model.id == id) position = models.indexOf(model)
@@ -192,4 +191,9 @@ class FavoriteGamesFragment : MviBaseFragment<
         super.onDestroy()
         _binding = null
     }
+
+    companion object{
+        const val GAME_ID_ARG = "gameIdArg"
+    }
+
 }

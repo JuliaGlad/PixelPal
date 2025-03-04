@@ -17,7 +17,6 @@ import androidx.fragment.app.viewModels
 import com.github.dhaval2404.imagepicker.ImagePicker
 import myapplication.android.pixelpal.App
 import myapplication.android.pixelpal.R
-import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.databinding.FragmentProfileMainBinding
 import myapplication.android.pixelpal.di.DaggerAppComponent
 import myapplication.android.pixelpal.ui.delegates.delegates.button_with_icon.ButtonWithIconDelegate
@@ -106,7 +105,7 @@ class ProfileMainFragment : MviBaseFragment<
                         binding.loading.root.visibility = VISIBLE
                         store.sendIntent(
                             ProfileMainIntent.EditUser(
-                                args?.getString(Constants.NAME_ARG).toString()
+                                args?.getString(NAME_ARG).toString()
                             )
                         )
                     }
@@ -122,7 +121,7 @@ class ProfileMainFragment : MviBaseFragment<
                         binding.loading.root.visibility = VISIBLE
                         store.sendIntent(
                             ProfileMainIntent.DeleteUser(
-                                args?.getString(Constants.PASSWORD_ARG).orEmpty()
+                                args?.getString(PASSWORD_ARG).orEmpty()
                             )
                         )
                     }
@@ -274,6 +273,8 @@ class ProfileMainFragment : MviBaseFragment<
     companion object {
         const val NAME_ID = 2
         const val EMAIL_ID = 3
+        const val PASSWORD_ARG = "PasswordArg"
+        const val NAME_ARG = "NameArg"
     }
 
 }

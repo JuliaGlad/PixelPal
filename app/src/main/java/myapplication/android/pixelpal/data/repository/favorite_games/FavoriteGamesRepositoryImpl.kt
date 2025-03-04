@@ -1,12 +1,10 @@
 package myapplication.android.pixelpal.data.repository.favorite_games
 
 import android.util.Log
-import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FieldValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import myapplication.android.pixelpal.app.Constants
 import myapplication.android.pixelpal.data.models.gamesNews.GamesMainInfoList
 import myapplication.android.pixelpal.data.repository.dto.game.GameMainInfoDtoList
 import myapplication.android.pixelpal.data.repository.mapper.game.toDto
@@ -25,11 +23,11 @@ class FavoriteGamesRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO){
             val uid = FirebaseService.auth.currentUser!!.uid
             val result = FirebaseService.fireStore
-                .collection(Constants.USER_COLLECTION)
+                .collection(USER_COLLECTION)
                 .document(uid)
                 .get()
                 .await()
-            val list = result.get(Constants.FAVORITE_GAMES) as List<Long>
+            val list = result.get(FAVORITE_GAMES) as List<Long>
             for (i in list){
                 Log.i("Game id favs", i.toString())
             }
@@ -56,9 +54,9 @@ class FavoriteGamesRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO){
             val uid = FirebaseService.auth.currentUser!!.uid
             val document = FirebaseService.fireStore
-                .collection(Constants.USER_COLLECTION)
+                .collection(USER_COLLECTION)
                 .document(uid)
-            document.update(Constants.FAVORITE_GAMES, FieldValue.arrayRemove(gameId)).await()
+            document.update(FAVORITE_GAMES, FieldValue.arrayRemove(gameId)).await()
             localSource.deleteGame(gameId)
         }
     }
@@ -78,8 +76,13 @@ class FavoriteGamesRepositoryImpl @Inject constructor(
     private suspend fun updateFirebaseDocument(gameId: Long) {
         val uid = FirebaseService.auth.currentUser!!.uid
         val document = FirebaseService.fireStore
-            .collection(Constants.USER_COLLECTION)
+            .collection(USER_COLLECTION)
             .document(uid)
-       document.update(Constants.FAVORITE_GAMES, FieldValue.arrayUnion(gameId)).await()
+       document.update(FAVORITE_GAMES, FieldValue.arrayUnion(gameId)).await()
+    }
+
+    companion object{
+        const val FAVORITE_GAMES = "FavoriteGames"
+        const val USER_COLLECTION = "UserCollection"
     }
 }
